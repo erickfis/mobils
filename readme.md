@@ -1,9 +1,9 @@
-#Readme
+# Readme
 
 Análise de uma planilha de gastos, separados em 20 categorias, de 10/14 a 03/17.
 
 
-##O que este script faz
+## O que este script faz
 
 - carrega o bd, neste caso, versão excel
 - faz o tratamento dos dados
