@@ -3,7 +3,9 @@
 Análise de uma planilha de gastos, separados em 20 categorias, de 10/14 a 03/17.
 
 
-## O que este script faz
+## O que este script faz: analiseFin.R
+
+
 
 - carrega o bd, neste caso, versão excel
 - faz o tratamento dos dados
@@ -12,10 +14,13 @@ Análise de uma planilha de gastos, separados em 20 categorias, de 10/14 a 03/17
 - cria uma paleta de cores brewer para 20 categorias
 - plota os totais por categoria, um painel para cada ano
 - após o refinamento dos dados, através da análise dos plots 1 a 3, grava o db para o disco - totais.csv e dados-fitlrados.csv
-
+- faz a análise exploratória
+- trata os dados de acordo com as necessidades apontadas na análise
+- plota gráficos para a análise financeira
 
 
 ## Como são tratados os dados:
+
 - removendo NA, que neste caso só corresponde às linhas que não possuem data, são apenas 
 formatação do excel: complete.cases()
 - renomeando algumas variáveis, formatando seus nomes e seu conteúdo para lower case, para facilitar o uso das vars
@@ -26,9 +31,10 @@ formatação do excel: complete.cases()
 - datas abaixo de 25-03-2017, quando o arquivo foi gerado (pq o db tem dados de 
 "previsão de gastos" até o fim do ano
 - removendo as colunas indesejadas
+- os dados são tratados novamente conforme o andamento da análise exploratória
 
 
-## Análise exploratória
+## Análise exploratória para tratamento dos dados
 
 ### Plot1
 
@@ -61,6 +67,9 @@ Por hora, vamos apenas remover 2017 e fazer o plot 3
 Tudo ok, vamos gravar os dados em totais.csv e dados-filtrados.csv.
 
 O próximo passo é estudar as categorias que mais se destacam: alimentação, pagamentos e corolla, fazendo subset para cada categoria
+
+
+## Análise exploratória - Finanças
 
 
 ### Plot4 - Alimentação

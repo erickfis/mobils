@@ -1,17 +1,16 @@
-require(xlsx)
-require(data.table)
-require(dplyr)
-require(lubridate)
-require(ggplot2)
-require(RColorBrewer)
+library(xlsx)
+library(data.table)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(RColorBrewer)
+library(gridExtra)
+
 
 
 
 #versão excel
 arquivo <- "data/start-2017-03-25.xls"
-
-
-
 dados <- read.xlsx(arquivo, sheetName = "Despesa", startRow = 2)
 
 # tratando o banco de dados
@@ -32,22 +31,22 @@ names(dadosT) <- tolower(names(dadosT)) # para facilitar o uso das vars
 ## também adiciona as cols mes e ano, para facilitar o plot por painéis
 
 dadosM <- dadosT %>%    rename(tipo = tipo.de.despesa) %>%
-                        mutate(data = parse_date_time(data, "dmY"), 
-                               descrição = tolower(as.character(descrição)),
-                               tipo = factor(tolower(as.character(tipo))),
-                               mes = month(data, label=TRUE),
-                               ano = factor(year(data))
-                        ) %>%
+        mutate(data = parse_date_time(data, "dmY"), 
+               descrição = tolower(as.character(descrição)),
+               tipo = factor(tolower(as.character(tipo))),
+               mes = month(data, label=TRUE),
+               ano = factor(year(data))
+        ) %>%
         
-# filtrando as informações que interessam, ou seja, somente da conta itau
-# e datas acima de 01-01-15, vamos considerar que eu não usava bem o app antes disso
-# e abaixo de 25-03-2017, quando o arquivo foi gerado (pq o db tem dados de 
-# "previsão de gastos" até o fim do ano
-
-                        filter(conta=="itau" &  data >= as.Date("2015-01-01") &
-                                                data <= as.Date("2017-03-25")) %>%
-## remove as colunas indesejadas
-                        select(data, ano, mes, tipo, descrição, valor)
+        # filtrando as informações que interessam, ou seja, somente da conta itau
+        # e datas acima de 01-01-15, vamos considerar que eu não usava bem o app antes disso
+        # e abaixo de 25-03-2017, quando o arquivo foi gerado (pq o db tem dados de 
+        # "previsão de gastos" até o fim do ano
+        
+        filter(conta=="itau" &  data >= as.Date("2015-01-01") &
+                       data <= as.Date("2017-03-25")) %>%
+        ## remove as colunas indesejadas
+        select(data, ano, mes, tipo, descrição, valor)
 
 
 ########fim da preparação do df, vamos começar #######
@@ -78,7 +77,7 @@ plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
                 facet_grid(ano ~.) + 
                 labs(title="Gastos por categoria", y="Total (R$)") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
-                # guides(fill=FALSE)
+        # guides(fill=FALSE)
 )
 
 
@@ -157,13 +156,18 @@ dev.off()
 # por hora, vamos apenas remover 2017
 
 totais <- totais[which(totais$ano %in% c(2015,2016)),]
+dadosFil <- dadosFil[which(dadosFil$ano %in% c(2015,2016)),]
 
 
+####caminho diferente para os sumarios:
+
+dt <- data.table(dadosFil)
+dt[, total := sum(valor), by = list(tipo,ano,mes)]
+dt[, media := mean(total), by = list(tipo,ano)]
+dt[, desvio := sd(total), by = list(tipo,ano)]
 
 
 ###novo gráfico
-# as cores:
-# Neste caso, temos 20 cat, mas somente 9 cores na paleta brewer padrao
 
 plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
 
@@ -173,7 +177,6 @@ plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
                 facet_grid(ano ~.) + 
                 labs(title="Gastos por categoria", y="Total (R$)") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
-        # guides(fill=FALSE)
 )
 
 
@@ -183,7 +186,7 @@ dev.off()
 
 write.csv(dadosFil, "dados-filtrados.csv")
 
-write.csv(totais, "totais-2015a2016-12-31.csv")
+write.csv(totais, "totais.csv")
 
 
 # # o próximo passo é estudar a variança, para ver quais categorias (tipos) 
@@ -192,38 +195,57 @@ write.csv(totais, "totais-2015a2016-12-31.csv")
 # alimentação, pagamentos e corolla
 
 
+
+
 # alimentação
 
-plt.alim <- ggplot(totais[totais$tipo=="alimentação",], 
-                   aes(x=mes, y=total, colour=ano, group=ano))
+#devidos subsets
+
+dt.alim <- dt[dt$tipo=="alimentação",]
+dt.alim[, erro := desvio/sqrt(length(unique(total))), by = list(ano)]
+
+plt.alim <- ggplot(dt.alim, aes(x=mes, y=total, group=ano, colour=ano))
 
 
-(plt.alim +  geom_line() + geom_point() +
-                facet_grid(ano ~.) + 
-                labs(title="Gastos - alimentação", y="Total (R$)") + 
+(plt.alim +  geom_line() + 
+                geom_point(size=0.5, alpha=0.5) +
+                facet_grid(ano ~.) +
+                geom_smooth(colour="black", linetype=3, alpha=0.2) +
+                geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
+                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                labs(title="Gastos por categoria", y="Total (R$)") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
 )
+
 
 dev.copy(png, file="plot-alim.png")
 dev.off()
 
+
+
 #analisar maio e julho
 
 dados.alim <- dadosFil %>% filter(mes %in% c("May","Jul") & tipo=="alimentação") %>%
-                arrange(ano, mes, desc(valor))
+        arrange(ano, mes, desc(valor))
 
 View(dados.alim)
 
 
 #pagamentos
 
-plt.pag <- ggplot(totais[totais$tipo=="pagamentos",], 
-                   aes(x=mes, y=total, colour=ano, group=ano))
+dt.pag <- dt[dt$tipo=="pagamentos",]
+dt.pag[, erro := desvio/sqrt(length(unique(total))), by = list(ano)]
+
+plt.pag <- ggplot(dt.pag, aes(x=mes, y=total, group=ano, colour=ano))
 
 
-(plt.pag +  geom_line() + geom_point() +
-                facet_grid(ano ~.) + 
-                labs(title="Gastos - pagamentos", y="Total (R$)") + 
+(plt.pag +  geom_line() + 
+                geom_point(size=0.5, alpha=0.5) +
+                facet_grid(ano ~.) +
+                geom_smooth(colour="black", linetype=3, alpha=0.2) +
+                geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
+                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                labs(title="Gastos por categoria", y="Total (R$)") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
 )
 
@@ -240,13 +262,19 @@ View(dados.pag)
 
 #corolla
 
-plt.cor <- ggplot(totais[totais$tipo=="corolla",], 
-                  aes(x=mes, y=total, colour=ano, group=ano))
+dt.cor <- dt[dt$tipo=="corolla",]
+dt.cor[, erro := desvio/sqrt(length(unique(total))), by = list(ano)]
+
+plt.cor <- ggplot(dt.cor, aes(x=mes, y=total, group=ano, colour=ano))
 
 
-(plt.cor +  geom_line() + geom_point() +
-                facet_grid(ano ~.) + 
-                labs(title="Gastos - Corolla", y="Total (R$)") + 
+(plt.cor +  geom_line() + 
+                geom_point(size=0.5, alpha=0.5) +
+                facet_grid(ano ~.) +
+                geom_smooth(colour="black", linetype=3, alpha=0.2) +
+                geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
+                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                labs(title="Gastos por categoria", y="Total (R$)") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
 )
 
@@ -267,20 +295,17 @@ View(dados.cor)
 
 ##############
 # o plot abaixo arrancaria os pontos fora na unha:
+# 
+# plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
+# 
+# (plt +  geom_line() + geom_point() + ylim(0,1750) +
+#                 scale_colour_manual(values = getPalette(colourCount))+
+#                 facet_grid(ano ~.) + 
+#                 labs(title="Gastos por categoria", y="Total (R$)") + 
+#                 theme(plot.title = element_text(hjust = 0.5)) 
+#         # guides(fill=FALSE)
+# )
 
-plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
-
-(plt +  geom_line() + geom_point() + ylim(0,1750) +
-                scale_colour_manual(values = getPalette(colourCount))+
-                facet_grid(ano ~.) + 
-                labs(title="Gastos por categoria", y="Total (R$)") + 
-                theme(plot.title = element_text(hjust = 0.5)) 
-        # guides(fill=FALSE)
-)
 
 
-dev.copy(png, file="plotFinal.png")
-dev.off()
-       
-       
-       
+
