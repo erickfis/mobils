@@ -3,7 +3,7 @@
 Análise de uma planilha de gastos, separados em 20 categorias, de 10/14 a 03/17.
 
 
-## O que este script faz: analiseFin.R
+## O que este script faz: prepareDF.R
 
 
 
@@ -13,9 +13,13 @@ Análise de uma planilha de gastos, separados em 20 categorias, de 10/14 a 03/17
 - agrupa os dados por categoria (tipos de gastos) e faz um sumário calculando os totais
 - cria uma paleta de cores brewer para 20 categorias
 - plota os totais por categoria, um painel para cada ano
-- após o refinamento dos dados, através da análise dos plots 1 a 3, grava o db para o disco - totais.csv e dados-fitlrados.csv
+- após o refinamento dos dados, através da análise dos plots 1 a 3, grava o db para o disco - totais.rds e dados-fitlrados.rds
 - faz a análise exploratória
 - trata os dados de acordo com as necessidades apontadas na análise
+
+## O que este script faz: analiseFin.R
+
+
 - plota gráficos para a análise financeira
 
 
@@ -72,7 +76,7 @@ O próximo passo é estudar as categorias que mais se destacam: alimentação, p
 ## Análise exploratória - Finanças
 
 
-### Plot4 - Alimentação
+### Alimentação
 
 ![alimentacao](plot-alim.png)
 
@@ -83,7 +87,8 @@ Observa-se:
 - tendência a aumento de gastos em julho. Fazendo um subset dos dados, verifica-se que isso ocorreu em 2016 porque foram feitas 2 compras no mes, para aproveitar uma promoção. Vê-se que este gasto despenca até setembro, voltando a subir em agosto, próx compra
 - sobe e desce: as compras maiores não são feitas todo mes
 
-### Plot5 - Pagamentos
+
+### Pagamentos
 
 ![Pagamentos](plot-pag.png)
 
@@ -93,7 +98,8 @@ Observa-se:
 - Por outro lado, verifica-se que nunca mais houve deficit. 
 - Em setembro de 2015 abrimos a loja de roupas da aline, o valor investido foi parcelado e lançado nesta categoria.
 
-### Plot6 - Corolla
+
+### Corolla
 
 ![Corolla](plot-cor.png)
 
