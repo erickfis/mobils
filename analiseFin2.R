@@ -65,7 +65,7 @@ plt.pag <- ggplot(dt.pag, aes(x=mes, y=total, group=ano, colour=ano))
                 # facet_grid(ano ~., scale="free") +
                 # geom_smooth(colour="black", linetype=3, alpha=0.2) +
                 # geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
-                # geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
                 labs(title="Gastos com pagamentos", y="Total (R$)") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
 )
