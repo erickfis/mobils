@@ -30,7 +30,7 @@ plt.alim <- ggplot(dt.alim, aes(x=mes, y=total, group=ano, colour=ano))
 
 (plt.alim +  geom_line() + 
                 geom_point(size=0.5, alpha=0.5) +
-                facet_grid(ano ~., scale="free") +
+                # facet_grid(ano ~., scale="free") +
                 # geom_smooth(colour="black", linetype=3, alpha=0.2) +
                 # geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
                 geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
@@ -62,10 +62,10 @@ plt.pag <- ggplot(dt.pag, aes(x=mes, y=total, group=ano, colour=ano))
 
 (plt.pag +  geom_line() + 
                 geom_point(size=0.5, alpha=0.5) +
-                facet_grid(ano ~., scale="free") +
-                geom_smooth(colour="black", linetype=3, alpha=0.2) +
-                geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
-                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                # facet_grid(ano ~., scale="free") +
+                # geom_smooth(colour="black", linetype=3, alpha=0.2) +
+                # geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
+                # geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
                 labs(title="Gastos com pagamentos", y="Total (R$)") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
 )
@@ -91,9 +91,9 @@ plt.cor <- ggplot(dt.cor, aes(x=mes, y=total, group=ano, colour=ano))
 
 (plt.cor +  geom_line() + 
                 geom_point(size=0.5, alpha=0.5) +
-                facet_grid(ano ~., scale="free") +
-                geom_smooth(colour="black", linetype=3, alpha=0.2) +
-                geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
+                # facet_grid(ano ~., scale="free") +
+                # geom_smooth(colour="black", linetype=3, alpha=0.2) +
+                # geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
                 geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
                 labs(title="Gastos com carro", y="Total (R$)") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
