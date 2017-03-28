@@ -40,7 +40,7 @@ formatação do excel: complete.cases()
 
 ## Análise exploratória para tratamento dos dados
 
-### Plot1
+### Gráfico 1
 
 ![plot1](plot1.png)
 
@@ -52,7 +52,7 @@ Assim, filtrar os dados novamente para retirar todas as lihas onde descrição c
 
 Agora podemos gerar o plot 2
 
-### Plot2
+### Gráfico 2
 
 ![plot2](plot2.png)
 
@@ -63,7 +63,7 @@ Vou ter que verificar os dados no servidor, para exportar novamente o db e recom
 
 Por hora, vamos apenas remover 2017 e fazer o plot 3
 
-### Plot3
+### Gráfico 3
 
 ![plot3](plot3.png)
 
@@ -86,6 +86,8 @@ Observa-se:
 - portanto, vigiar o cartão em abril
 - tendência a aumento de gastos em julho. Fazendo um subset dos dados, verifica-se que isso ocorreu em 2016 porque foram feitas 2 compras no mes, para aproveitar uma promoção. Vê-se que este gasto despenca até setembro, voltando a subir em agosto, próx compra
 - sobe e desce: as compras maiores não são feitas todo mes
+
+
 
 
 ### Pagamentos
