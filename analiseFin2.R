@@ -70,7 +70,7 @@ plt.pag <- ggplot(dt.pag, aes(x=mes, y=total, group=ano, colour=ano))
                 theme(plot.title = element_text(hjust = 0.5)) 
 )
 
-dev.copy(png, file="plot-pag.png")
+dev.copy(png, file="plot-pag2.png")
 dev.off()
 
 

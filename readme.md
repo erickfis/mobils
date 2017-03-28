@@ -92,7 +92,7 @@ Observa-se:
 
 ### Pagamentos
 
-![Pagamentos](plot-pag.png)
+![Pagamentos](plot-pag2.png)
 
 Observa-se:
 
