@@ -1,122 +1,763 @@
-# Readme
+Objetivo
+========
 
-Análise de uma planilha de gastos, separados em 20 categorias, de 10/14 a 03/17.
+Analisar uma planilha de gastos domésticos registrados ao longo dos anos
+e verificar a existência de tendências relacionadas à estações do ano,
+datas comemorativas ou datas-chave.
 
+Os dados foram gerados pela plataforma mobils, um app android que
+registra despesas realizadas, armazena os dados na nuvem e permite a
+posterior exportação destes dados.
 
-## O que este script faz: prepareDF.R
+<https://web.mobills.com.br>
 
+Análise dos dados
+=================
 
+Tratamento inicial dos dados
+----------------------------
 
-- carrega o bd, neste caso, versão excel
-- faz o tratamento dos dados
-- grava o db para o disco - dadosM.csv
-- agrupa os dados por categoria (tipos de gastos) e faz um sumário calculando os totais
-- cria uma paleta de cores brewer para 20 categorias
-- plota os totais por categoria, um painel para cada ano
-- após o refinamento dos dados, através da análise dos plots 1 a 3, grava o db para o disco - totais.rds e dados-fitlrados.rds
-- faz a análise exploratória
-- trata os dados de acordo com as necessidades apontadas na análise
-
-## O que este script faz: analiseFin.R
-
-
-- plota gráficos para a análise financeira
-
-
-## Como são tratados os dados:
-
-- removendo NA, que neste caso só corresponde às linhas que não possuem data, são apenas 
-formatação do excel: complete.cases()
-- renomeando algumas variáveis, formatando seus nomes e seu conteúdo para lower case, para facilitar o uso das vars
-- acertando formatos de data e descrição, pacote lubridate
-- adicionando as cols mes e ano, para facilitar o plot por painéis
-- filtrando as informações que interessam, ou seja, somente da conta itau
-- datas acima de 01-01-15, vamos considerar que eu não usava bem o app antes disso
-- datas abaixo de 25-03-2017, quando o arquivo foi gerado (pq o db tem dados de 
-"previsão de gastos" até o fim do ano
-- removendo as colunas indesejadas
-- os dados são tratados novamente conforme o andamento da análise exploratória
-
-
-## Análise exploratória para tratamento dos dados
+Antes de procurar estabelecer qualquer correlação, vamos primeiramente
+analisar os dados exportados pela plataforma, procurando avaliar sua
+qualidade e quais são as transformações necessárias para o seu uso.
 
 ### Gráfico 1
 
-![plot1](plot1.png)
+![](readme_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
-Analisando o primeiro plot, vemos que há problemas em mar-2015, pagamentos, e em jan/mar-2017 alimentação: pontos fora do gráfico
+Analisando o primeiro gráfico, vemos que há problemas em março de 2015,
+tipo pagamentos.
 
-olhamos mais de perto para estes dados e verificamos que os valores de previsão não foram retirados após o final de alguns meses, portanto podemos tirar estes pontos do gráfico. Além disso, consta um lançamento referente a pagamento de cc, mas não é assim que eu uso o programa.
+Vamos olhar este ponto fora do gráfico mais de perto:
 
-Assim, filtrar os dados novamente para retirar todas as lihas onde descrição contenha "previsão" ou "visa", usando grep.
+<table>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+<th align="right">valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-03-25</td>
+<td align="left">2015</td>
+<td align="left">Mar</td>
+<td align="left">pagamentos</td>
+<td align="left">pagamento parcial-visa</td>
+<td align="right">4077</td>
+</tr>
+<tr class="even">
+<td align="left">2015-03-10</td>
+<td align="left">2015</td>
+<td align="left">Mar</td>
+<td align="left">pagamentos</td>
+<td align="left">banco</td>
+<td align="right">41</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-03-10</td>
+<td align="left">2015</td>
+<td align="left">Mar</td>
+<td align="left">pagamentos</td>
+<td align="left">saque</td>
+<td align="right">90</td>
+</tr>
+<tr class="even">
+<td align="left">2015-03-07</td>
+<td align="left">2015</td>
+<td align="left">Mar</td>
+<td align="left">pagamentos</td>
+<td align="left">saque</td>
+<td align="right">230</td>
+</tr>
+</tbody>
+</table>
 
-Agora podemos gerar o plot 2
+Da tabela acima, podemos observar que consta um lançamento referente a
+pagamento de cartão de crédito, mas não é assim que o restante dos
+lançamentos foram feitos: não foram registrados totais. Este, portanto,
+foi um erro de uso da plataforma. Vamos, portanto, retirar este ponto da
+análise.
+
+Além disso, verifica-se que todas as despesas pagas no cartão de crédito
+ficaram registradas na data de vencimento do cartão, dia 25.
+
+<table>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+<th align="right">valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">corolla</td>
+<td align="left">webmotors (1/3)</td>
+<td align="right">49.97</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">saúde</td>
+<td align="left">coop capuava (2/3)</td>
+<td align="right">53.76</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">transporte</td>
+<td align="left">auto posto miro</td>
+<td align="right">30.00</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">corolla</td>
+<td align="left">mercadopago (1/3)</td>
+<td align="right">52.04</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">coop capuava</td>
+<td align="right">15.25</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">compras pão de açúcar</td>
+<td align="right">475.00</td>
+</tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+<th align="right">valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">pao do marques</td>
+<td align="right">10.34</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">investimento</td>
+<td align="left">uber*uber</td>
+<td align="right">7.39</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+<td align="right">88.82</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">lazer</td>
+<td align="left">bruti s cafe e lanches</td>
+<td align="right">12.50</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">assai atacadista</td>
+<td align="right">482.89</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">fast food</td>
+<td align="left">divino fogao c t da fa</td>
+<td align="right">19.83</td>
+</tr>
+</tbody>
+</table>
+
+Desta forma, não é possível dizer se a despesa foi feita no mês anterior
+ou no próprio mês. Ela apenas foi paga no mês onde é lançada. Uma vez
+que a fatura deste cartão é fechada no dia 15, todas as compras
+realizadas a partir do dia 16 são cobradas apenas na próxima fatura.
+
+No entanto, como isso ocorre para todos os dados da mesma forma, não há
+impacto impeditivo na análise.
 
 ### Gráfico 2
 
-![plot2](plot2.png)
+![](readme_files/figure-markdown_strict/unnamed-chunk-13-1.png)
 
+Como podemos ver no gráfico 2, não há mais pontos obviamente fora do
+gráfico, todos os erros de coleta dados foram filtrados.
 
-Analisando o 2nd gráfico, vemos que ainda há problemas com os lançamentos de 2017: valores altos de alimentação para jan e mar, 0 em fev.
+O próximo passo é estudar os tipos de despesas que mais se destacam:
+alimentação, pagamentos e corolla.
 
-Vou ter que verificar os dados no servidor, para exportar novamente o db e recomeçar.
+Análise por tipo de despesa: Alimentação
+----------------------------------------
 
-Por hora, vamos apenas remover 2017 e fazer o plot 3
-
-### Gráfico 3
-
-![plot3](plot3.png)
-
-
-Como podemos ver no gráfico 3, não há mais pontos obviamente fora do gráfico, todos os erros de coleta dados. de  vamos gravar os dados em totais.csv e dados-filtrados.csv.
-
-O próximo passo é estudar as categorias que mais se destacam: alimentação, pagamentos e corolla, fazendo subset para cada categoria
-
-
-## Análise exploratória - Finanças
-
-
-### Alimentação
-
-![alimentacao](plot-alim.png)
+![](readme_files/figure-markdown_strict/unnamed-chunk-14-1.png)
 
 Observa-se:
 
-- tendência a aumento de gastos em maio. Fazendo um subset dos dados, verifica-se que isso ocorre porque as compras para a páscoa são pagas em maio, cc
-- portanto, vigiar o cartão em abril
-- tendência a aumento de gastos em julho. Fazendo um subset dos dados, verifica-se que isso ocorreu em 2016 porque foram feitas 2 compras no mes, para aproveitar uma promoção. Vê-se que este gasto despenca até setembro, voltando a subir em agosto, próx compra
-- sobe e desce: as compras maiores não são feitas todo mes
+-   tendência a aumento de gastos em maio.
+-   tendência a aumento de gastos em julho.
+-   sobe e desce: as compras maiores não são feitas todo mês
 
+Vamos analisar a tabela de dados:
 
+<table>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+<th align="right">valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">18-04 mercado</td>
+<td align="right">405.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">12-04 feira</td>
+<td align="right">130.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">25-04 feira</td>
+<td align="right">103.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">19-04 feira</td>
+<td align="right">90.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">19-04 feira</td>
+<td align="right">90.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">09-05 feira</td>
+<td align="right">89.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">25-04 camarao</td>
+<td align="right">88.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">02-05 feira</td>
+<td align="right">86.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">09-05 mercado</td>
+<td align="right">59.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">16-06 compras</td>
+<td align="right">566.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">04-07 feira</td>
+<td align="right">138.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">27-06 feira</td>
+<td align="right">103.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">29-06 walmart</td>
+<td align="right">85.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">11-09 feira</td>
+<td align="right">76.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">20-06 feira</td>
+<td align="right">72.00</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">assai atacadista</td>
+<td align="right">430.14</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+<td align="right">108.76</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+<td align="right">86.93</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+<td align="right">85.80</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+<td align="right">83.42</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">coop capuava</td>
+<td align="right">67.72</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">coop capuava</td>
+<td align="right">64.20</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">coop capuava</td>
+<td align="right">60.53</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">May</td>
+<td align="left">alimentação</td>
+<td align="left">carrefour sto 248</td>
+<td align="right">50.25</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">assai atacadista</td>
+<td align="right">482.89</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">compras pão de açúcar</td>
+<td align="right">475.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+<td align="right">117.15</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+<td align="right">92.55</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+<td align="right">88.82</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+<td align="right">74.67</td>
+</tr>
+</tbody>
+</table>
 
+Da tabela acima, verifica-se que o aumento em maio ocorre porque as
+compras para a páscoa são pagas em maio, no cartão de crédito.
 
-### Pagamentos
+Além disso, o aumento em julho de 2016 ocorreu porque foram feitas 2
+compras mensais, para aproveitar uma promoção. Vê-se que este gasto cai
+até setembro, voltando a subir em outubro, próxima compra mensal.
 
-![Pagamentos](plot-pag2.png)
+Portanto, verifica-se que há tendência para gastos extras com a páscoa.
+
+Análise por tipo de despesa: Pagamentos
+---------------------------------------
+
+![](readme_files/figure-markdown_strict/unnamed-chunk-16-1.png)
 
 Observa-se:
 
-- aumento bizarro em 2015 de fev a set. Fazendo um subset, verifica-se que isso ocorreu porque a cada vez que as metas de economia não eram alcançadas, o valor gasto a mais era lançado no mês seguinte como déficit, atingindo o pico em agosto. 
-- Por outro lado, verifica-se que nunca mais houve deficit. 
-- Em setembro de 2015 abrimos a loja de roupas da aline, o valor investido foi parcelado e lançado nesta categoria.
+-   aumento significativo de de fevereiro a setembro de 2015.
 
+Vamos analisar a tabela de dados, em especial para valores acima de
+R$200,00:
 
-### Corolla
+<table>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+<th align="right">valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-02-26</td>
+<td align="left">2015</td>
+<td align="left">Feb</td>
+<td align="left">pagamentos</td>
+<td align="left">25-02 saque</td>
+<td align="right">250</td>
+</tr>
+<tr class="even">
+<td align="left">2015-03-07</td>
+<td align="left">2015</td>
+<td align="left">Mar</td>
+<td align="left">pagamentos</td>
+<td align="left">saque</td>
+<td align="right">230</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-04-01</td>
+<td align="left">2015</td>
+<td align="left">Apr</td>
+<td align="left">pagamentos</td>
+<td align="left">defict mes anterior</td>
+<td align="right">230</td>
+</tr>
+<tr class="even">
+<td align="left">2015-05-01</td>
+<td align="left">2015</td>
+<td align="left">May</td>
+<td align="left">pagamentos</td>
+<td align="left">defict mes anterior</td>
+<td align="right">230</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-06-01</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">pagamentos</td>
+<td align="left">deficit mês anterior</td>
+<td align="right">470</td>
+</tr>
+<tr class="even">
+<td align="left">2015-07-01</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">pagamentos</td>
+<td align="left">defict mes anterior</td>
+<td align="right">766</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-08-03</td>
+<td align="left">2015</td>
+<td align="left">Aug</td>
+<td align="left">pagamentos</td>
+<td align="left">deficit mês anterior</td>
+<td align="right">250</td>
+</tr>
+<tr class="even">
+<td align="left">2015-09-01</td>
+<td align="left">2015</td>
+<td align="left">Sep</td>
+<td align="left">pagamentos</td>
+<td align="left">deficit mês anterior</td>
+<td align="right">490</td>
+</tr>
+</tbody>
+</table>
 
-![Corolla](plot-cor.png)
+Verifica-se que este aumento ocorreu porque a cada vez que as metas de
+economia não eram alcançadas, o valor gasto acima da meta era lançado no
+mês seguinte como déficit, atingindo o pico em agosto.
+
+Por outro lado, verifica-se que nunca mais houve deficit.
+
+Análise por tipo de despesa: Corolla
+------------------------------------
+
+![](readme_files/figure-markdown_strict/unnamed-chunk-18-1.png)
 
 Observa-se:
 
-- valores altos de agosto a nov de 2015: Fazendo um subset, verifica-se que isso ocorreu porque em agosto foi renovado o seguro, em 4x, isso explica as altas até nov;
-- e em setembro foi feita uma manutenção de 10k, também parcelada em 4x
-- queda a partir de jul-16: venda do carro em julho
+-   valores altos de agosto a novembro de 2015
+-   queda a partir de jul-16
 
+<table>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+<th align="right">valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-08-23</td>
+<td align="left">2015</td>
+<td align="left">Aug</td>
+<td align="left">corolla</td>
+<td align="left">seguro corolla (1/4)</td>
+<td align="right">577.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-08-25</td>
+<td align="left">2015</td>
+<td align="left">Aug</td>
+<td align="left">corolla</td>
+<td align="left">suspensão corolla (2/3)</td>
+<td align="right">166.66</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-08-25</td>
+<td align="left">2015</td>
+<td align="left">Aug</td>
+<td align="left">corolla</td>
+<td align="left">02-04 bateria (5/5)</td>
+<td align="right">65.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-08-19</td>
+<td align="left">2015</td>
+<td align="left">Aug</td>
+<td align="left">corolla</td>
+<td align="left">ducha</td>
+<td align="right">10.50</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-09-23</td>
+<td align="left">2015</td>
+<td align="left">Sep</td>
+<td align="left">corolla</td>
+<td align="left">seguro corolla (2/4)</td>
+<td align="right">577.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-09-25</td>
+<td align="left">2015</td>
+<td align="left">Sep</td>
+<td align="left">corolla</td>
+<td align="left">manutenção corolla 190k (1/4)</td>
+<td align="right">193.75</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-09-25</td>
+<td align="left">2015</td>
+<td align="left">Sep</td>
+<td align="left">corolla</td>
+<td align="left">suspensão corolla (3/3)</td>
+<td align="right">166.66</td>
+</tr>
+<tr class="even">
+<td align="left">2015-09-01</td>
+<td align="left">2015</td>
+<td align="left">Sep</td>
+<td align="left">corolla</td>
+<td align="left">lavagem carro</td>
+<td align="right">30.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-09-23</td>
+<td align="left">2015</td>
+<td align="left">Sep</td>
+<td align="left">corolla</td>
+<td align="left">lavagem carro</td>
+<td align="right">10.00</td>
+</tr>
+<tr class="even">
+<td align="left">2015-10-23</td>
+<td align="left">2015</td>
+<td align="left">Oct</td>
+<td align="left">corolla</td>
+<td align="left">seguro corolla (3/4)</td>
+<td align="right">577.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-10-25</td>
+<td align="left">2015</td>
+<td align="left">Oct</td>
+<td align="left">corolla</td>
+<td align="left">manutenção corolla 190k (2/4)</td>
+<td align="right">193.75</td>
+</tr>
+<tr class="even">
+<td align="left">2015-11-23</td>
+<td align="left">2015</td>
+<td align="left">Nov</td>
+<td align="left">corolla</td>
+<td align="left">seguro corolla (4/4)</td>
+<td align="right">577.00</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-11-25</td>
+<td align="left">2015</td>
+<td align="left">Nov</td>
+<td align="left">corolla</td>
+<td align="left">manutenção corolla 190k (3/4)</td>
+<td align="right">193.75</td>
+</tr>
+<tr class="even">
+<td align="left">2015-12-28</td>
+<td align="left">2015</td>
+<td align="left">Dec</td>
+<td align="left">corolla</td>
+<td align="left">manutenção corolla 190k (4/4)</td>
+<td align="right">193.75</td>
+</tr>
+</tbody>
+</table>
 
-# Conclusão
+Verifica-se que isso ocorreu porque em agosto de 2015 foi renovado o
+seguro, em 4x, isso explica as altas até novembro; em setembro foi feita
+uma manutenção de 10k, também parcelada em 4x.
+
+Por outro lado, a queda a partir de julho de 2016 é explicada pela venda
+do carro neste mesmo mês.
+
+Conclusão
+=========
 
 Entre 2015 e 2016, verificamos que:
 
-- os valores mais altos estão em alimentação, pagamentos e corolla
-- deve-se tomar cuidado com os gastos para a páscoa
-- havia um déficit em 2015, mas foi superado
-- o seguro do carro era uma pancada, e as manutenções mantinham as médias de gasto mensal na casa dos R$500, mas esse problema acabou com a venda do carro.
+-   os valores mais altos estão em alimentação, pagamentos e corolla
+-   deve-se tomar cuidado com os gastos para a páscoa
+-   havia um déficit em 2015, mas foi superado
+-   o seguro do carro era uma pancada, e as manutenções mantinham as
+    médias de gasto mensal na casa dos R$500, mas esse problema acabou
+    com a venda do carro.
+
+<!-- # render("analise.Rmd", output_format = "md_document", output_file="readme.md") -->

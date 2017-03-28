@@ -1,0 +1,255 @@
+# Objetivo
+
+Analisar uma planilha de gastos domésticos registrados ao longo dos anos e verificar a existência de tendências relacionadas à estações do ano, datas comemorativas ou datas-chave.
+
+Os dados foram gerados pela plataforma mobils, um app android que registra despesas realizadas, armazena os dados na núvem e permite a posterior exportação destes dados.
+
+https://web.mobills.com.br
+
+
+# Análise dos dados
+
+## Tratamento inicial dos dados
+
+Antes de procurar estabelecer qualquer correlação, vamos primeiramente analizar os dados exportados pela plataforma, procurando avaliar sua qualidade e quais são as transformações necessárias para o seu uso.
+
+```{r echo = FALSE}
+library(data.table)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(RColorBrewer)
+library(gridExtra)
+library(knitr)
+
+#versão csv
+arquivo <- "data/mobills-2015a2017-03.csv"
+dados <- read.csv(arquivo)
+
+```
+
+```{r echo = FALSE}
+# tratando o banco de dados
+
+dadosT <- tbl_df(dados)
+names(dadosT) <- tolower(names(dadosT)) # para facilitar o uso das vars
+
+# # filtrando as informações que interessam, ou seja, somente da conta itau # e
+# datas acima de 01-01-15, vamos considerar que eu não usava bem o app antes
+# disso e abaixo de 01-01-2017, porque quando este banco de dados foi gerado
+# ainda não havia muita # informação sobre 2017
+# Além disso, transformar tudo para lowercase, converter formato de datas,
+# renomear variáveis, selecionar as que interessam, criar variável mês 
+
+
+dadosT <- dadosT %>% rename(tipo = category, valor = amount, descrição = description) %>%
+                mutate(data = parse_date_time(date, "dmY"), 
+                       descrição = tolower(as.character(descrição)), 
+                       tipo = factor(tolower(as.character(tipo))), 
+                       valor = as.numeric(as.character(gsub(",","", valor))),
+                       mes = month(data, label=TRUE),
+                       ano = factor(ano)
+                ) %>%
+                filter(data >= as.Date("2015-01-01") & data < as.Date("2017-01-01")) %>%
+                select(data, ano, mes, tipo, descrição, valor, cartao)
+
+```
+
+```{r echo = FALSE}
+# Vamos agrupar os dados por tipo de gasto, ano e mes, e depois calcular o total de gastos em cada categoria
+
+dadosM <- tbl_df(dadosT)
+dadosM <- group_by(dadosM, tipo, ano, mes)
+saveRDS(dadosM, "dadosM.rds")
+totais <- summarise(dadosM, total=sum(valor))
+saveRDS(totais, "totais.rds")
+```
+
+
+### Gráfico 1
+
+```{r echo = FALSE}
+# o gráfico
+# as cores:
+# Neste caso, temos 20 cat, mas somente 9 cores na paleta brewer padrao
+
+colourCount = length(unique(totais$tipo))
+getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+
+
+plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
+
+(plt +  geom_line() + geom_point() +
+                scale_colour_manual(values = getPalette(colourCount))+
+                facet_grid(ano ~., scale = "free") + 
+                labs(title="Gastos por categoria", y="Total (R$)") + 
+                theme(plot.title = element_text(hjust = 0.5)) 
+)
+
+```
+
+Analisando o primeiro gráfico, vemos que há problemas em março de 2015, tipo pagamentos. 
+
+Vamos olhar este ponto fora do gráfico mais de perto:
+
+
+```{r echo = FALSE}
+
+# vamos ver do q se trata, para talvez remover do gráfico
+
+sub <- with(dadosM, ano==2015 & mes=="Mar" & tipo=="pagamentos" )
+
+kable(dadosM[which(sub),])
+```
+
+Da tabela acima, podemos observar que consta um lançamento referente a pagamento de cartão de crédito, mas não é assim que o restante dos lançamentos foram feitos: não foram registrados totais. Este, portanto, foi um erro de uso da plataforma. Vamos retirar este ponto da análise e passar para a próxima etapa.
+
+```{r echo = FALSE}
+
+sub <- with(dadosM, ano==2015 & mes=="Mar" & tipo=="pagamentos" & valor > 4000)
+dadosFil <- dadosM[which(!sub),]
+dadosFil <- group_by(dadosFil, tipo, ano, mes)
+totais <- summarise(dadosFil, total=sum(valor))
+
+```
+
+
+### Gráfico 2
+
+```{r echo = FALSE}
+plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
+
+(plt +  geom_line() + geom_point() +
+                scale_colour_manual(values = getPalette(colourCount))+
+                facet_grid(ano ~., scale="free") + 
+                labs(title="Gastos por categoria", y="Total (R$)") + 
+                theme(plot.title = element_text(hjust = 0.5)) 
+)
+
+```
+
+Como podemos ver no gráfico 2, não há mais pontos obviamente fora do gráfico, todos os erros de coleta dados foram filtrados. 
+
+O próximo passo é estudar os tipos de despesas que mais se destacam: alimentação, pagamentos e corolla.
+
+
+## Análise por tipo de despesa: Alimentação
+
+
+
+```{r echo = FALSE}
+
+#  vamos salvar os dados
+saveRDS(dadosFil, "dados-filtrados.rds")
+
+totais <- data.table(totais)
+totais <- totais[, media := mean(total), by = list(tipo,ano)]
+saveRDS(totais, "totais.rds")
+
+#devidos subsets
+
+totais.alim <- totais[totais$tipo=="alimentação",]
+
+plt.alim <- ggplot(totais.alim, aes(x=mes, y=total, group=ano, colour=ano))
+
+
+(plt.alim +  geom_line() + 
+                geom_point(size=0.5, alpha=0.5) +
+                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                labs(title="Gastos com pagamentos", y="Total (R$)", x="Mês") +
+                
+                theme(plot.title = element_text(hjust = 0.5)) 
+)
+
+```
+
+
+
+
+
+
+<!-- dados.alim <- dadosFil %>% filter(mes %in% c("May","Jul") & tipo=="alimentação") %>% -->
+<!--         arrange(ano, mes, desc(valor)) -->
+
+<!-- View(dados.alim) -->
+
+
+<!-- #pagamentos -->
+
+<!-- dt.pag <- dt[dt$tipo=="pagamentos",] -->
+<!-- dt.pag[, erro := desvio/sqrt(length(unique(total))), by = list(ano)] -->
+
+<!-- plt.pag <- ggplot(dt.pag, aes(x=mes, y=total, group=ano, colour=ano)) -->
+
+
+<!-- (plt.pag +  geom_line() +  -->
+<!--                 geom_point(size=0.5, alpha=0.5) + -->
+<!--                 # facet_grid(ano ~., scale="free") + -->
+<!--                 # geom_smooth(colour="black", linetype=3, alpha=0.2) + -->
+<!--                 # geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) + -->
+<!--                 geom_hline(aes(yintercept = media, colour = ano), linetype=2) + -->
+<!--                 labs(title="Gastos com pagamentos", y="Total (R$)") +  -->
+<!--                 theme(plot.title = element_text(hjust = 0.5))  -->
+<!-- ) -->
+
+<!-- dev.copy(png, file="plot-pag2.png") -->
+<!-- dev.off() -->
+
+
+<!-- #analisar 2015 - pagamentos -->
+
+<!-- dados.pag <- dadosFil %>% filter(ano %in% c(2015) & tipo=="pagamentos") %>% -->
+<!--         arrange(ano, mes, desc(valor)) -->
+
+<!-- View(dados.pag) -->
+
+<!-- #corolla -->
+
+<!-- dt.cor <- dt[dt$tipo=="corolla",] -->
+<!-- dt.cor[, erro := desvio/sqrt(length(unique(total))), by = list(ano)] -->
+
+<!-- plt.cor <- ggplot(dt.cor, aes(x=mes, y=total, group=ano, colour=ano)) -->
+
+
+<!-- (plt.cor +  geom_line() +  -->
+<!--                 geom_point(size=0.5, alpha=0.5) + -->
+<!--                 # facet_grid(ano ~., scale="free") + -->
+<!--                 # geom_smooth(colour="black", linetype=3, alpha=0.2) + -->
+<!--                 # geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) + -->
+<!--                 geom_hline(aes(yintercept = media, colour = ano), linetype=2) + -->
+<!--                 labs(title="Gastos com carro", y="Total (R$)") +  -->
+<!--                 theme(plot.title = element_text(hjust = 0.5))  -->
+<!-- ) -->
+
+<!-- dev.copy(png, file="plot-cor.png") -->
+<!-- dev.off() -->
+
+
+<!-- #analisar 2015 -->
+
+<!-- dados.cor <- dadosFil %>% filter(ano %in% c(2015) & tipo=="corolla") %>% -->
+<!--         arrange(ano, mes, desc(valor)) -->
+
+<!-- View(dados.cor) -->
+
+
+
+
+
+<!-- ############## -->
+<!-- # o plot abaixo arrancaria os pontos fora na unha: -->
+<!-- #  -->
+<!-- # plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo)) -->
+<!-- #  -->
+<!-- # (plt +  geom_line() + geom_point() + ylim(0,1750) + -->
+<!-- #                 scale_colour_manual(values = getPalette(colourCount))+ -->
+<!-- #                 facet_grid(ano ~.) +  -->
+<!-- #                 labs(title="Gastos por categoria", y="Total (R$)") +  -->
+<!-- #                 theme(plot.title = element_text(hjust = 0.5))  -->
+<!-- #         # guides(fill=FALSE) -->
+<!-- # ) -->
+
+<!-- # render("readme.Rmd", output_format = "md_document") -->
+
+
+
