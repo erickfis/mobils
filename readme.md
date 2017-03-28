@@ -46,7 +46,7 @@ formatação do excel: complete.cases()
 
 Analisando o primeiro plot, vemos que há problemas em mar-2015, pagamentos, e em jan/mar-2017 alimentação: pontos fora do gráfico
 
-Fazendo subsets, olhamos mais de perto para estes dados e verificamos que os valores de previsão não foram retirados após o final de alguns meses, portanto podemos tirar estes pontos do gráfico. Além disso, consta um lançamento referente a pagamento de cc, mas não é assim que eu uso o programa.
+olhamos mais de perto para estes dados e verificamos que os valores de previsão não foram retirados após o final de alguns meses, portanto podemos tirar estes pontos do gráfico. Além disso, consta um lançamento referente a pagamento de cc, mas não é assim que eu uso o programa.
 
 Assim, filtrar os dados novamente para retirar todas as lihas onde descrição contenha "previsão" ou "visa", usando grep.
 
@@ -68,7 +68,7 @@ Por hora, vamos apenas remover 2017 e fazer o plot 3
 ![plot3](plot3.png)
 
 
-Tudo ok, vamos gravar os dados em totais.csv e dados-filtrados.csv.
+Como podemos ver no gráfico 3, não há mais pontos obviamente fora do gráfico, todos os erros de coleta dados. de  vamos gravar os dados em totais.csv e dados-filtrados.csv.
 
 O próximo passo é estudar as categorias que mais se destacam: alimentação, pagamentos e corolla, fazendo subset para cada categoria
 
