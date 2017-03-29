@@ -102,7 +102,7 @@ plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
 (plt +  geom_line() + geom_point() +
                 scale_colour_manual(values = getPalette(colourCount))+
                 facet_grid(ano ~., scale = "free") + 
-                labs(title="Gastos por categoria", y="Total (R$)") + 
+                labs(title="Gastos por tipo de despesa", y="Total (R$)") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
 )
 
@@ -161,7 +161,7 @@ plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
 (plt +  geom_line() + geom_point() +
                 scale_colour_manual(values = getPalette(colourCount))+
                 facet_grid(ano ~., scale="free") + 
-                labs(title="Gastos por categoria", y="Total (R$)") + 
+                labs(title="Gastos por tipo de despesa", y="Total (R$)") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
 )
 
