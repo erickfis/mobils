@@ -237,8 +237,9 @@ Análise por tipo de despesa: Alimentação
 
 Observa-se:
 
--   tendência a aumento de gastos em maio.
--   tendência a aumento de gastos em julho.
+-   tendência a aumento de gastos em maio
+-   tendência a aumento de gastos em julho
+-   aumento da média em 2016
 -   sobe e desce: as compras maiores não são feitas todo mês
 
 Vamos analisar a tabela de dados:
@@ -501,11 +502,14 @@ Vamos analisar a tabela de dados:
 Da tabela acima, verifica-se que o aumento em maio ocorre porque as
 compras para a páscoa são pagas em maio, no cartão de crédito.
 
+Portanto, verifica-se que há tendência para gastos extras com a páscoa.
+
 Além disso, o aumento em julho de 2016 ocorreu porque foram feitas 2
 compras mensais, para aproveitar uma promoção. Vê-se que este gasto cai
 até setembro, voltando a subir em outubro, próxima compra mensal.
 
-Portanto, verifica-se que há tendência para gastos extras com a páscoa.
+O aumento da média em 2016 ocorre porque, além dos fatores acima, em
+março 2015 os gastos não foram registrados.
 
 Análise por tipo de despesa: Pagamentos
 ---------------------------------------
@@ -613,6 +617,8 @@ Observa-se:
 
 -   valores altos de agosto a novembro de 2015
 -   queda a partir de jul-16
+
+Vamos analisar a tabela de dados:
 
 <table>
 <thead>
