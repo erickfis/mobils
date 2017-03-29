@@ -23,7 +23,7 @@ qualidade e quais são as transformações necessárias para o seu uso.
 
 ### Gráfico 1
 
-![](readme_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](readme_files/figure-markdown_strict/plot1-1.png)
 
 Analisando o primeiro gráfico, vemos que há problemas em março de 2015,
 tipo pagamentos.
@@ -222,7 +222,7 @@ impacto impeditivo na análise.
 
 ### Gráfico 2
 
-![](readme_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![](readme_files/figure-markdown_strict/plot2-1.png)
 
 Como podemos ver no gráfico 2, não há mais pontos obviamente fora do
 gráfico, todos os erros de coleta dados foram filtrados.
@@ -233,7 +233,7 @@ alimentação, pagamentos e corolla.
 Análise por tipo de despesa: Alimentação
 ----------------------------------------
 
-![](readme_files/figure-markdown_strict/unnamed-chunk-12-1.png)
+![](readme_files/figure-markdown_strict/alimentacao-1.png)
 
 Observa-se:
 
@@ -510,7 +510,7 @@ Portanto, verifica-se que há tendência para gastos extras com a páscoa.
 Análise por tipo de despesa: Pagamentos
 ---------------------------------------
 
-![](readme_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+![](readme_files/figure-markdown_strict/plot-pagamentos-1.png)
 
 Observa-se:
 
@@ -607,7 +607,7 @@ Por outro lado, verifica-se que nunca mais houve deficit.
 Análise por tipo de despesa: Corolla
 ------------------------------------
 
-![](readme_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+![](readme_files/figure-markdown_strict/plot-corolla-1.png)
 
 Observa-se:
 
@@ -756,8 +756,6 @@ Entre 2015 e 2016, verificamos que:
 -   os valores mais altos estão em alimentação, pagamentos e corolla
 -   deve-se tomar cuidado com os gastos para a páscoa
 -   havia um déficit em 2015, mas foi superado
--   o seguro do carro era uma pancada, e as manutenções mantinham as
-    médias de gasto mensal na casa dos R$500, mas esse problema acabou
-    com a venda do carro.
-
-<!-- # render("analise.Rmd", output_format = "md_document", output_file="readme.md") -->
+-   o seguro do carro tinha um valor elevado e as manutenções mantinham
+    as médias de gasto mensal na casa dos R$500, mas esse problema
+    acabou com a venda do carro.

@@ -3,3 +3,6 @@ unnamed-chunk-4	dadosT	.Random.seed
 unnamed-chunk-5	dadosM	totais
 unnamed-chunk-9	dadosFil	sub	totais
 unnamed-chunk-11	totais
+load-e-tratamento	arquivo	dados	dadosM	dadosT	totais	.Random.seed
+filtra-dados	dadosFil	sub	totais
+salvando	totais

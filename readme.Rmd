@@ -12,7 +12,7 @@ opts_chunk$set(echo = FALSE, message = FALSE,
 
 ```
 
-```{r}
+```{r libraries}
 library(data.table)
 library(dplyr)
 library(lubridate)
@@ -39,17 +39,12 @@ https://web.mobills.com.br
 
 Antes de procurar estabelecer qualquer correlação, vamos primeiramente analisar os dados exportados pela plataforma, procurando avaliar sua qualidade e quais são as transformações necessárias para o seu uso.
 
-```{r cache=TRUE}
-
-
+```{r load-e-tratamento, cache=TRUE}
 
 #versão csv
 arquivo <- "data/mobills-2015a2017-03.csv"
 dados <- read.csv(arquivo)
 
-```
-
-```{r cache=TRUE}
 # tratando o banco de dados
 
 dadosT <- tbl_df(dados)
@@ -77,10 +72,6 @@ dadosT <- dadosT %>% rename(tipo = category, valor = amount, descrição = descr
                 select(data, ano, mes, tipo, descrição, valor, cartao)
 
 
-
-```
-
-```{r cache=TRUE}
 # Vamos agrupar os dados por tipo de gasto, ano e mes, e depois calcular o total de gastos em cada categoria
 
 dadosM <- tbl_df(dadosT)
@@ -93,7 +84,7 @@ saveRDS(totais, "totais.rds")
 
 ### Gráfico 1
 
-```{r}
+```{r plot1}
 # o gráfico
 # as cores:
 # Neste caso, temos 20 cat, mas somente 9 cores na paleta brewer padrao
@@ -107,7 +98,7 @@ plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
 (plt +  geom_line() + geom_point() +
                 scale_colour_manual(values = getPalette(colourCount))+
                 facet_grid(ano ~., scale = "free") + 
-                labs(title="Gastos por tipo de despesa", y="Total (R$)") + 
+                labs(title="Gastos por tipo de despesa", y="Total (R$)", x="Mês") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
 )
 
@@ -118,7 +109,7 @@ Analisando o primeiro gráfico, vemos que há problemas em março de 2015, tipo 
 Vamos olhar este ponto fora do gráfico mais de perto:
 
 
-```{r}
+```{r tabela1}
 
 # vamos ver do q se trata, para talvez remover do gráfico
 
@@ -131,7 +122,7 @@ Da tabela acima, podemos observar que consta um lançamento referente a pagament
 
 Além disso, verifica-se que todas as despesas pagas no cartão de crédito ficaram registradas na data de vencimento do cartão, dia 25. 
 
-```{r}
+```{r tabela2}
 
 # vamos ver do q se trata, para talvez remover do gráfico
 
@@ -148,7 +139,7 @@ Desta forma, não é possível dizer se a despesa foi feita no mês anterior ou 
 
 No entanto, como isso ocorre para todos os dados da mesma forma, não há impacto impeditivo na análise.
 
-```{r cache=TRUE}
+```{r filtra-dados, cache=TRUE}
 
 sub <- with(dadosM, ano==2015 & mes=="Mar" & tipo=="pagamentos" & valor > 4000)
 dadosFil <- dadosM[which(!sub),]
@@ -160,13 +151,13 @@ totais <- summarise(dadosFil, total=sum(valor))
 
 ### Gráfico 2
 
-```{r}
+```{r plot2}
 plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
 
 (plt +  geom_line() + geom_point() +
                 scale_colour_manual(values = getPalette(colourCount))+
                 facet_grid(ano ~., scale="free") + 
-                labs(title="Gastos por tipo de despesa", y="Total (R$)") + 
+                labs(title="Gastos por tipo de despesa", y="Total (R$)", x="Mês") + 
                 theme(plot.title = element_text(hjust = 0.5)) 
 )
 
@@ -177,7 +168,7 @@ Como podemos ver no gráfico 2, não há mais pontos obviamente fora do gráfico
 O próximo passo é estudar os tipos de despesas que mais se destacam: alimentação, pagamentos e corolla.
 
 
-```{r cache=TRUE}
+```{r salvando, cache=TRUE}
 
 #  vamos salvar os dados
 saveRDS(dadosFil, "dados-filtrados.rds")
@@ -190,7 +181,7 @@ saveRDS(totais, "totais.rds")
 
 ## Análise por tipo de despesa: Alimentação
 
-```{r}
+```{r alimentacao}
 #devidos subsets
 
 totais.alim <- totais[totais$tipo=="alimentação",]
@@ -216,7 +207,7 @@ Observa-se:
 
 Vamos analisar a tabela de dados:
 
-```{r}
+```{r tabela-alim}
 dados.alim <- dadosFil %>% filter(mes %in% c("Mai", "Jul") & tipo=="alimentação" & valor > 50) %>%
         arrange(ano, mes, desc(valor))
 kable(dados.alim[,1:6])
@@ -235,7 +226,7 @@ Portanto, verifica-se que há tendência para gastos extras com a páscoa.
 
 ## Análise por tipo de despesa: Pagamentos
 
-```{r}
+```{r plot-pagamentos}
 totais.pag <- totais[totais$tipo=="pagamentos",]
 plt.pag <- ggplot(totais.pag, aes(x=mes, y=total, group=ano, colour=ano))
 
@@ -258,7 +249,7 @@ Observa-se:
 Vamos analisar a tabela de dados, em especial para valores acima de R$200,00:
 
 
-```{r}
+```{r tabela-pag}
 
 dados.pag <- dadosFil %>% filter(ano %in% c(2015) & tipo=="pagamentos" & valor > 200) %>%
         arrange(ano, mes, desc(valor))
@@ -273,7 +264,7 @@ Por outro lado, verifica-se que nunca mais houve deficit.
 
 ## Análise por tipo de despesa: Corolla
 
-```{r}
+```{r plot-corolla}
 totais.cor <- totais[totais$tipo=="corolla",]
 plt.cor <- ggplot(totais.cor, aes(x=mes, y=total, group=ano, colour=ano))
 
@@ -292,7 +283,7 @@ Observa-se:
 - queda a partir de jul-16
 
 
-```{r}
+```{r tabela-cor}
 
 dados.cor <- dadosFil %>% filter(ano %in% c(2015) & tipo=="corolla" & month(data) >= 8) %>%
         arrange(ano, mes, desc(valor))
@@ -313,11 +304,8 @@ Entre 2015 e 2016, verificamos que:
 - os valores mais altos estão em alimentação, pagamentos e corolla
 - deve-se tomar cuidado com os gastos para a páscoa
 - havia um déficit em 2015, mas foi superado
-- o seguro do carro era uma pancada, e as manutenções mantinham as médias de gasto mensal na casa dos R$500, mas esse problema acabou com a venda do carro.
+- o seguro do carro tinha um valor elevado e as manutenções mantinham as médias de gasto mensal na casa dos R$500, mas esse problema acabou com a venda do carro.
 
-
-
-<!-- # render("analise.Rmd", output_format = "md_document", output_file="readme.md") -->
 
 
 
