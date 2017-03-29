@@ -21,6 +21,58 @@ Antes de procurar estabelecer qualquer correlação, vamos primeiramente
 analisar os dados exportados pela plataforma, procurando avaliar sua
 qualidade e quais são as transformações necessárias para o seu uso.
 
+    ## data.table 1.10.4
+
+    ##   The fastest way to learn (by data.table authors): https://www.datacamp.com/courses/data-analysis-the-data-table-way
+
+    ##   Documentation: ?data.table, example(data.table) and browseVignettes("data.table")
+
+    ##   Release notes, videos and slides: http://r-datatable.com
+
+    ## -------------------------------------------------------------------------
+
+    ## data.table + dplyr code now lives in dtplyr.
+    ## Please library(dtplyr)!
+
+    ## -------------------------------------------------------------------------
+
+    ## 
+    ## Attaching package: 'dplyr'
+
+    ## The following objects are masked from 'package:data.table':
+    ## 
+    ##     between, first, last
+
+    ## The following objects are masked from 'package:stats':
+    ## 
+    ##     filter, lag
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     intersect, setdiff, setequal, union
+
+    ## 
+    ## Attaching package: 'lubridate'
+
+    ## The following objects are masked from 'package:data.table':
+    ## 
+    ##     hour, isoweek, mday, minute, month, quarter, second, wday,
+    ##     week, yday, year
+
+    ## The following object is masked from 'package:base':
+    ## 
+    ##     date
+
+    ## Find out what's changed in ggplot2 at
+    ## http://github.com/tidyverse/ggplot2/releases.
+
+    ## 
+    ## Attaching package: 'gridExtra'
+
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     combine
+
 ### Gráfico 1
 
 ![](readme_files/figure-markdown_strict/unnamed-chunk-4-1.png)
