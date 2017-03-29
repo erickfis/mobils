@@ -21,6 +21,8 @@ library(ggplot2)
 library(RColorBrewer)
 library(gridExtra)
 library(knitr)
+library(rmarkdown)
+
 
 #versão csv
 arquivo <- "data/mobills-2015a2017-03.csv"
