@@ -1,0 +1,5 @@
+unnamed-chunk-3	read.csv
+unnamed-chunk-4	<	>=	&	%>%	amount	ano	as.character	as.Date	as.numeric	cartao	category	dados	data	date	descrição	description	factor	filter	gsub	mes	month	mutate	names	names<-	parse_date_time	rename	select	tbl_df	tipo	tolower	valor
+unnamed-chunk-5	ano	dadosT	group_by	mes	saveRDS	sum	summarise	tbl_df	tipo	valor
+unnamed-chunk-9	==	>	!	&	ano	dadosM	group_by	mes	sum	summarise	tipo	valor	which	with
+unnamed-chunk-11	:=	ano	dadosFil	data.table	list	mean	media	saveRDS	tipo	total

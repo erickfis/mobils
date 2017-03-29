@@ -1,0 +1,9 @@
+base
+knitr
+data.table
+dplyr
+lubridate
+ggplot2
+RColorBrewer
+gridExtra
+rmarkdown
