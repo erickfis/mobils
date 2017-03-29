@@ -67,11 +67,16 @@ dadosT <- dadosT %>% rename(tipo = category, valor = amount, descrição = descr
                        descrição = tolower(as.character(descrição)), 
                        tipo = factor(tolower(as.character(tipo))), 
                        valor = as.numeric(as.character(gsub(",","", valor))),
-                       mes = month(data, label=TRUE),
+                       mes = factor(months(data, abbreviate=TRUE), 
+                                    levels = c("Jan", "Fev", "Mar", "Abr", "Mai", 
+                                               "Jun", "Jul", "Ago", "Set", "Out", "Nov",
+                                               "Dez"), ordered=TRUE),
                        ano = factor(ano)
                 ) %>%
                 filter(data >= as.Date("2015-01-01") & data < as.Date("2017-01-01")) %>%
                 select(data, ano, mes, tipo, descrição, valor, cartao)
+
+
 
 ```
 
@@ -212,7 +217,7 @@ Observa-se:
 Vamos analisar a tabela de dados:
 
 ```{r}
-dados.alim <- dadosFil %>% filter(mes %in% c("May","Jul") & tipo=="alimentação" & valor > 50) %>%
+dados.alim <- dadosFil %>% filter(mes %in% c("Mai", "Jul") & tipo=="alimentação" & valor > 50) %>%
         arrange(ano, mes, desc(valor))
 kable(dados.alim[,1:6])
 ```

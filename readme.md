@@ -258,7 +258,7 @@ Vamos analisar a tabela de dados:
 <tr class="odd">
 <td align="left">2015-05-25</td>
 <td align="left">2015</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">18-04 mercado</td>
 <td align="right">405.00</td>
@@ -266,7 +266,7 @@ Vamos analisar a tabela de dados:
 <tr class="even">
 <td align="left">2015-05-25</td>
 <td align="left">2015</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">12-04 feira</td>
 <td align="right">130.00</td>
@@ -274,7 +274,7 @@ Vamos analisar a tabela de dados:
 <tr class="odd">
 <td align="left">2015-05-25</td>
 <td align="left">2015</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">25-04 feira</td>
 <td align="right">103.00</td>
@@ -282,7 +282,7 @@ Vamos analisar a tabela de dados:
 <tr class="even">
 <td align="left">2015-05-25</td>
 <td align="left">2015</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">19-04 feira</td>
 <td align="right">90.00</td>
@@ -290,7 +290,7 @@ Vamos analisar a tabela de dados:
 <tr class="odd">
 <td align="left">2015-05-25</td>
 <td align="left">2015</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">19-04 feira</td>
 <td align="right">90.00</td>
@@ -298,7 +298,7 @@ Vamos analisar a tabela de dados:
 <tr class="even">
 <td align="left">2015-05-25</td>
 <td align="left">2015</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">09-05 feira</td>
 <td align="right">89.00</td>
@@ -306,7 +306,7 @@ Vamos analisar a tabela de dados:
 <tr class="odd">
 <td align="left">2015-05-25</td>
 <td align="left">2015</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">25-04 camarao</td>
 <td align="right">88.00</td>
@@ -314,7 +314,7 @@ Vamos analisar a tabela de dados:
 <tr class="even">
 <td align="left">2015-05-25</td>
 <td align="left">2015</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">02-05 feira</td>
 <td align="right">86.00</td>
@@ -322,7 +322,7 @@ Vamos analisar a tabela de dados:
 <tr class="odd">
 <td align="left">2015-05-25</td>
 <td align="left">2015</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">09-05 mercado</td>
 <td align="right">59.00</td>
@@ -378,7 +378,7 @@ Vamos analisar a tabela de dados:
 <tr class="even">
 <td align="left">2016-05-25</td>
 <td align="left">2016</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">assai atacadista</td>
 <td align="right">430.14</td>
@@ -386,7 +386,7 @@ Vamos analisar a tabela de dados:
 <tr class="odd">
 <td align="left">2016-05-25</td>
 <td align="left">2016</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">sacolao saude st</td>
 <td align="right">108.76</td>
@@ -394,7 +394,7 @@ Vamos analisar a tabela de dados:
 <tr class="even">
 <td align="left">2016-05-25</td>
 <td align="left">2016</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">sacolao saude st</td>
 <td align="right">86.93</td>
@@ -402,7 +402,7 @@ Vamos analisar a tabela de dados:
 <tr class="odd">
 <td align="left">2016-05-25</td>
 <td align="left">2016</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">sacolao saude st</td>
 <td align="right">85.80</td>
@@ -410,7 +410,7 @@ Vamos analisar a tabela de dados:
 <tr class="even">
 <td align="left">2016-05-25</td>
 <td align="left">2016</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">sacolao saude st</td>
 <td align="right">83.42</td>
@@ -418,7 +418,7 @@ Vamos analisar a tabela de dados:
 <tr class="odd">
 <td align="left">2016-05-25</td>
 <td align="left">2016</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">coop capuava</td>
 <td align="right">67.72</td>
@@ -426,7 +426,7 @@ Vamos analisar a tabela de dados:
 <tr class="even">
 <td align="left">2016-05-25</td>
 <td align="left">2016</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">coop capuava</td>
 <td align="right">64.20</td>
@@ -434,7 +434,7 @@ Vamos analisar a tabela de dados:
 <tr class="odd">
 <td align="left">2016-05-25</td>
 <td align="left">2016</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">coop capuava</td>
 <td align="right">60.53</td>
@@ -442,7 +442,7 @@ Vamos analisar a tabela de dados:
 <tr class="even">
 <td align="left">2016-05-25</td>
 <td align="left">2016</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">alimentação</td>
 <td align="left">carrefour sto 248</td>
 <td align="right">50.25</td>
@@ -534,7 +534,7 @@ R$200,00:
 <tr class="odd">
 <td align="left">2015-02-26</td>
 <td align="left">2015</td>
-<td align="left">Feb</td>
+<td align="left">Fev</td>
 <td align="left">pagamentos</td>
 <td align="left">25-02 saque</td>
 <td align="right">250</td>
@@ -550,7 +550,7 @@ R$200,00:
 <tr class="odd">
 <td align="left">2015-04-01</td>
 <td align="left">2015</td>
-<td align="left">Apr</td>
+<td align="left">Abr</td>
 <td align="left">pagamentos</td>
 <td align="left">defict mes anterior</td>
 <td align="right">230</td>
@@ -558,7 +558,7 @@ R$200,00:
 <tr class="even">
 <td align="left">2015-05-01</td>
 <td align="left">2015</td>
-<td align="left">May</td>
+<td align="left">Mai</td>
 <td align="left">pagamentos</td>
 <td align="left">defict mes anterior</td>
 <td align="right">230</td>
@@ -582,7 +582,7 @@ R$200,00:
 <tr class="odd">
 <td align="left">2015-08-03</td>
 <td align="left">2015</td>
-<td align="left">Aug</td>
+<td align="left">Ago</td>
 <td align="left">pagamentos</td>
 <td align="left">deficit mês anterior</td>
 <td align="right">250</td>
@@ -590,7 +590,7 @@ R$200,00:
 <tr class="even">
 <td align="left">2015-09-01</td>
 <td align="left">2015</td>
-<td align="left">Sep</td>
+<td align="left">Set</td>
 <td align="left">pagamentos</td>
 <td align="left">deficit mês anterior</td>
 <td align="right">490</td>
@@ -629,7 +629,7 @@ Observa-se:
 <tr class="odd">
 <td align="left">2015-08-23</td>
 <td align="left">2015</td>
-<td align="left">Aug</td>
+<td align="left">Ago</td>
 <td align="left">corolla</td>
 <td align="left">seguro corolla (1/4)</td>
 <td align="right">577.00</td>
@@ -637,7 +637,7 @@ Observa-se:
 <tr class="even">
 <td align="left">2015-08-25</td>
 <td align="left">2015</td>
-<td align="left">Aug</td>
+<td align="left">Ago</td>
 <td align="left">corolla</td>
 <td align="left">suspensão corolla (2/3)</td>
 <td align="right">166.66</td>
@@ -645,7 +645,7 @@ Observa-se:
 <tr class="odd">
 <td align="left">2015-08-25</td>
 <td align="left">2015</td>
-<td align="left">Aug</td>
+<td align="left">Ago</td>
 <td align="left">corolla</td>
 <td align="left">02-04 bateria (5/5)</td>
 <td align="right">65.00</td>
@@ -653,7 +653,7 @@ Observa-se:
 <tr class="even">
 <td align="left">2015-08-19</td>
 <td align="left">2015</td>
-<td align="left">Aug</td>
+<td align="left">Ago</td>
 <td align="left">corolla</td>
 <td align="left">ducha</td>
 <td align="right">10.50</td>
@@ -661,7 +661,7 @@ Observa-se:
 <tr class="odd">
 <td align="left">2015-09-23</td>
 <td align="left">2015</td>
-<td align="left">Sep</td>
+<td align="left">Set</td>
 <td align="left">corolla</td>
 <td align="left">seguro corolla (2/4)</td>
 <td align="right">577.00</td>
@@ -669,7 +669,7 @@ Observa-se:
 <tr class="even">
 <td align="left">2015-09-25</td>
 <td align="left">2015</td>
-<td align="left">Sep</td>
+<td align="left">Set</td>
 <td align="left">corolla</td>
 <td align="left">manutenção corolla 190k (1/4)</td>
 <td align="right">193.75</td>
@@ -677,7 +677,7 @@ Observa-se:
 <tr class="odd">
 <td align="left">2015-09-25</td>
 <td align="left">2015</td>
-<td align="left">Sep</td>
+<td align="left">Set</td>
 <td align="left">corolla</td>
 <td align="left">suspensão corolla (3/3)</td>
 <td align="right">166.66</td>
@@ -685,7 +685,7 @@ Observa-se:
 <tr class="even">
 <td align="left">2015-09-01</td>
 <td align="left">2015</td>
-<td align="left">Sep</td>
+<td align="left">Set</td>
 <td align="left">corolla</td>
 <td align="left">lavagem carro</td>
 <td align="right">30.00</td>
@@ -693,7 +693,7 @@ Observa-se:
 <tr class="odd">
 <td align="left">2015-09-23</td>
 <td align="left">2015</td>
-<td align="left">Sep</td>
+<td align="left">Set</td>
 <td align="left">corolla</td>
 <td align="left">lavagem carro</td>
 <td align="right">10.00</td>
@@ -701,7 +701,7 @@ Observa-se:
 <tr class="even">
 <td align="left">2015-10-23</td>
 <td align="left">2015</td>
-<td align="left">Oct</td>
+<td align="left">Out</td>
 <td align="left">corolla</td>
 <td align="left">seguro corolla (3/4)</td>
 <td align="right">577.00</td>
@@ -709,7 +709,7 @@ Observa-se:
 <tr class="odd">
 <td align="left">2015-10-25</td>
 <td align="left">2015</td>
-<td align="left">Oct</td>
+<td align="left">Out</td>
 <td align="left">corolla</td>
 <td align="left">manutenção corolla 190k (2/4)</td>
 <td align="right">193.75</td>
@@ -733,7 +733,7 @@ Observa-se:
 <tr class="even">
 <td align="left">2015-12-28</td>
 <td align="left">2015</td>
-<td align="left">Dec</td>
+<td align="left">Dez</td>
 <td align="left">corolla</td>
 <td align="left">manutenção corolla 190k (4/4)</td>
 <td align="right">193.75</td>
