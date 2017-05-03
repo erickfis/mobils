@@ -32,16 +32,14 @@ output:
 ```{r knit-rules, echo=FALSE}
 library(knitr)
 
-opts_chunk$set(echo = TRUE, message = FALSE, include = TRUE, 
+opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE, 
                warning = FALSE, autodep = TRUE, options(scipen=999),
                fig.pos = 'H')
 
 ```
 
 
-# Plataforma Mobills - análise de despesas
 
-*erickfis, `r format(Sys.time(), '%Y %B, %d')`*
 
 ```{r child = 'intros.Rmd'}
 ```
