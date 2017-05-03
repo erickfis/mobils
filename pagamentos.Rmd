@@ -1,0 +1,41 @@
+
+
+
+## Análise por tipo de despesa: Pagamentos
+
+```{r plot-pagamentos}
+totais.pag <- totais[totais$tipo=="pagamentos",]
+plt.pag <- ggplot(totais.pag, aes(x=mes, y=total, group=ano, colour=ano))
+
+
+(plt.pag +  geom_line() +
+                geom_point(size=0.5, alpha=0.5) +
+                # facet_grid(ano ~., scale="free") +
+                # geom_smooth(colour="black", linetype=3, alpha=0.2) +
+                # geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
+                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                labs(title="Gastos com pagamentos diversos", y="Total (R$)", x="Mês") +
+                theme(plot.title = element_text(hjust = 0.5))
+)
+```
+
+Observa-se:
+
+- aumento significativo de de fevereiro a setembro de 2015.
+
+Vamos analisar a tabela de dados, em especial para valores acima de R$200,00:
+
+
+```{r tabela-pag}
+
+dados.pag <- dadosFil %>% filter(ano %in% c(2015) & tipo=="pagamentos" & valor > 200) %>%
+        arrange(ano, mes, desc(valor))
+kable(dados.pag[,1:6])
+```
+
+Verifica-se que este aumento ocorreu porque a cada vez que as metas de economia não eram alcançadas, o valor gasto acima da meta era lançado no mês seguinte como déficit, atingindo o pico em agosto. 
+
+Por outro lado, verifica-se que nunca mais houve deficit. 
+
+
+

@@ -4,5 +4,6 @@ unnamed-chunk-5	ano	dadosT	group_by	mes	saveRDS	sum	summarise	tbl_df	tipo	valor
 unnamed-chunk-9	==	>	!	&	ano	dadosM	group_by	mes	sum	summarise	tipo	valor	which	with
 unnamed-chunk-11	:=	ano	dadosFil	data.table	list	mean	media	saveRDS	tipo	total
 load-e-tratamento	<	>=	&	%>%	amount	ano	as.character	as.Date	as.numeric	c	cartao	category	data	date	descrição	description	factor	filter	group_by	gsub	mes	months	mutate	names	names<-	parse_date_time	read.csv	rename	saveRDS	select	sum	summarise	tbl_df	tipo	tolower	valor
-filtra-dados	==	>	!	&	ano	dadosM	group_by	mes	sum	summarise	tipo	valor	which	with
+filtra-dados	==	>	!	&	%>%	ano	dados	dadosT	group_by	mean	mes	mutate	rm	sum	summarise	tipo	total	valor	which	with
 salvando	:=	ano	dadosFil	data.table	list	mean	media	saveRDS	tipo	total
+load-e-tratamento-csv	==	%>%	amount	ano	as.character	as.numeric	bind_rows	c	category	data	date	descrição	description	dir	factor	for	grep	group_by	gsub	if	length	mes	months	mutate	names	names<-	parse_date_time	paste0	read.csv	readRDS	rename	saveRDS	select	sum	summarise	tbl_df	tipo	tolower	valor	year

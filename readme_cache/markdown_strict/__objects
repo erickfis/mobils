@@ -6,3 +6,4 @@ unnamed-chunk-11	totais
 load-e-tratamento	arquivo	dados	dadosM	dadosT	totais	.Random.seed
 filtra-dados	dadosFil	sub	totais
 salvando	totais
+load-e-tratamento-csv	dadosT	lerRds	totais	.Random.seed

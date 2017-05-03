@@ -1,9 +1,31 @@
+-   [Plataforma Mobills - análise de
+    despesas](#plataforma-mobills---analise-de-despesas)
+-   [Objetivo](#objetivo)
+-   [A plataforma Mobills](#a-plataforma-mobills)
+-   [Processamento dos dados](#processamento-dos-dados)
+    -   [Tratamento inicial dos dados](#tratamento-inicial-dos-dados)
+    -   [Análise da qualidade dos
+        dados](#analise-da-qualidade-dos-dados)
+-   [Principais tipos de despesas](#principais-tipos-de-despesas)
+    -   [Análise por tipo de despesa:
+        Alimentação](#analise-por-tipo-de-despesa-alimentacao)
+    -   [Análise por tipo de despesa:
+        Pagamentos](#analise-por-tipo-de-despesa-pagamentos)
+    -   [Análise por tipo de despesa:
+        Corolla](#analise-por-tipo-de-despesa-corolla)
+-   [Conclusão](#conclusao)
+
+Plataforma Mobills - análise de despesas
+========================================
+
+*erickfis, 2017 maio, 03*
+
 Objetivo
 ========
 
-Analisar uma planilha de gastos domésticos registrados ao longo dos anos
-e verificar a existência de tendências relacionadas à estações do ano,
-datas comemorativas ou datas-chave.
+Analisar uma planilha de gastos domésticos registrados ao longo dos
+meses e verificar a existência de tendências relacionadas à estações do
+ano, datas comemorativas ou datas-chave.
 
 Os dados foram gerados pela plataforma mobils, um app android que
 registra despesas realizadas, armazena os dados na nuvem e permite a
@@ -11,8 +33,28 @@ posterior exportação destes dados.
 
 <https://web.mobills.com.br>
 
-Análise dos dados
-=================
+A plataforma Mobills
+====================
+
+-   necessário escolher a conta ao exportar o csv
+
+Processamento dos dados
+=======================
+
+Este código carrega e prepara o banco de dados para que possamos
+responder às questões levantadas.
+
+    library(scales)
+    library(stringr)
+    library(data.table)
+    library(chron)
+    library(dplyr)
+    library(lubridate)
+    library(ggplot2)
+    library(rmarkdown)
+    library(RColorBrewer)
+    library(gridExtra)
+    library(grid)
 
 Tratamento inicial dos dados
 ----------------------------
@@ -21,7 +63,78 @@ Antes de procurar estabelecer qualquer correlação, vamos primeiramente
 analisar os dados exportados pela plataforma, procurando avaliar sua
 qualidade e quais são as transformações necessárias para o seu uso.
 
-### Gráfico 1
+<!-- tratar inicial.csv com sed+grep para filtrar 2015 e 2016 -->
+<!-- Pega a 1a linha, para cabeçalho -->
+<!-- $ sed -n "1,5p" inicial.csv > newData.csv -->
+<!-- filtra 2015 e 2016 -->
+<!-- $ grep -E "^(,2015|,2016)" inicial.csv >> newData.csv -->
+    #load-multiplo
+
+    lerRds <- 1
+
+    if (lerRds==0){
+            arquivos <- dir("data/")
+            arquivos <- arquivos[grep("mobills", arquivos)]
+
+            dados <- read.csv(paste0("data/", arquivos[1]))
+
+            for (i in 2:length(arquivos)) {
+                    dados <- bind_rows(dados, read.csv(paste0("data/", arquivos[i])))
+            }
+
+            dados <- tbl_df(dados)
+            names(dados) <- tolower(names(dados)) # para facilitar o uso das vars
+
+    # # filtrando as informações que interessam,
+    # Além disso, transformar tudo para lowercase, converter formato de datas,
+    # renomear variáveis, selecionar as que interessam, criar variável mês
+
+            dadosT <- dados %>% rename(tipo = category, valor = amount,
+                                       descrição = description) %>%
+                    mutate(data = parse_date_time(date, "dmY"),
+                           descrição = tolower(as.character(descrição)),
+                           tipo = factor(tolower(as.character(tipo))),
+                           valor = as.numeric(gsub("\\$|,","", valor)),
+                           mes = factor(months(data, abbreviate=TRUE),
+                                        levels = c("Jan", "Fev", "Mar", "Abr", "Mai",
+                                                   "Jun", "Jul", "Ago", "Set", "Out", "Nov",
+                                                   "Dez"), ordered=TRUE),
+                           ano = factor(year(data))
+                    ) %>%
+                    select(data, ano, mes, tipo, descrição, valor)
+
+
+
+    # Vamos agrupar os dados por tipo de gasto, ano e mes, e depois calcular o total de gastos em cada categoria
+
+            dadosT <- tbl_df(dadosT) %>% group_by(tipo, ano, mes)
+            saveRDS(dadosT, "data/dados-ok.rds")
+    } else{
+            dadosT <- readRDS("data/dados-ok.rds")
+
+    }
+            
+    totais <- summarise(dadosT, total=sum(valor))
+
+Análise da qualidade dos dados
+------------------------------
+
+    # o gráfico
+    # as cores:
+    # Neste caso, temos 20 cat, mas somente 9 cores na paleta brewer padrao
+
+    colourCount = length(unique(totais$tipo))
+    getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+
+
+    plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
+
+    (plt +  geom_line() + geom_point() +
+                    scale_colour_manual(values = getPalette(colourCount))+
+                    facet_grid(ano ~., scale = "free") + 
+                    labs(title="Gastos por tipo de despesa", y="Total (R$)", x="Mês") + 
+                    theme(plot.title = element_text(hjust = 0.5)) 
+    )
 
 ![](readme_files/figure-markdown_strict/plot1-1.png)
 
@@ -29,6 +142,12 @@ Analisando o primeiro gráfico, vemos que há problemas em março de 2015,
 tipo pagamentos.
 
 Vamos olhar este ponto fora do gráfico mais de perto:
+
+    # vamos ver do q se trata, para talvez remover do gráfico
+
+    sub <- with(dadosT, ano==2015 & mes=="Mar" & tipo=="pagamentos" )
+
+    kable(dadosT[which(sub),1:6])
 
 <table>
 <thead>
@@ -85,6 +204,12 @@ análise.
 
 Além disso, verifica-se que todas as despesas pagas no cartão de crédito
 ficaram registradas na data de vencimento do cartão, dia 25.
+
+    # vamos ver do q se trata, para talvez remover do gráfico
+
+    sub <- with(dadosT, mes %in% c("Jun","Jul") & day(dadosT$data) == 25)
+    dadosub <- dadosT[which(sub),]
+    kable(head(dadosub[unique(dadosub$tipo),1:6]))
 
 <table>
 <thead>
@@ -148,6 +273,8 @@ ficaram registradas na data de vencimento do cartão, dia 25.
 </tr>
 </tbody>
 </table>
+
+    kable(tail(dadosub[unique(dadosub$tipo),1:6]))
 
 <table>
 <thead>
@@ -220,7 +347,23 @@ realizadas a partir do dia 16 são cobradas apenas na próxima fatura.
 No entanto, como isso ocorre para todos os dados da mesma forma, não há
 impacto impeditivo na análise.
 
-### Gráfico 2
+    sub <- with(dadosT, ano==2015 & mes=="Mar" & tipo=="pagamentos" & valor > 4000)
+    dadosFil <- dadosT[which(!sub),]
+    dadosFil <- group_by(dadosFil, tipo, ano, mes)
+    totais <- summarise(dadosFil, total=sum(valor)) %>%
+                    mutate(media = mean(total))
+
+
+    rm(dados, dadosT) # house cleanning
+
+    plt <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
+
+    (plt +  geom_line() + geom_point() +
+                    scale_colour_manual(values = getPalette(colourCount))+
+                    facet_grid(ano ~., scale="free") + 
+                    labs(title="Gastos por tipo de despesa", y="Total (R$)", x="Mês") + 
+                    theme(plot.title = element_text(hjust = 0.5)) 
+    )
 
 ![](readme_files/figure-markdown_strict/plot2-1.png)
 
@@ -230,8 +373,26 @@ gráfico, todos os erros de coleta dados foram filtrados.
 O próximo passo é estudar os tipos de despesas que mais se destacam:
 alimentação, pagamentos e corolla.
 
+Principais tipos de despesas
+============================
+
 Análise por tipo de despesa: Alimentação
 ----------------------------------------
+
+    #devidos subsets
+
+    totais.alim <- totais[totais$tipo=="alimentação",]
+
+    plt.alim <- ggplot(totais.alim, aes(x=mes, y=total, group=ano, colour=ano))
+
+
+    (plt.alim +  geom_line() + 
+                    geom_point(size=0.5, alpha=0.5) +
+                    geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                    labs(title="Gastos com alimentação", y="Total (R$)", x="Mês") +
+                    
+                    theme(plot.title = element_text(hjust = 0.5)) 
+    )
 
 ![](readme_files/figure-markdown_strict/alimentacao-1.png)
 
@@ -243,6 +404,10 @@ Observa-se:
 -   sobe e desce: as compras maiores não são feitas todo mês
 
 Vamos analisar a tabela de dados:
+
+    dados.alim <- dadosFil %>% filter(mes %in% c("Mai", "Jul") & tipo=="alimentação" & valor > 50) %>%
+            arrange(ano, mes, desc(valor))
+    kable(dados.alim[,1:6])
 
 <table>
 <thead>
@@ -514,6 +679,20 @@ março 2015 os gastos não foram registrados.
 Análise por tipo de despesa: Pagamentos
 ---------------------------------------
 
+    totais.pag <- totais[totais$tipo=="pagamentos",]
+    plt.pag <- ggplot(totais.pag, aes(x=mes, y=total, group=ano, colour=ano))
+
+
+    (plt.pag +  geom_line() +
+                    geom_point(size=0.5, alpha=0.5) +
+                    # facet_grid(ano ~., scale="free") +
+                    # geom_smooth(colour="black", linetype=3, alpha=0.2) +
+                    # geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
+                    geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                    labs(title="Gastos com pagamentos diversos", y="Total (R$)", x="Mês") +
+                    theme(plot.title = element_text(hjust = 0.5))
+    )
+
 ![](readme_files/figure-markdown_strict/plot-pagamentos-1.png)
 
 Observa-se:
@@ -522,6 +701,10 @@ Observa-se:
 
 Vamos analisar a tabela de dados, em especial para valores acima de
 R$200,00:
+
+    dados.pag <- dadosFil %>% filter(ano %in% c(2015) & tipo=="pagamentos" & valor > 200) %>%
+            arrange(ano, mes, desc(valor))
+    kable(dados.pag[,1:6])
 
 <table>
 <thead>
@@ -611,6 +794,17 @@ Por outro lado, verifica-se que nunca mais houve deficit.
 Análise por tipo de despesa: Corolla
 ------------------------------------
 
+    totais.cor <- totais[totais$tipo=="corolla",]
+    plt.cor <- ggplot(totais.cor, aes(x=mes, y=total, group=ano, colour=ano))
+
+
+    (plt.cor +  geom_line() +
+                    geom_point(size=0.5, alpha=0.5) +
+                    geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                    labs(title="Gastos com Corolla", y="Total (R$)", x="Mês") +
+                    theme(plot.title = element_text(hjust = 0.5))
+    )
+
 ![](readme_files/figure-markdown_strict/plot-corolla-1.png)
 
 Observa-se:
@@ -619,6 +813,11 @@ Observa-se:
 -   queda a partir de jul-16
 
 Vamos analisar a tabela de dados:
+
+    dados.cor <- dadosFil %>% filter(ano %in% c(2015) & tipo=="corolla" & month(data) >= 8) %>%
+            arrange(ano, mes, desc(valor))
+
+    kable(dados.cor[,1:6])
 
 <table>
 <thead>
@@ -759,7 +958,8 @@ Conclusão
 
 Entre 2015 e 2016, verificamos que:
 
--   os valores mais altos estão em alimentação, pagamentos e corolla
+        - os valores mais altos estão em alimentação, pagamentos e corolla
+
 -   deve-se tomar cuidado com os gastos para a páscoa
 -   havia um déficit em 2015, mas foi superado
 -   o seguro do carro tinha um valor elevado e as manutenções mantinham

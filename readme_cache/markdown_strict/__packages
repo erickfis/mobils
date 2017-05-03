@@ -7,3 +7,6 @@ ggplot2
 RColorBrewer
 gridExtra
 rmarkdown
+scales
+stringr
+chron

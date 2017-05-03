@@ -1,0 +1,13 @@
+
+# Objetivo
+
+Analisar uma planilha de gastos domésticos registrados ao longo dos meses e verificar a existência de tendências relacionadas à estações do ano, datas comemorativas ou datas-chave.
+
+Os dados foram gerados pela plataforma mobils, um app android que registra despesas realizadas, armazena os dados na nuvem e permite a posterior exportação destes dados.
+
+https://web.mobills.com.br
+
+
+# A plataforma Mobills
+
+- necessário escolher a conta ao exportar o csv

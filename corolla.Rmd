@@ -1,0 +1,38 @@
+
+## Análise por tipo de despesa: Corolla
+
+```{r plot-corolla}
+totais.cor <- totais[totais$tipo=="corolla",]
+plt.cor <- ggplot(totais.cor, aes(x=mes, y=total, group=ano, colour=ano))
+
+
+(plt.cor +  geom_line() +
+                geom_point(size=0.5, alpha=0.5) +
+                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                labs(title="Gastos com Corolla", y="Total (R$)", x="Mês") +
+                theme(plot.title = element_text(hjust = 0.5))
+)
+```
+
+Observa-se:
+
+- valores altos de agosto a novembro de 2015
+- queda a partir de jul-16
+
+Vamos analisar a tabela de dados:
+
+```{r tabela-cor}
+
+dados.cor <- dadosFil %>% filter(ano %in% c(2015) & tipo=="corolla" & month(data) >= 8) %>%
+        arrange(ano, mes, desc(valor))
+
+kable(dados.cor[,1:6])
+```
+
+
+Verifica-se que isso ocorreu porque em agosto de 2015 foi renovado o seguro, em 4x, isso explica as altas até novembro; em setembro foi feita uma manutenção de 10k, também parcelada em 4x.
+
+Por outro lado, a queda a partir de julho de 2016 é explicada pela venda do carro neste mesmo mês.
+
+
+
