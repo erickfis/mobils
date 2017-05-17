@@ -4,20 +4,20 @@ author: "erickfis@gmail.com"
 date: "`r format(Sys.time(), '%Y %B, %d')`"
 
 
-# output:
-#    md_document:
-#          toc: true
-
-
 output:
-        html_document:
-                toc: true
-                toc_depth: 3
-                number_sections: true
-                self_contained: no
-                keep_md: true
-                fig_crop: false
-                classoption: landscape
+   md_document:
+         toc: true
+
+
+# output:
+#         html_document:
+#                 toc: true
+#                 toc_depth: 3
+#                 number_sections: true
+#                 self_contained: no
+#                 keep_md: false
+#                 fig_crop: false
+#                 classoption: landscape
 
 ---
 

@@ -8,6 +8,5 @@ Os dados foram gerados pela plataforma mobils, um app android que registra despe
 https://web.mobills.com.br
 
 
-# A plataforma Mobills
+<!-- # A plataforma Mobills -->
 
-- necessário escolher a conta ao exportar o csv
