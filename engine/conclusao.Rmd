@@ -1,0 +1,19 @@
+
+# Conclusão
+
+## Plataforma Mobills:
+
+- ainda não há API que permita o acesso direto aos dados
+- existe um problema com as datas das compras feitas em cartão de crédito: são registradas todas como se fossem feitas na data de vencimento do cartão
+- desta forma, ao registrar estas compras, anotar na descrição a data da transação
+
+
+## Gastos pessoais
+
+        
+- os valores mais altos estão em alimentação, pagamentos e corolla
+- deve-se tomar cuidado com os gastos para a páscoa
+- havia um déficit em 2015, mas foi superado
+- o seguro do carro tinha um valor elevado e as manutenções mantinham as médias de gasto mensal na casa dos R$500, mas esse problema acabou com a venda do carro.
+
+

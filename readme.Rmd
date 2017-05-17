@@ -1,31 +1,24 @@
 ---
-title: "Plataforma Mobills - análise de despesas"
-author: "erickfis"
+title: "Plataforma Mobills - Análise de Despesas Pessoais - WIP"
+author: "erickfis@gmail.com"
 date: "`r format(Sys.time(), '%Y %B, %d')`"
 
 
+# output:
+#    md_document:
+#          toc: true
+
+
 output:
-   md_document:
-         toc: true
+        html_document:
+                toc: true
+                toc_depth: 3
+                number_sections: true
+                self_contained: no
+                keep_md: true
+                fig_crop: false
+                classoption: landscape
 
-
-# output:
-#         html_document:
-#                 toc: true
-#                 toc_depth: 3
-#                 number_sections: true
-#                 self_contained: yes
-#                 keep_md: false
-#                 fig_crop: false
-#                 classoption: landscape
-
-
-# output:
-#   pdf_document:
-#         toc: true
-#         toc_depth: 3
-#         number_sections: true
-#         keep_tex: true
 ---
 
 
@@ -33,32 +26,29 @@ output:
 library(knitr)
 
 opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE, 
-               warning = FALSE, autodep = TRUE, options(scipen=999),
-               fig.pos = 'H')
+               warning = FALSE, autodep = TRUE, options(scipen=999))
 
 ```
 
 
-
-
-```{r child = 'intros.Rmd'}
+```{r child = 'engine/intros.Rmd'}
 ```
 
-```{r child = 'processamento.Rmd'}
+```{r child = 'engine/processamento.Rmd'}
 ```        
 
 # Principais tipos de despesas
 
-```{r child = 'alimentacao.Rmd'}
+```{r child = 'engine/alimentacao.Rmd'}
 ```        
 
-```{r child = 'pagamentos.Rmd'}
+```{r child = 'engine/pagamentos.Rmd'}
 ```        
 
-```{r child = 'corolla.Rmd'}
+```{r child = 'engine/corolla.Rmd'}
 ```        
 
 
-```{r child = 'conclusao.Rmd'}
+```{r child = 'engine/conclusao.Rmd'}
 ```        
 

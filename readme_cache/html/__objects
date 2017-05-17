@@ -1,0 +1,5 @@
+load-e-tratamento-csv	arquivos.local	dadosT	tem.novidade	tem.rds	totais	.Random.seed
+passo1	colourCount	getPalette	plt.p1
+filtra-dados	dadosFil	sub	totais
+passo2	plt.p2
+grid	
