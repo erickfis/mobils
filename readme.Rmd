@@ -29,7 +29,10 @@ opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE,
                warning = FALSE, autodep = TRUE, options(scipen=999))
 
 ```
+# Em progresso
 
+- acessar API da plataforma - ainda não disponível
+ 
 
 ```{r child = 'engine/intros.Rmd'}
 ```

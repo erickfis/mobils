@@ -118,41 +118,43 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Plataforma Mobills - Análise de Despesas Pessoais - WIP</h1>
 <h4 class="author"><em><a href="mailto:erickfis@gmail.com">erickfis@gmail.com</a></em></h4>
-<h4 class="date"><em>2017 maio, 17</em></h4>
+<h4 class="date"><em>2017 maio, 22</em></h4>
 
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#objetivo"><span class="toc-section-number">1</span> Objetivo</a></li>
-<li><a href="#a-plataforma-mobills"><span class="toc-section-number">2</span> A plataforma Mobills</a></li>
+<li><a href="#em-progresso"><span class="toc-section-number">1</span> Em progresso</a></li>
+<li><a href="#objetivo"><span class="toc-section-number">2</span> Objetivo</a></li>
 <li><a href="#processamento-dos-dados"><span class="toc-section-number">3</span> Processamento dos dados</a><ul>
 <li><a href="#tratamento-inicial-dos-dados"><span class="toc-section-number">3.1</span> Tratamento inicial dos dados</a></li>
 <li><a href="#analise-da-qualidade-dos-dados"><span class="toc-section-number">3.2</span> Análise da qualidade dos dados</a></li>
 </ul></li>
-<li><a href="#principais-tipos-de-despesas"><span class="toc-section-number">4</span> Principais tipos de despesas</a><ul>
-<li><a href="#analise-por-tipo-de-despesa-alimentacao"><span class="toc-section-number">4.1</span> Análise por tipo de despesa: Alimentação</a></li>
-<li><a href="#analise-por-tipo-de-despesa-pagamentos"><span class="toc-section-number">4.2</span> Análise por tipo de despesa: Pagamentos</a></li>
-<li><a href="#analise-por-tipo-de-despesa-corolla"><span class="toc-section-number">4.3</span> Análise por tipo de despesa: Corolla</a></li>
+<li><a href="#maiores-despesas-por-categoria"><span class="toc-section-number">4</span> Maiores Despesas por categoria</a></li>
+<li><a href="#principais-tipos-de-despesas"><span class="toc-section-number">5</span> Principais tipos de despesas</a><ul>
+<li><a href="#analise-por-tipo-de-despesa-alimentacao"><span class="toc-section-number">5.1</span> Análise por tipo de despesa: Alimentação</a></li>
+<li><a href="#analise-por-tipo-de-despesa-pagamentos"><span class="toc-section-number">5.2</span> Análise por tipo de despesa: Pagamentos</a></li>
+<li><a href="#analise-por-tipo-de-despesa-corolla"><span class="toc-section-number">5.3</span> Análise por tipo de despesa: Corolla</a></li>
 </ul></li>
-<li><a href="#conclusao"><span class="toc-section-number">5</span> Conclusão</a><ul>
-<li><a href="#plataforma-mobills"><span class="toc-section-number">5.1</span> Plataforma Mobills:</a></li>
-<li><a href="#gastos-pessoais"><span class="toc-section-number">5.2</span> Gastos pessoais</a></li>
+<li><a href="#conclusao"><span class="toc-section-number">6</span> Conclusão</a><ul>
+<li><a href="#plataforma-mobills"><span class="toc-section-number">6.1</span> Plataforma Mobills:</a></li>
+<li><a href="#gastos-pessoais"><span class="toc-section-number">6.2</span> Gastos pessoais</a></li>
 </ul></li>
 </ul>
 </div>
 
+<div id="em-progresso" class="section level1">
+<h1><span class="header-section-number">1</span> Em progresso</h1>
+<ul>
+<li>acessar API da plataforma - ainda não disponível</li>
+</ul>
+</div>
 <div id="objetivo" class="section level1">
-<h1><span class="header-section-number">1</span> Objetivo</h1>
+<h1><span class="header-section-number">2</span> Objetivo</h1>
 <p>Analisar uma planilha de gastos domésticos registrados ao longo dos meses e verificar a existência de tendências relacionadas à estações do ano, datas comemorativas ou datas-chave.</p>
 <p>Os dados foram gerados pela plataforma mobils, um app android que registra despesas realizadas, armazena os dados na nuvem e permite a posterior exportação destes dados.</p>
 <p><a href="https://web.mobills.com.br" class="uri">https://web.mobills.com.br</a></p>
-</div>
-<div id="a-plataforma-mobills" class="section level1">
-<h1><span class="header-section-number">2</span> A plataforma Mobills</h1>
-<ul>
-<li>necessário escolher a conta ao exportar o csv</li>
-</ul>
+<!-- # A plataforma Mobills -->
 </div>
 <div id="processamento-dos-dados" class="section level1">
 <h1><span class="header-section-number">3</span> Processamento dos dados</h1>
@@ -356,18 +358,199 @@ $(document).ready(function () {
 <p>Uma vez que a fatura deste cartão é fechada no dia 15, todas as compras realizadas a partir do dia 16 são cobradas apenas na próxima fatura.</p>
 <p>No entanto, como isso ocorre para todos os dados da mesma forma, não há impacto impeditivo na análise.</p>
 <p>Como podemos ver no gráfico 2, não há mais pontos obviamente fora do gráfico, todos os erros de coleta dados foram filtrados.</p>
-<p>O próximo passo é estudar os tipos de despesas que mais se destacam: alimentação, pagamentos e corolla.</p>
+<p>O próximo passo é estudar os tipos de despesas que mais se destacam.</p>
 <div class="figure">
-<img src="readme_files/figure-html/grid-1.png" alt="Tratamento dos dados" />
-<p class="caption">Tratamento dos dados</p>
+<img src="readme_files/figure-html/grid-1.png" alt="Tratamento dos dados" width="672" />
+<p class="caption">
+Tratamento dos dados
+</p>
 </div>
 </div>
+</div>
+<div id="maiores-despesas-por-categoria" class="section level1">
+<h1><span class="header-section-number">4</span> Maiores Despesas por categoria</h1>
+<p>Na tabela abaixo temos um ranking dos maiores tipos de despesa por ano:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">tipo</th>
+<th align="right">media.total</th>
+<th align="left">ano</th>
+<th align="right">total.anual</th>
+<th align="right">media.anual</th>
+<th align="right">sd.anual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">alimentação</td>
+<td align="right">10413.72</td>
+<td align="left">2015</td>
+<td align="right">11317.11</td>
+<td align="right">1028.83</td>
+<td align="right">218.451669</td>
+</tr>
+<tr class="even">
+<td align="left">alimentação</td>
+<td align="right">10413.72</td>
+<td align="left">2016</td>
+<td align="right">13809.51</td>
+<td align="right">1150.79</td>
+<td align="right">264.265256</td>
+</tr>
+<tr class="odd">
+<td align="left">alimentação</td>
+<td align="right">10413.72</td>
+<td align="left">2017</td>
+<td align="right">6114.55</td>
+<td align="right">1528.64</td>
+<td align="right">409.415748</td>
+</tr>
+<tr class="even">
+<td align="left">transporte</td>
+<td align="right">5091.76</td>
+<td align="left">2015</td>
+<td align="right">5861.51</td>
+<td align="right">532.86</td>
+<td align="right">126.071060</td>
+</tr>
+<tr class="odd">
+<td align="left">transporte</td>
+<td align="right">5091.76</td>
+<td align="left">2016</td>
+<td align="right">7419.99</td>
+<td align="right">618.33</td>
+<td align="right">109.892028</td>
+</tr>
+<tr class="even">
+<td align="left">transporte</td>
+<td align="right">5091.76</td>
+<td align="left">2017</td>
+<td align="right">1993.77</td>
+<td align="right">498.44</td>
+<td align="right">85.329031</td>
+</tr>
+<tr class="odd">
+<td align="left">saúde</td>
+<td align="right">3537.84</td>
+<td align="left">2015</td>
+<td align="right">4170.79</td>
+<td align="right">347.57</td>
+<td align="right">73.603969</td>
+</tr>
+<tr class="even">
+<td align="left">saúde</td>
+<td align="right">3537.84</td>
+<td align="left">2016</td>
+<td align="right">4950.81</td>
+<td align="right">412.57</td>
+<td align="right">98.528588</td>
+</tr>
+<tr class="odd">
+<td align="left">saúde</td>
+<td align="right">3537.84</td>
+<td align="left">2017</td>
+<td align="right">1491.92</td>
+<td align="right">372.98</td>
+<td align="right">208.047493</td>
+</tr>
+<tr class="even">
+<td align="left">pagamentos</td>
+<td align="right">3172.63</td>
+<td align="left">2015</td>
+<td align="right">6266.99</td>
+<td align="right">522.25</td>
+<td align="right">333.768537</td>
+</tr>
+<tr class="odd">
+<td align="left">pagamentos</td>
+<td align="right">3172.63</td>
+<td align="left">2016</td>
+<td align="right">2501.00</td>
+<td align="right">208.42</td>
+<td align="right">87.059497</td>
+</tr>
+<tr class="even">
+<td align="left">pagamentos</td>
+<td align="right">3172.63</td>
+<td align="left">2017</td>
+<td align="right">749.90</td>
+<td align="right">187.47</td>
+<td align="right">94.964041</td>
+</tr>
+<tr class="odd">
+<td align="left">corolla</td>
+<td align="right">3137.90</td>
+<td align="left">2015</td>
+<td align="right">5313.14</td>
+<td align="right">442.76</td>
+<td align="right">310.598222</td>
+</tr>
+<tr class="even">
+<td align="left">corolla</td>
+<td align="right">3137.90</td>
+<td align="left">2016</td>
+<td align="right">2599.03</td>
+<td align="right">288.78</td>
+<td align="right">223.242858</td>
+</tr>
+<tr class="odd">
+<td align="left">corolla</td>
+<td align="right">3137.90</td>
+<td align="left">2017</td>
+<td align="right">1501.54</td>
+<td align="right">375.38</td>
+<td align="right">264.099645</td>
+</tr>
+<tr class="even">
+<td align="left">moradia</td>
+<td align="right">2637.11</td>
+<td align="left">2015</td>
+<td align="right">2749.32</td>
+<td align="right">229.11</td>
+<td align="right">62.570169</td>
+</tr>
+<tr class="odd">
+<td align="left">moradia</td>
+<td align="right">2637.11</td>
+<td align="left">2016</td>
+<td align="right">2934.00</td>
+<td align="right">244.50</td>
+<td align="right">54.251100</td>
+</tr>
+<tr class="even">
+<td align="left">moradia</td>
+<td align="right">2637.11</td>
+<td align="left">2017</td>
+<td align="right">2228.00</td>
+<td align="right">557.00</td>
+<td align="right">105.915060</td>
+</tr>
+<tr class="odd">
+<td align="left">seguros</td>
+<td align="right">2386.57</td>
+<td align="left">2015</td>
+<td align="right">2940.00</td>
+<td align="right">294.00</td>
+<td align="right">107.206965</td>
+</tr>
+<tr class="even">
+<td align="left">seguros</td>
+<td align="right">2386.57</td>
+<td align="left">2016</td>
+<td align="right">3139.90</td>
+<td align="right">261.66</td>
+<td align="right">5.744635</td>
+</tr>
+</tbody>
+</table>
+<p><img src="readme_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>
 <div id="principais-tipos-de-despesas" class="section level1">
-<h1><span class="header-section-number">4</span> Principais tipos de despesas</h1>
+<h1><span class="header-section-number">5</span> Principais tipos de despesas</h1>
 <div id="analise-por-tipo-de-despesa-alimentacao" class="section level2">
-<h2><span class="header-section-number">4.1</span> Análise por tipo de despesa: Alimentação</h2>
-<p><img src="readme_files/figure-html/alimentacao-1.png" /><!-- --></p>
+<h2><span class="header-section-number">5.1</span> Análise por tipo de despesa: Alimentação</h2>
+<p><img src="readme_files/figure-html/alimentacao-1.png" width="672" /></p>
 <p>Observa-se:</p>
 <ul>
 <li>tendência a aumento de gastos em maio</li>
@@ -636,8 +819,8 @@ $(document).ready(function () {
 <p>O aumento da média em 2016 ocorre porque, além dos fatores acima, em março 2015 os gastos não foram registrados.</p>
 </div>
 <div id="analise-por-tipo-de-despesa-pagamentos" class="section level2">
-<h2><span class="header-section-number">4.2</span> Análise por tipo de despesa: Pagamentos</h2>
-<p><img src="readme_files/figure-html/plot-pagamentos-1.png" /><!-- --></p>
+<h2><span class="header-section-number">5.2</span> Análise por tipo de despesa: Pagamentos</h2>
+<p><img src="readme_files/figure-html/plot-pagamentos-1.png" width="672" /></p>
 <p>Observa-se:</p>
 <ul>
 <li>aumento significativo de de fevereiro a setembro de 2015.</li>
@@ -725,8 +908,8 @@ $(document).ready(function () {
 <p>Por outro lado, verifica-se que nunca mais houve deficit.</p>
 </div>
 <div id="analise-por-tipo-de-despesa-corolla" class="section level2">
-<h2><span class="header-section-number">4.3</span> Análise por tipo de despesa: Corolla</h2>
-<p><img src="readme_files/figure-html/plot-corolla-1.png" /><!-- --></p>
+<h2><span class="header-section-number">5.3</span> Análise por tipo de despesa: Corolla</h2>
+<p><img src="readme_files/figure-html/plot-corolla-1.png" width="672" /></p>
 <p>Observa-se:</p>
 <ul>
 <li>valores altos de agosto a novembro de 2015</li>
@@ -864,9 +1047,9 @@ $(document).ready(function () {
 </div>
 </div>
 <div id="conclusao" class="section level1">
-<h1><span class="header-section-number">5</span> Conclusão</h1>
+<h1><span class="header-section-number">6</span> Conclusão</h1>
 <div id="plataforma-mobills" class="section level2">
-<h2><span class="header-section-number">5.1</span> Plataforma Mobills:</h2>
+<h2><span class="header-section-number">6.1</span> Plataforma Mobills:</h2>
 <ul>
 <li>ainda não há API que permita o acesso direto aos dados</li>
 <li>existe um problema com as datas das compras feitas em cartão de crédito: são registradas todas como se fossem feitas na data de vencimento do cartão</li>
@@ -874,7 +1057,7 @@ $(document).ready(function () {
 </ul>
 </div>
 <div id="gastos-pessoais" class="section level2">
-<h2><span class="header-section-number">5.2</span> Gastos pessoais</h2>
+<h2><span class="header-section-number">6.2</span> Gastos pessoais</h2>
 <ul>
 <li>os valores mais altos estão em alimentação, pagamentos e corolla</li>
 <li>deve-se tomar cuidado com os gastos para a páscoa</li>

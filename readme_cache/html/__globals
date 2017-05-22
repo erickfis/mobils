@@ -1,5 +1,6 @@
-load-e-tratamento-csv	==	|	%>%	amount	ano	as.character	as.numeric	bind_rows	c	category	data	date	descrição	description	dir	factor	for	fread	grep	group_by	gsub	if	length	mes	months	mutate	names	names<-	parse_date_time	paste0	readRDS	rename	rm	saveRDS	select	sum	summarise	tbl_df	tipo	tolower	valor	year
+load-e-tratamento-csv	==	|	!	%>%	amount	ano	as.character	as.numeric	bind_rows	c	category	data	date	descrição	description	dir	factor	file.exists	for	fread	grep	group_by	gsub	if	length	mes	months	mutate	names	names<-	parse_date_time	paste0	readRDS	rename	rm	saveRDS	select	sum	summarise	tbl_df	tipo	tolower	valor	year
 passo1	~	$	aes	brewer.pal	colorRampPalette	element_text	facet_grid	geom_line	geom_point	ggplot	labs	length	mes	scale_colour_manual	theme	tipo	totais	total	unique
 filtra-dados	==	>	!	&	%>%	ano	dadosT	group_by	mean	mes	mutate	rm	sum	summarise	tipo	total	valor	which	with
 passo2	~	aes	colourCount	element_blank	element_text	facet_grid	geom_line	geom_point	getPalette	ggplot	guide_legend	guides	labs	mes	scale_colour_manual	theme	tipo	totais	total
 grid	gpar	grid.arrange	grid.rect	plt.p1	plt.p2
+maiores.despesas	%>%	ano	arrange	c	desc	group_by	kable	mean	media.total	mutate	round	sd	sum	summarise	tipo	totais	total	total.anual

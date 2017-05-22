@@ -39,10 +39,10 @@ tem.novidade <- 0
 
 # procurando por db pronto, salvo em rds
 arquivos.local <- dir("../data/")
-tem.rds <- grep("rds", arquivos.local)
+tem.rds <- file.exists("../data/dados-ok.rds")
 
 # se tem novidade ou falta o rds, processar do começo:
-if(tem.novidade==1|length(tem.rds)==0) {
+if(tem.novidade==1|!tem.rds) {
         arquivos.local <- arquivos.local[grep("mobills", arquivos.local)]
 
         # dados <- read.csv(paste0("data/", arquivos.local[1]))
@@ -198,7 +198,8 @@ plt.p2 <- plt.p2 +  geom_line() + geom_point() +
 
 Como podemos ver no gráfico 2, não há mais pontos obviamente fora do gráfico, todos os erros de coleta dados foram filtrados. 
 
-O próximo passo é estudar os tipos de despesas que mais se destacam: alimentação, pagamentos e corolla.
+O próximo passo é estudar os tipos de despesas que mais se destacam.
+
 
 ```{r grid, fig.height=10, fig.cap="Tratamento dos dados", cache=TRUE}
 
@@ -206,5 +207,54 @@ O próximo passo é estudar os tipos de despesas que mais se destacam: alimenta�
 grid.arrange(plt.p1, plt.p2,  
              nrow=2, ncol=1)
 grid.rect(gp=gpar(fill=NA))
+```
+
+
+# Maiores Despesas por categoria
+
+Na tabela abaixo temos um ranking dos maiores tipos de despesa por ano:
+
+```{r maiores.despesas, cache=TRUE}
+
+maiores <- totais %>% group_by(tipo, ano) %>% 
+        summarise(total.anual=sum(total), media.anual = round(mean(total),2),
+                  sd.anual=sd(total)) %>%
+        mutate(media.total = round(mean(total.anual),2)) %>%
+        arrange(desc(media.total), ano, tipo)
+
+
+kable(maiores[1:20,c(1,6,2:5)])
+```
+
+```{r}
+maiores.df.plot <-  maiores %>% group_by(tipo) %>% 
+        summarise(media = round(mean(total.anual),2)) %>%
+        arrange(desc(media)) %>%
+        mutate(rank = 1:length(media))
+
+maiores.df.plot$tipo <- factor(maiores.df.plot$tipo,
+                levels = maiores.df.plot$tipo[order(maiores.df.plot$rank)])
+
+colourCount = length(unique(maiores.df.plot$tipo))
+getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+
+maiores.plt <- ggplot(maiores.df.plot, aes(tipo, media, fill=tipo))
+
+maiores.plt <- maiores.plt + geom_bar(stat="identity") +
+        geom_text(aes(label=ifelse(media==max(media),
+                paste0(tipo, ": ", dollar(max(media))),'')),
+                hjust=0,vjust=2) +
+        # geom_hline(aes(yintercept = median), linetype=2) +
+        labs(title="Maiores tipos de despesas", y="Média em Reais",
+             x="Tipos de despesas") + 
+                
+        theme(legend.position="none") +        
+        scale_colour_manual(values = getPalette(colourCount.fatal.all))+                
+        theme(legend.title=element_blank()) +
+        theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+        theme(plot.title = element_text(hjust = 0.5))                 
+
+
+maiores.plt
 ```
 

@@ -1,23 +1,30 @@
 # Plataforma Mobills - Análise de Despesas Pessoais - WIP
-*erickfis@gmail.com, 2017 maio, 17*
+
+*erickfis@gmail.com - 2017 maio, 22*
 
 
-Analisar uma planilha de gastos domésticos registrados ao longo dos
+
+Análise de uma planilha de gastos domésticos registrados ao longo dos
 meses e verificar a existência de tendências relacionadas à estações do
 ano, datas comemorativas ou datas-chave.
 
-Os dados foram gerados pela plataforma Mobills, um app android que
+Os dados foram gerados pela plataforma mobils, um app android que
 registra despesas realizadas, armazena os dados na nuvem e permite a
 posterior exportação destes dados.
 
+
 <https://web.mobills.com.br>
 
+<!-- # A plataforma Mobills -->
 
 
+-   [Em progresso](#em-progresso)
+-   [Objetivo](#objetivo)
 -   [Processamento dos dados](#processamento-dos-dados)
     -   [Tratamento inicial dos dados](#tratamento-inicial-dos-dados)
     -   [Análise da qualidade dos
         dados](#analise-da-qualidade-dos-dados)
+-   [Maiores Despesas por categoria](#maiores-despesas-por-categoria)
 -   [Principais tipos de despesas](#principais-tipos-de-despesas)
     -   [Análise por tipo de despesa:
         Alimentação](#analise-por-tipo-de-despesa-alimentacao)
@@ -29,9 +36,13 @@ posterior exportação destes dados.
     -   [Plataforma Mobills:](#plataforma-mobills)
     -   [Gastos pessoais](#gastos-pessoais)
 
+Em progresso
+============
+
+-   acessar API da plataforma - ainda não disponível
 
 
-<!-- # A plataforma Mobills -->
+
 Processamento dos dados
 =======================
 
@@ -264,10 +275,191 @@ impacto impeditivo na análise.
 Como podemos ver no gráfico 2, não há mais pontos obviamente fora do
 gráfico, todos os erros de coleta dados foram filtrados.
 
-O próximo passo é estudar os tipos de despesas que mais se destacam:
-alimentação, pagamentos e corolla.
+O próximo passo é estudar os tipos de despesas que mais se destacam.
 
 ![Tratamento dos dados](readme_files/figure-markdown_strict/grid-1.png)
+
+Maiores Despesas por categoria
+==============================
+
+Na tabela abaixo temos um ranking dos maiores tipos de despesa por ano:
+
+<table>
+<thead>
+<tr class="header">
+<th align="left">tipo</th>
+<th align="right">media.total</th>
+<th align="left">ano</th>
+<th align="right">total.anual</th>
+<th align="right">media.anual</th>
+<th align="right">sd.anual</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">alimentação</td>
+<td align="right">10413.72</td>
+<td align="left">2015</td>
+<td align="right">11317.11</td>
+<td align="right">1028.83</td>
+<td align="right">218.451669</td>
+</tr>
+<tr class="even">
+<td align="left">alimentação</td>
+<td align="right">10413.72</td>
+<td align="left">2016</td>
+<td align="right">13809.51</td>
+<td align="right">1150.79</td>
+<td align="right">264.265256</td>
+</tr>
+<tr class="odd">
+<td align="left">alimentação</td>
+<td align="right">10413.72</td>
+<td align="left">2017</td>
+<td align="right">6114.55</td>
+<td align="right">1528.64</td>
+<td align="right">409.415748</td>
+</tr>
+<tr class="even">
+<td align="left">transporte</td>
+<td align="right">5091.76</td>
+<td align="left">2015</td>
+<td align="right">5861.51</td>
+<td align="right">532.86</td>
+<td align="right">126.071060</td>
+</tr>
+<tr class="odd">
+<td align="left">transporte</td>
+<td align="right">5091.76</td>
+<td align="left">2016</td>
+<td align="right">7419.99</td>
+<td align="right">618.33</td>
+<td align="right">109.892028</td>
+</tr>
+<tr class="even">
+<td align="left">transporte</td>
+<td align="right">5091.76</td>
+<td align="left">2017</td>
+<td align="right">1993.77</td>
+<td align="right">498.44</td>
+<td align="right">85.329031</td>
+</tr>
+<tr class="odd">
+<td align="left">saúde</td>
+<td align="right">3537.84</td>
+<td align="left">2015</td>
+<td align="right">4170.79</td>
+<td align="right">347.57</td>
+<td align="right">73.603969</td>
+</tr>
+<tr class="even">
+<td align="left">saúde</td>
+<td align="right">3537.84</td>
+<td align="left">2016</td>
+<td align="right">4950.81</td>
+<td align="right">412.57</td>
+<td align="right">98.528588</td>
+</tr>
+<tr class="odd">
+<td align="left">saúde</td>
+<td align="right">3537.84</td>
+<td align="left">2017</td>
+<td align="right">1491.92</td>
+<td align="right">372.98</td>
+<td align="right">208.047493</td>
+</tr>
+<tr class="even">
+<td align="left">pagamentos</td>
+<td align="right">3172.63</td>
+<td align="left">2015</td>
+<td align="right">6266.99</td>
+<td align="right">522.25</td>
+<td align="right">333.768537</td>
+</tr>
+<tr class="odd">
+<td align="left">pagamentos</td>
+<td align="right">3172.63</td>
+<td align="left">2016</td>
+<td align="right">2501.00</td>
+<td align="right">208.42</td>
+<td align="right">87.059497</td>
+</tr>
+<tr class="even">
+<td align="left">pagamentos</td>
+<td align="right">3172.63</td>
+<td align="left">2017</td>
+<td align="right">749.90</td>
+<td align="right">187.47</td>
+<td align="right">94.964041</td>
+</tr>
+<tr class="odd">
+<td align="left">corolla</td>
+<td align="right">3137.90</td>
+<td align="left">2015</td>
+<td align="right">5313.14</td>
+<td align="right">442.76</td>
+<td align="right">310.598222</td>
+</tr>
+<tr class="even">
+<td align="left">corolla</td>
+<td align="right">3137.90</td>
+<td align="left">2016</td>
+<td align="right">2599.03</td>
+<td align="right">288.78</td>
+<td align="right">223.242858</td>
+</tr>
+<tr class="odd">
+<td align="left">corolla</td>
+<td align="right">3137.90</td>
+<td align="left">2017</td>
+<td align="right">1501.54</td>
+<td align="right">375.38</td>
+<td align="right">264.099645</td>
+</tr>
+<tr class="even">
+<td align="left">moradia</td>
+<td align="right">2637.11</td>
+<td align="left">2015</td>
+<td align="right">2749.32</td>
+<td align="right">229.11</td>
+<td align="right">62.570169</td>
+</tr>
+<tr class="odd">
+<td align="left">moradia</td>
+<td align="right">2637.11</td>
+<td align="left">2016</td>
+<td align="right">2934.00</td>
+<td align="right">244.50</td>
+<td align="right">54.251100</td>
+</tr>
+<tr class="even">
+<td align="left">moradia</td>
+<td align="right">2637.11</td>
+<td align="left">2017</td>
+<td align="right">2228.00</td>
+<td align="right">557.00</td>
+<td align="right">105.915060</td>
+</tr>
+<tr class="odd">
+<td align="left">seguros</td>
+<td align="right">2386.57</td>
+<td align="left">2015</td>
+<td align="right">2940.00</td>
+<td align="right">294.00</td>
+<td align="right">107.206965</td>
+</tr>
+<tr class="even">
+<td align="left">seguros</td>
+<td align="right">2386.57</td>
+<td align="left">2016</td>
+<td align="right">3139.90</td>
+<td align="right">261.66</td>
+<td align="right">5.744635</td>
+</tr>
+</tbody>
+</table>
+
+![](readme_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
 Principais tipos de despesas
 ============================
