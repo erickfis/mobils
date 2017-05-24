@@ -1,25 +1,55 @@
-# Plataforma Mobills - Análise de Despesas Pessoais - WIP
 
-*erickfis@gmail.com - 2017 maio, 22*
+# Plataforma Mobills - Análise de Finanças Pessoais
+
+*erickfis@gmail.com, 2017 maio, 24*
 
 
 
-Análise de uma planilha de gastos domésticos registrados ao longo dos
-meses e verificar a existência de tendências relacionadas à estações do
-ano, datas comemorativas ou datas-chave.
+A plataforma Mobills é um serviço pago que, através de um app android,
+leitura de SMSs do banco e de interação via web, registra despesas
+realizadas, armazena os dados na nuvem e permite a posterior exportação
+destes dados.
 
-Os dados foram gerados pela plataforma mobils, um app android que
-registra despesas realizadas, armazena os dados na nuvem e permite a
-posterior exportação destes dados.
+A interface disponibilizada via APP ou web possui algumas
+funcionalidades, tais como:
 
+-   lançamento de despesas / receitas
+-   somatória e cálculo de saldo
+-   gráfico de despesas por categoria, por mês.
+
+Mas algumas funcionalidades importantes estão faltando, entre elas:
+
+-   acompanhamento da evolução das despesas por categoria ao longo dos
+    meses
+-   gráficos e tabelas que permitam analisar mais a sério o controle de
+    gastos ao longo do tempo
+-   gráficos e tabelas que indiquem tendências de gastos relacionadas à
+    estações do ano, datas comemorativas ou datas-chave
+-   evidências que indiquem necessidade de mudanças no controle
+    financeiro
+
+Este estudo se destina justamente a suprir estas deficiências apontadas
+e, através do banco de dados gerado pela plataforma, analisar o
+orçamento doméstico com uma visão mais ampla que possibilitará um maior
+entendimento do mesmo, dando ao usuário fundamentação e evidências para
+tomada de decisões que poderão alterar positivamente o rumo de seu
+planejamento financeiro
+
+A plataforma mobils pode ser encontrada em:
 
 <https://web.mobills.com.br>
 
-<!-- # A plataforma Mobills -->
+O aplicativo para android pode ser encontrado em:
+
+<https://play.google.com/store/apps/details?id=br.com.gerenciadorfinanceiro.controller>
+
+
 
 
 -   [Em progresso](#em-progresso)
 -   [Objetivo](#objetivo)
+-   [Software utilizado e instruções de
+    uso](#software-utilizado-e-instrucoes-de-uso)
 -   [Processamento dos dados](#processamento-dos-dados)
     -   [Tratamento inicial dos dados](#tratamento-inicial-dos-dados)
     -   [Análise da qualidade dos
@@ -39,9 +69,38 @@ posterior exportação destes dados.
 Em progresso
 ============
 
--   acessar API da plataforma - ainda não disponível
+-   acessar API da plataforma - ainda não disponibilizado pela
+    plataforma
 
 
+
+
+Software utilizado e instruções de uso
+======================================
+
+Esta análise é realisada através dos seguintes softwares:
+
+-   R version 3.4.0 (2017-04-21)
+-   Platform x86\_64-pc-linux-gnu
+-   OS Description: Linux Mint 18.1 Serena
+
+Para utilizar o programa, acessar a plataforma web e baixar os bancos de
+dados exportado no formato csv.
+
+Os arquivos devem ser guardados na pasta data e devem conter a string
+"mobills" em seu nome. É aconselhado nomear o arquivo usando também um
+indicador de data.
+
+Ex: *bancoX-mobills-2015a2017.csv*
+
+Podem ser utilizados vários arquivos complementares, não sendo
+necessário exportar um banco de dados completo toda vez que for
+necessário incluir novos dados.
+
+O programa analisa a pasta dados e irá processá-los novamente sempre que
+houver novidades, salvando o banco de dados tratado para o arquivo
+*dados-ok.rds*. Caso não haja novidades, o programa somente carrega este
+banco de dados já tratado, acelerando consideravelmente o processo.
 
 Processamento dos dados
 =======================
@@ -285,181 +344,276 @@ Maiores Despesas por categoria
 Na tabela abaixo temos um ranking dos maiores tipos de despesa por ano:
 
 <table>
+<caption>Maiores gastos</caption>
 <thead>
 <tr class="header">
+<th align="right">rank</th>
 <th align="left">tipo</th>
-<th align="right">media.total</th>
-<th align="left">ano</th>
-<th align="right">total.anual</th>
-<th align="right">media.anual</th>
-<th align="right">sd.anual</th>
+<th align="right">media</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td align="right">1</td>
 <td align="left">alimentação</td>
-<td align="right">10413.72</td>
-<td align="left">2015</td>
-<td align="right">11317.11</td>
-<td align="right">1028.83</td>
-<td align="right">218.451669</td>
+<td align="right">1236.09</td>
 </tr>
 <tr class="even">
-<td align="left">alimentação</td>
-<td align="right">10413.72</td>
-<td align="left">2016</td>
-<td align="right">13809.51</td>
-<td align="right">1150.79</td>
-<td align="right">264.265256</td>
-</tr>
-<tr class="odd">
-<td align="left">alimentação</td>
-<td align="right">10413.72</td>
-<td align="left">2017</td>
-<td align="right">6114.55</td>
-<td align="right">1528.64</td>
-<td align="right">409.415748</td>
-</tr>
-<tr class="even">
+<td align="right">2</td>
 <td align="left">transporte</td>
-<td align="right">5091.76</td>
-<td align="left">2015</td>
-<td align="right">5861.51</td>
-<td align="right">532.86</td>
-<td align="right">126.071060</td>
+<td align="right">549.88</td>
 </tr>
 <tr class="odd">
-<td align="left">transporte</td>
-<td align="right">5091.76</td>
-<td align="left">2016</td>
-<td align="right">7419.99</td>
-<td align="right">618.33</td>
-<td align="right">109.892028</td>
-</tr>
-<tr class="even">
-<td align="left">transporte</td>
-<td align="right">5091.76</td>
-<td align="left">2017</td>
-<td align="right">1993.77</td>
-<td align="right">498.44</td>
-<td align="right">85.329031</td>
-</tr>
-<tr class="odd">
+<td align="right">3</td>
 <td align="left">saúde</td>
-<td align="right">3537.84</td>
-<td align="left">2015</td>
-<td align="right">4170.79</td>
-<td align="right">347.57</td>
-<td align="right">73.603969</td>
+<td align="right">377.71</td>
 </tr>
 <tr class="even">
-<td align="left">saúde</td>
-<td align="right">3537.84</td>
-<td align="left">2016</td>
-<td align="right">4950.81</td>
-<td align="right">412.57</td>
-<td align="right">98.528588</td>
-</tr>
-<tr class="odd">
-<td align="left">saúde</td>
-<td align="right">3537.84</td>
-<td align="left">2017</td>
-<td align="right">1491.92</td>
-<td align="right">372.98</td>
-<td align="right">208.047493</td>
-</tr>
-<tr class="even">
-<td align="left">pagamentos</td>
-<td align="right">3172.63</td>
-<td align="left">2015</td>
-<td align="right">6266.99</td>
-<td align="right">522.25</td>
-<td align="right">333.768537</td>
-</tr>
-<tr class="odd">
-<td align="left">pagamentos</td>
-<td align="right">3172.63</td>
-<td align="left">2016</td>
-<td align="right">2501.00</td>
-<td align="right">208.42</td>
-<td align="right">87.059497</td>
-</tr>
-<tr class="even">
-<td align="left">pagamentos</td>
-<td align="right">3172.63</td>
-<td align="left">2017</td>
-<td align="right">749.90</td>
-<td align="right">187.47</td>
-<td align="right">94.964041</td>
-</tr>
-<tr class="odd">
+<td align="right">4</td>
 <td align="left">corolla</td>
-<td align="right">3137.90</td>
-<td align="left">2015</td>
-<td align="right">5313.14</td>
-<td align="right">442.76</td>
-<td align="right">310.598222</td>
-</tr>
-<tr class="even">
-<td align="left">corolla</td>
-<td align="right">3137.90</td>
-<td align="left">2016</td>
-<td align="right">2599.03</td>
-<td align="right">288.78</td>
-<td align="right">223.242858</td>
+<td align="right">368.97</td>
 </tr>
 <tr class="odd">
-<td align="left">corolla</td>
-<td align="right">3137.90</td>
-<td align="left">2017</td>
-<td align="right">1501.54</td>
-<td align="right">375.38</td>
-<td align="right">264.099645</td>
+<td align="right">5</td>
+<td align="left">moradia</td>
+<td align="right">343.54</td>
 </tr>
 <tr class="even">
-<td align="left">moradia</td>
-<td align="right">2637.11</td>
-<td align="left">2015</td>
-<td align="right">2749.32</td>
-<td align="right">229.11</td>
-<td align="right">62.570169</td>
+<td align="right">6</td>
+<td align="left">pagamentos</td>
+<td align="right">306.05</td>
 </tr>
 <tr class="odd">
-<td align="left">moradia</td>
-<td align="right">2637.11</td>
-<td align="left">2016</td>
-<td align="right">2934.00</td>
-<td align="right">244.50</td>
-<td align="right">54.251100</td>
-</tr>
-<tr class="even">
-<td align="left">moradia</td>
-<td align="right">2637.11</td>
-<td align="left">2017</td>
-<td align="right">2228.00</td>
-<td align="right">557.00</td>
-<td align="right">105.915060</td>
-</tr>
-<tr class="odd">
+<td align="right">7</td>
 <td align="left">seguros</td>
-<td align="right">2386.57</td>
-<td align="left">2015</td>
-<td align="right">2940.00</td>
-<td align="right">294.00</td>
-<td align="right">107.206965</td>
+<td align="right">275.20</td>
 </tr>
 <tr class="even">
-<td align="left">seguros</td>
-<td align="right">2386.57</td>
-<td align="left">2016</td>
-<td align="right">3139.90</td>
-<td align="right">261.66</td>
-<td align="right">5.744635</td>
+<td align="right">8</td>
+<td align="left">educação</td>
+<td align="right">206.30</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="left">telefonia</td>
+<td align="right">172.79</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="left">equipamentos</td>
+<td align="right">166.68</td>
+</tr>
+<tr class="odd">
+<td align="right">11</td>
+<td align="left">pet</td>
+<td align="right">148.93</td>
+</tr>
+<tr class="even">
+<td align="right">12</td>
+<td align="left">roupa</td>
+<td align="right">135.65</td>
+</tr>
+<tr class="odd">
+<td align="right">13</td>
+<td align="left">lazer</td>
+<td align="right">115.78</td>
+</tr>
+<tr class="even">
+<td align="right">14</td>
+<td align="left">investimento</td>
+<td align="right">107.20</td>
+</tr>
+<tr class="odd">
+<td align="right">15</td>
+<td align="left">fast food</td>
+<td align="right">89.61</td>
+</tr>
+<tr class="even">
+<td align="right">16</td>
+<td align="left">beleza</td>
+<td align="right">85.30</td>
+</tr>
+<tr class="odd">
+<td align="right">17</td>
+<td align="left">terceiros</td>
+<td align="right">83.12</td>
+</tr>
+<tr class="even">
+<td align="right">18</td>
+<td align="left">presentes</td>
+<td align="right">69.31</td>
+</tr>
+<tr class="odd">
+<td align="right">19</td>
+<td align="left">steam</td>
+<td align="right">23.21</td>
+</tr>
+<tr class="even">
+<td align="right">20</td>
+<td align="left">fatura c.crédito</td>
+<td align="right">0.99</td>
 </tr>
 </tbody>
 </table>
 
-![](readme_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](readme_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+
+Além disso, pode ser interessante analisar as categorias que apresentam
+as maiores variações mês a mês:
+
+<table>
+<thead>
+<tr class="header">
+<th align="right">rank</th>
+<th align="left">tipo</th>
+<th align="left">ano</th>
+<th align="right">media.mensal.ano</th>
+<th align="right">sd.mensal.ano</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">alimentação</td>
+<td align="left">2017</td>
+<td align="right">1528.64</td>
+<td align="right">409.42</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">pagamentos</td>
+<td align="left">2015</td>
+<td align="right">522.25</td>
+<td align="right">333.77</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">corolla</td>
+<td align="left">2015</td>
+<td align="right">442.76</td>
+<td align="right">310.60</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">alimentação</td>
+<td align="left">2016</td>
+<td align="right">1150.79</td>
+<td align="right">264.27</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">corolla</td>
+<td align="left">2017</td>
+<td align="right">375.38</td>
+<td align="right">264.10</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">corolla</td>
+<td align="left">2016</td>
+<td align="right">288.78</td>
+<td align="right">223.24</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">alimentação</td>
+<td align="left">2015</td>
+<td align="right">1028.83</td>
+<td align="right">218.45</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="left">saúde</td>
+<td align="left">2017</td>
+<td align="right">372.98</td>
+<td align="right">208.05</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="left">lazer</td>
+<td align="left">2015</td>
+<td align="right">188.90</td>
+<td align="right">166.38</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="left">pet</td>
+<td align="left">2015</td>
+<td align="right">203.18</td>
+<td align="right">147.09</td>
+</tr>
+<tr class="odd">
+<td align="right">11</td>
+<td align="left">equipamentos</td>
+<td align="left">2016</td>
+<td align="right">186.40</td>
+<td align="right">144.96</td>
+</tr>
+<tr class="even">
+<td align="right">12</td>
+<td align="left">pet</td>
+<td align="left">2016</td>
+<td align="right">94.67</td>
+<td align="right">142.34</td>
+</tr>
+<tr class="odd">
+<td align="right">13</td>
+<td align="left">transporte</td>
+<td align="left">2015</td>
+<td align="right">532.86</td>
+<td align="right">126.07</td>
+</tr>
+<tr class="even">
+<td align="right">14</td>
+<td align="left">beleza</td>
+<td align="left">2015</td>
+<td align="right">181.06</td>
+<td align="right">117.06</td>
+</tr>
+<tr class="odd">
+<td align="right">15</td>
+<td align="left">transporte</td>
+<td align="left">2016</td>
+<td align="right">618.33</td>
+<td align="right">109.89</td>
+</tr>
+<tr class="even">
+<td align="right">16</td>
+<td align="left">educação</td>
+<td align="left">2015</td>
+<td align="right">411.67</td>
+<td align="right">109.03</td>
+</tr>
+<tr class="odd">
+<td align="right">17</td>
+<td align="left">seguros</td>
+<td align="left">2015</td>
+<td align="right">294.00</td>
+<td align="right">107.21</td>
+</tr>
+<tr class="even">
+<td align="right">18</td>
+<td align="left">moradia</td>
+<td align="left">2017</td>
+<td align="right">557.00</td>
+<td align="right">105.92</td>
+</tr>
+<tr class="odd">
+<td align="right">19</td>
+<td align="left">saúde</td>
+<td align="left">2016</td>
+<td align="right">412.57</td>
+<td align="right">98.53</td>
+</tr>
+<tr class="even">
+<td align="right">20</td>
+<td align="left">pagamentos</td>
+<td align="left">2017</td>
+<td align="right">187.47</td>
+<td align="right">94.96</td>
+</tr>
+</tbody>
+</table>
 
 Principais tipos de despesas
 ============================

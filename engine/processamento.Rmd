@@ -37,21 +37,41 @@ Antes de fazer qualquer inferência, vamos primeiramente analisar os dados expor
 # gatilho tem.novidade futuramente vai ser ativado a partir de comparação com o servidor
 tem.novidade <- 0
 
+# verifica se os arquivos disponíveis são os mesmos que já foram utilizados anteriormente. Se não, dispara um novo processamento
+
+arquivos.atual <- dir("../data/")
+arquivos.atual <- arquivos.atual[grep("mobills", arquivos.atual)]
+
+if (file.exists("../data/lista.txt")) {
+        data.previous <- readLines("../data/lista.txt")
+                if (identical(data.previous,arquivos.atual)) {
+                        tem.novidade <- 0
+                } else {
+                        tem.novidade <- 1
+                        writeLines(arquivos.atual, "../data/lista.txt")
+                }
+        
+} else {
+        tem.novidade <- 1
+        writeLines(arquivos.atual, "../data/lista.txt")
+}
+
+
+
+
 # procurando por db pronto, salvo em rds
-arquivos.local <- dir("../data/")
 tem.rds <- file.exists("../data/dados-ok.rds")
 
 # se tem novidade ou falta o rds, processar do começo:
 if(tem.novidade==1|!tem.rds) {
-        arquivos.local <- arquivos.local[grep("mobills", arquivos.local)]
 
         # dados <- read.csv(paste0("data/", arquivos.local[1]))
-        dados <- fread(paste0("../data/", arquivos.local[1]), na.strings = "")
+        dados <- fread(paste0("../data/", arquivos.atual[1]), na.strings = "")
 
 
-        for (i in 2:length(arquivos.local)) {
+        for (i in 2:length(arquivos.atual)) {
                 dados <- bind_rows(dados, fread(
-                        paste0("../data/", arquivos.local[i]), 
+                        paste0("../data/", arquivos.atual[i]), 
                         na.strings = "")
                         )
         }
@@ -117,7 +137,7 @@ plt.p1 <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
 plt.p1 <- plt.p1 +  geom_line() + geom_point() +
                 scale_colour_manual(values = getPalette(colourCount))+
                 facet_grid(ano ~., scale = "free") + 
-                labs(title="Gastos por tipo de despesa - dados iniciais", y="Total (R$)", x="Mês") + 
+                labs(title="Gastos por tipo de despesa - dados não-filtrados", y="Total (R$)", x="Mês") + 
                 theme(legend.position="none") +
                 theme(plot.title = element_text(hjust = 0.5)) 
 
@@ -217,24 +237,29 @@ Na tabela abaixo temos um ranking dos maiores tipos de despesa por ano:
 ```{r maiores.despesas, cache=TRUE}
 
 maiores <- totais %>% group_by(tipo, ano) %>% 
-        summarise(total.anual=sum(total), media.anual = round(mean(total),2),
-                  sd.anual=sd(total)) %>%
-        mutate(media.total = round(mean(total.anual),2)) %>%
-        arrange(desc(media.total), ano, tipo)
+        summarise(media.mensal.ano = round(mean(total),2),
+                  sd.mensal.ano=round(sd(total), 2)) %>%
+        mutate(media.mensal.geral = round(mean(media.mensal.ano),2)) %>%
+        arrange(desc(media.mensal.geral), ano, tipo)
 
 
-kable(maiores[1:20,c(1,6,2:5)])
 ```
 
 ```{r}
 maiores.df.plot <-  maiores %>% group_by(tipo) %>% 
-        summarise(media = round(mean(total.anual),2)) %>%
+        summarise(media = round(mean(media.mensal.ano),2)) %>%
         arrange(desc(media)) %>%
         mutate(rank = 1:length(media))
 
 maiores.df.plot$tipo <- factor(maiores.df.plot$tipo,
                 levels = maiores.df.plot$tipo[order(maiores.df.plot$rank)])
 
+
+kable(maiores.df.plot[,c(3,1:2)], caption = "Maiores gastos")
+```
+
+
+```{r}
 colourCount = length(unique(maiores.df.plot$tipo))
 getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
 
@@ -256,5 +281,20 @@ maiores.plt <- maiores.plt + geom_bar(stat="identity") +
 
 
 maiores.plt
+```
+
+
+Além disso, pode ser interessante analisar as categorias que apresentam as maiores variações mês a mês:
+
+
+```{r}
+
+m.variacoes <- ungroup(maiores) %>%
+        arrange(desc(sd.mensal.ano)) %>%
+        mutate(rank = 1:length(sd.mensal.ano))
+
+kable(m.variacoes[1:20, c(6,1:4)])
+
+
 ```
 

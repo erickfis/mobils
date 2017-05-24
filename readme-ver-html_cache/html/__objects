@@ -1,0 +1,6 @@
+load-e-tratamento-csv	arquivos.atual	dadosT	data.previous	tem.novidade	tem.rds	totais	.Random.seed
+passo1	colourCount	getPalette	plt.p1
+filtra-dados	dadosFil	sub	totais
+passo2	plt.p2
+grid	
+maiores.despesas	maiores

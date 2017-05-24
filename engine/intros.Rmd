@@ -1,12 +1,58 @@
 
 # Objetivo
 
-Analisar uma planilha de gastos domésticos registrados ao longo dos meses e verificar a existência de tendências relacionadas à estações do ano, datas comemorativas ou datas-chave.
 
-Os dados foram gerados pela plataforma mobils, um app android que registra despesas realizadas, armazena os dados na nuvem e permite a posterior exportação destes dados.
+A plataforma Mobills é um serviço pago que, através de um app android, leitura de SMSs do banco e de interação via web, registra despesas realizadas, armazena os dados na nuvem e permite a posterior exportação destes dados.
+
+A interface disponibilizada via APP ou web possui algumas funcionalidades, tais como:
+
+- lançamento de despesas / receitas
+- somatória e cálculo de saldo
+- gráfico de despesas por categoria, por mês.
+
+
+
+Mas algumas funcionalidades importantes estão faltando, entre elas:
+
+- acompanhamento da evolução das despesas por categoria ao longo dos meses
+- gráficos e tabelas que permitam analisar mais a sério o controle de gastos ao longo do tempo
+- gráficos e tabelas que indiquem tendências de gastos relacionadas à estações do ano, datas comemorativas ou datas-chave
+- evidências que indiquem necessidade de mudanças no controle financeiro
+
+
+Este estudo se destina justamente a suprir estas deficiências apontadas e,
+através do banco de dados gerado pela plataforma, analisar o orçamento doméstico com uma visão mais ampla que possibilitará um maior entendimento do mesmo, dando ao usuário fundamentação e evidências para tomada de decisões que poderão alterar positivamente o rumo de seu planejamento financeiro
+
+
+A plataforma mobils pode ser encontrada em:
 
 https://web.mobills.com.br
 
 
-<!-- # A plataforma Mobills -->
+O aplicativo para android pode ser encontrado em:
+
+https://play.google.com/store/apps/details?id=br.com.gerenciadorfinanceiro.controller
+
+
+# Software utilizado e instruções de uso
+
+Esta análise é realisada através dos seguintes softwares:
+
+- `r R.version.string`
+- Platform `r R.version$platform`
+- OS `r system("lsb_release -a", intern = TRUE)[2]`
+
+
+Para utilizar o programa, acessar a plataforma web e baixar os bancos de dados exportado no formato csv.
+
+Os arquivos devem ser guardados na pasta data e devem conter a string "mobills" em seu nome. É aconselhado nomear o arquivo usando também um indicador de data.
+
+Ex: *bancoX-mobills-2015a2017.csv*
+
+Podem ser utilizados vários arquivos complementares, não sendo necessário exportar um banco de dados completo toda vez que for necessário incluir novos dados.
+
+O programa analisa a pasta dados e irá processá-los novamente sempre que houver novidades, salvando o banco de dados tratado para o arquivo *dados-ok.rds*.
+Caso não haja novidades, o programa somente carrega este banco de dados já tratado, acelerando consideravelmente o processo.
+
+
 
