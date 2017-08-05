@@ -29,9 +29,9 @@ Observa-se:
 Vamos analisar a tabela de dados:
 
 ```{r tabela-alim}
-dados.alim <- dadosFil %>% filter(mes %in% c("Mai", "Jul") & tipo=="alimentação" & valor > 50) %>%
+dados.alim <- dadosFil %>% filter(mes %in% c("Mai", "Jul") & tipo=="alimentação" & valor > 100) %>%
         arrange(ano, mes, desc(valor))
-kable(dados.alim[,1:6])
+kable(dados.alim[,c(1,6,7)])
 ```
 
 

@@ -32,10 +32,21 @@ opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE,
 ```{r child = 'engine/processamento.Rmd'}
 ```        
 
+```{r child = 'engine/outliers.Rmd'}
+```        
+
+```{r child = 'engine/maiores.Rmd'}
+```        
+
+
 # Principais tipos de despesas
 
 ```{r child = 'engine/alimentacao.Rmd'}
 ```        
+
+```{r child = 'engine/moradia.Rmd'}
+```        
+
 
 ```{r child = 'engine/pagamentos.Rmd'}
 ```        

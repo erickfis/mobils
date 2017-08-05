@@ -4,3 +4,5 @@ filtra-dados	dadosFil	sub	totais
 passo2	plt.p2
 grid	
 maiores.despesas	maiores
+maiores-plot	colourCount	getPalette	maiores.plt	real
+variacoes-plot	colourCount	getPalette	m.variacoes	variacoes.plt

@@ -1,0 +1,44 @@
+
+## Análise por tipo de despesa: Moradia
+
+```{r moradia}
+#devidos subsets
+
+totais.moradia <- totais[totais$tipo=="moradia",]
+
+plt.moradia <- ggplot(totais.moradia, aes(x=mes, y=total,
+                                          group=ano, colour=ano))
+
+
+(plt.moradia +  geom_line() + 
+                geom_point(size=0.5, alpha=0.5) +
+                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                labs(title="Gastos com moradia", y="Total (R$)", x="Mês") +
+                
+                theme(plot.title = element_text(hjust = 0.5)) 
+)
+
+```
+
+
+```{r tabela-moradia}
+
+sub <- which(dadosFil$ano==2017 & dadosFil$mes=="Abr" & 
+                     dadosFil$tipo=="moradia" )
+
+kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com moradia em 2017-04")
+
+
+sub <- which(dadosFil$ano==2016 & dadosFil$mes=="Abr" & 
+                     dadosFil$tipo=="moradia" )
+
+kable(dadosFil[sub,], caption = "Gastos com moradia em 2016-04")
+
+```
+
+
+O grande aumento na média deve-se ao fato de que em 2016:
+
+- não contratávamos faxina
+- não tínhamos seguro-residência
+- gás era lançado como alimentação

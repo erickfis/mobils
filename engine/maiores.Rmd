@@ -1,0 +1,119 @@
+
+# Maiores Despesas por tipo
+
+Na tabela abaixo temos um ranking dos maiores tipos de despesa na média de todos os anos:
+
+```{r maiores.despesas, cache=TRUE}
+
+maiores <- totais %>% group_by(tipo, ano) %>% 
+        summarise(media.anual = round(mean(total),2),
+                  sd.anual=round(sd(total), 2)) %>%
+        mutate(media.geral = round(mean(media.anual),2),
+               sd.geral=round(sd(media.anual), 2)) %>%
+        arrange(desc(media.geral), ano, tipo)
+
+
+```
+
+```{r}
+maiores.df.plot <-  maiores %>% group_by(tipo) %>% 
+        summarise(media = round(mean(media.anual),2)) %>%
+        arrange(desc(media)) %>%
+        mutate(rank = 1:length(media))
+
+maiores.df.plot <- maiores.df.plot[1:10,]
+
+maiores.df.plot$tipo <- factor(maiores.df.plot$tipo,
+                levels = maiores.df.plot$tipo[order(maiores.df.plot$rank,
+                                                decreasing = TRUE)])
+
+
+kable(maiores.df.plot[1:10, c(3,1:2)], caption = "Os 10 maiores tipos de despesas")
+```
+
+
+```{r maiores-plot, cache=TRUE}
+
+real <- dollar_format(prefix = "R$ ")
+
+colourCount = length(unique(maiores.df.plot$tipo))
+getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+
+maiores.plt <- ggplot(maiores.df.plot, aes(tipo, media, fill=tipo))
+
+maiores.plt <- maiores.plt + geom_bar(stat="identity") +
+ 
+        # geom_hline(aes(yintercept = median), linetype=2) +
+        labs(title=" Média das maiores despesas, por tipo", 
+             y="", x="") + 
+                
+        geom_text(aes(label=tipo),
+                vjust=.5, hjust=1.1, colour="white") +
+
+        theme(legend.position="none") +    
+        scale_y_continuous(labels = real) +
+        scale_colour_manual(values = getPalette(colourCount))+                
+        theme(legend.title=element_blank()) +
+        theme(axis.text.y = element_blank()) + 
+        theme(axis.ticks.y = element_blank()) + 
+        theme(plot.title = element_text(hjust = 0.5))    
+
+
+maiores.plt + coord_flip()
+```
+
+
+# Maiores Variações 
+
+
+Pode ser interessante analisar as categorias que apresentam as maiores variações ao longo dos anos
+
+
+Na tabela abaixo temos um ranking dos tipos de despesas que apresentaram os maiores desvios padrões da média:
+
+```{r variacoes-plot, cache=TRUE}
+
+m.variacoes <-  maiores %>% group_by(tipo) %>% 
+        summarise(sd = round(sd(media.anual),2)) %>%
+        arrange(desc(sd)) %>%
+        mutate(rank = 1:length(sd))
+
+m.variacoes <- m.variacoes[1:10,]
+
+kable(m.variacoes[, c(3,1:2)])
+
+
+m.variacoes$tipo <- factor(m.variacoes$tipo,
+                levels = m.variacoes$tipo[order(m.variacoes$rank, 
+                                                decreasing = TRUE)])
+
+
+colourCount = length(unique(m.variacoes$tipo))
+getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+
+variacoes.plt <- ggplot(m.variacoes, aes(tipo, sd, fill=tipo))
+
+variacoes.plt <- variacoes.plt + geom_bar(stat="identity") +
+
+        geom_text(aes(label=tipo),
+                vjust=.5, hjust=1.1, colour="white") +
+        
+        labs(title="Maiores variações por tipos de despesas", 
+             y="Desvio Padrão", x="") + 
+                
+        theme(legend.position="none") +        
+        scale_colour_manual(values = getPalette(colourCount))+   
+        scale_y_continuous(labels = real) +
+        theme(legend.title=element_blank()) +
+        theme(axis.text.y = element_blank()) + 
+        theme(axis.ticks.y = element_blank()) + 
+        theme(plot.title = element_text(hjust = 0.5))                 
+
+
+variacoes.plt + coord_flip()
+
+
+```
+
+
+

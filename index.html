@@ -45,11 +45,13 @@
 <li><a href="#software-utilizado-e-instrucoes-de-uso">Software utilizado e instruções de uso</a></li>
 <li><a href="#processamento-dos-dados">Processamento dos dados</a><ul>
 <li><a href="#tratamento-inicial-dos-dados">Tratamento inicial dos dados</a></li>
-<li><a href="#analise-da-qualidade-dos-dados">Análise da qualidade dos dados</a></li>
 </ul></li>
-<li><a href="#maiores-despesas-por-categoria">Maiores Despesas por categoria</a></li>
+<li><a href="#analise-da-qualidade-dos-dados">Análise da qualidade dos dados</a></li>
+<li><a href="#maiores-despesas-por-tipo">Maiores Despesas por tipo</a></li>
+<li><a href="#maiores-variacoes">Maiores Variações</a></li>
 <li><a href="#principais-tipos-de-despesas">Principais tipos de despesas</a><ul>
 <li><a href="#analise-por-tipo-de-despesa-alimentacao">Análise por tipo de despesa: Alimentação</a></li>
+<li><a href="#analise-por-tipo-de-despesa-moradia">Análise por tipo de despesa: Moradia</a></li>
 <li><a href="#analise-por-tipo-de-despesa-pagamentos">Análise por tipo de despesa: Pagamentos</a></li>
 <li><a href="#analise-por-tipo-de-despesa-corolla">Análise por tipo de despesa: Corolla</a></li>
 </ul></li>
@@ -117,11 +119,12 @@
 <!-- filtra 2015 e 2016 -->
 <!-- $ grep -E "^(,2015|,2016)" inicial.csv >> newData.csv -->
 </div>
-<div id="analise-da-qualidade-dos-dados" class="section level2">
-<h2>Análise da qualidade dos dados</h2>
+</div>
+<div id="analise-da-qualidade-dos-dados" class="section level1">
+<h1>Análise da qualidade dos dados</h1>
 <p><img src="index_files/figure-html/passo1-1.png" /><!-- --></p>
-<p>Analisando o primeiro gráfico, vemos que há problemas em março de 2015, tipo pagamentos.</p>
-<p>Vamos olhar este ponto fora do gráfico mais de perto:</p>
+<p>Analisando este gráfico, verificamos um outlier em março de 2015, tipo pagamentos.</p>
+<p>Vamos olhar esta informação mais de perto:</p>
 <table>
 <caption>categoria pagamentos, em março de 2015</caption>
 <thead>
@@ -159,7 +162,7 @@
 </tr>
 </tbody>
 </table>
-<p>Da tabela acima, podemos observar que consta um lançamento referente a pagamento de cartão de crédito, mas não é assim que o restante dos lançamentos foram feitos: não foram registrados totais. Este, portanto, foi um erro de uso da plataforma. Vamos, portanto, retirar este ponto da análise.</p>
+<p>Da tabela acima, observa-se que consta um lançamento referente a pagamento de cartão de crédito. Porém não é assim que o restante dos lançamentos foram feitos: não foram registrados totais. Este, portanto, foi um erro de uso da plataforma. Podemos, portanto, retirar este outlier com segurança.</p>
 <table>
 <caption>compras no crédito, registradas no dia 25</caption>
 <thead>
@@ -290,15 +293,15 @@
 <p>Desta forma, não é possível dizer se a despesa foi feita no mês anterior ou no próprio mês. Ela apenas foi paga no mês onde é lançada.</p>
 <p>Uma vez que a fatura deste cartão é fechada no dia 15, todas as compras realizadas a partir do dia 16 são cobradas apenas na próxima fatura.</p>
 <p>No entanto, como isso ocorre para todos os dados da mesma forma, não há impacto impeditivo na análise.</p>
-<p>Como podemos ver no gráfico 2, não há mais pontos obviamente fora do gráfico, todos os erros de coleta dados foram filtrados.</p>
+<p><img src="index_files/figure-html/passo2-1.png" /><!-- --></p>
+<p>Como podemos ver no gráfico 2, não há mais outliers, todos os erros de coleta dados foram filtrados.</p>
 <p>O próximo passo é estudar os tipos de despesas que mais se destacam.</p>
 </div>
-</div>
-<div id="maiores-despesas-por-categoria" class="section level1">
-<h1>Maiores Despesas por categoria</h1>
-<p>Na tabela abaixo temos um ranking dos maiores tipos de despesa por ano:</p>
+<div id="maiores-despesas-por-tipo" class="section level1">
+<h1>Maiores Despesas por tipo</h1>
+<p>Na tabela abaixo temos um ranking dos maiores tipos de despesa na média de todos os anos:</p>
 <table>
-<caption>Maiores gastos</caption>
+<caption>Os 10 maiores tipos de despesas</caption>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
@@ -357,213 +360,76 @@
 <td align="left">equipamentos</td>
 <td align="right">178.48</td>
 </tr>
-<tr class="odd">
-<td align="right">11</td>
-<td align="left">telefonia</td>
-<td align="right">176.36</td>
-</tr>
-<tr class="even">
-<td align="right">12</td>
-<td align="left">pet</td>
-<td align="right">148.93</td>
-</tr>
-<tr class="odd">
-<td align="right">13</td>
-<td align="left">lazer</td>
-<td align="right">146.07</td>
-</tr>
-<tr class="even">
-<td align="right">14</td>
-<td align="left">investimento</td>
-<td align="right">107.20</td>
-</tr>
-<tr class="odd">
-<td align="right">15</td>
-<td align="left">beleza</td>
-<td align="right">85.30</td>
-</tr>
-<tr class="even">
-<td align="right">16</td>
-<td align="left">fast food</td>
-<td align="right">83.40</td>
-</tr>
-<tr class="odd">
-<td align="right">17</td>
-<td align="left">terceiros</td>
-<td align="right">83.12</td>
-</tr>
-<tr class="even">
-<td align="right">18</td>
-<td align="left">presentes</td>
-<td align="right">70.18</td>
-</tr>
-<tr class="odd">
-<td align="right">19</td>
-<td align="left">steam</td>
-<td align="right">33.71</td>
-</tr>
-<tr class="even">
-<td align="right">20</td>
-<td align="left">fatura c.crédito</td>
-<td align="right">0.99</td>
-</tr>
 </tbody>
 </table>
-<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" /><!-- --></p>
-<p>Além disso, pode ser interessante analisar as categorias que apresentam as maiores variações mês a mês:</p>
+<p><img src="index_files/figure-html/maiores-plot-1.png" /><!-- --></p>
+</div>
+<div id="maiores-variacoes" class="section level1">
+<h1>Maiores Variações</h1>
+<p>Pode ser interessante analisar as categorias que apresentam as maiores variações ao longo dos anos</p>
+<p>Na tabela abaixo temos um ranking dos tipos de despesas que apresentaram os maiores desvios padrões da média:</p>
 <table>
 <thead>
 <tr class="header">
 <th align="right">rank</th>
 <th align="left">tipo</th>
-<th align="left">ano</th>
-<th align="right">media.mensal.ano</th>
-<th align="right">sd.mensal.ano</th>
+<th align="right">sd</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="left">corolla</td>
-<td align="left">2017</td>
-<td align="right">581.93</td>
-<td align="right">571.50</td>
+<td align="left">alimentação</td>
+<td align="right">319.75</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="left">alimentação</td>
-<td align="left">2017</td>
-<td align="right">1633.46</td>
-<td align="right">486.77</td>
+<td align="left">moradia</td>
+<td align="right">189.29</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
 <td align="left">pagamentos</td>
-<td align="left">2015</td>
-<td align="right">522.25</td>
-<td align="right">333.77</td>
+<td align="right">181.22</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
 <td align="left">corolla</td>
-<td align="left">2015</td>
-<td align="right">442.76</td>
-<td align="right">310.60</td>
+<td align="right">146.64</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="left">transporte</td>
-<td align="left">2017</td>
-<td align="right">708.08</td>
-<td align="right">304.62</td>
+<td align="left">educação</td>
+<td align="right">143.32</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="left">alimentação</td>
-<td align="left">2016</td>
-<td align="right">1150.79</td>
-<td align="right">264.27</td>
+<td align="left">transporte</td>
+<td align="right">87.62</td>
 </tr>
 <tr class="odd">
 <td align="right">7</td>
-<td align="left">saúde</td>
-<td align="left">2017</td>
-<td align="right">476.39</td>
-<td align="right">227.82</td>
+<td align="left">roupa</td>
+<td align="right">84.02</td>
 </tr>
 <tr class="even">
 <td align="right">8</td>
-<td align="left">corolla</td>
-<td align="left">2016</td>
-<td align="right">288.78</td>
-<td align="right">223.24</td>
+<td align="left">beleza</td>
+<td align="right">82.97</td>
 </tr>
 <tr class="odd">
 <td align="right">9</td>
-<td align="left">alimentação</td>
-<td align="left">2015</td>
-<td align="right">1028.83</td>
-<td align="right">218.45</td>
+<td align="left">pet</td>
+<td align="right">76.73</td>
 </tr>
 <tr class="even">
 <td align="right">10</td>
-<td align="left">lazer</td>
-<td align="left">2017</td>
-<td align="right">149.58</td>
-<td align="right">218.41</td>
-</tr>
-<tr class="odd">
-<td align="right">11</td>
-<td align="left">lazer</td>
-<td align="left">2015</td>
-<td align="right">188.90</td>
-<td align="right">166.38</td>
-</tr>
-<tr class="even">
-<td align="right">12</td>
-<td align="left">pet</td>
-<td align="left">2015</td>
-<td align="right">203.18</td>
-<td align="right">147.09</td>
-</tr>
-<tr class="odd">
-<td align="right">13</td>
-<td align="left">equipamentos</td>
-<td align="left">2016</td>
-<td align="right">186.40</td>
-<td align="right">144.96</td>
-</tr>
-<tr class="even">
-<td align="right">14</td>
-<td align="left">pet</td>
-<td align="left">2016</td>
-<td align="right">94.67</td>
-<td align="right">142.34</td>
-</tr>
-<tr class="odd">
-<td align="right">15</td>
-<td align="left">educação</td>
-<td align="left">2017</td>
-<td align="right">155.40</td>
-<td align="right">131.62</td>
-</tr>
-<tr class="even">
-<td align="right">16</td>
-<td align="left">roupa</td>
-<td align="left">2017</td>
-<td align="right">280.95</td>
-<td align="right">126.83</td>
-</tr>
-<tr class="odd">
-<td align="right">17</td>
-<td align="left">transporte</td>
-<td align="left">2015</td>
-<td align="right">532.86</td>
-<td align="right">126.07</td>
-</tr>
-<tr class="even">
-<td align="right">18</td>
-<td align="left">pagamentos</td>
-<td align="left">2017</td>
-<td align="right">208.32</td>
-<td align="right">124.31</td>
-</tr>
-<tr class="odd">
-<td align="right">19</td>
-<td align="left">beleza</td>
-<td align="left">2015</td>
-<td align="right">181.06</td>
-<td align="right">117.06</td>
-</tr>
-<tr class="even">
-<td align="right">20</td>
-<td align="left">transporte</td>
-<td align="left">2016</td>
-<td align="right">618.33</td>
-<td align="right">109.89</td>
+<td align="left">saúde</td>
+<td align="right">64.41</td>
 </tr>
 </tbody>
 </table>
+<p><img src="index_files/figure-html/variacoes-plot-1.png" /><!-- --></p>
 </div>
 <div id="principais-tipos-de-despesas" class="section level1">
 <h1>Principais tipos de despesas</h1>
@@ -582,389 +448,100 @@
 <thead>
 <tr class="header">
 <th align="left">data</th>
-<th align="left">ano</th>
-<th align="left">mes</th>
-<th align="left">mes.ano</th>
-<th align="left">tipo</th>
 <th align="left">descrição</th>
+<th align="right">valor</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">2015-05-25</td>
-<td align="left">2015</td>
-<td align="left">Mai</td>
-<td align="left">2015-05</td>
-<td align="left">alimentação</td>
 <td align="left">18-04 mercado</td>
+<td align="right">405.00</td>
 </tr>
 <tr class="even">
 <td align="left">2015-05-25</td>
-<td align="left">2015</td>
-<td align="left">Mai</td>
-<td align="left">2015-05</td>
-<td align="left">alimentação</td>
 <td align="left">12-04 feira</td>
+<td align="right">130.00</td>
 </tr>
 <tr class="odd">
 <td align="left">2015-05-25</td>
-<td align="left">2015</td>
-<td align="left">Mai</td>
-<td align="left">2015-05</td>
-<td align="left">alimentação</td>
 <td align="left">25-04 feira</td>
-</tr>
-<tr class="even">
-<td align="left">2015-05-25</td>
-<td align="left">2015</td>
-<td align="left">Mai</td>
-<td align="left">2015-05</td>
-<td align="left">alimentação</td>
-<td align="left">19-04 feira</td>
-</tr>
-<tr class="odd">
-<td align="left">2015-05-25</td>
-<td align="left">2015</td>
-<td align="left">Mai</td>
-<td align="left">2015-05</td>
-<td align="left">alimentação</td>
-<td align="left">19-04 feira</td>
-</tr>
-<tr class="even">
-<td align="left">2015-05-25</td>
-<td align="left">2015</td>
-<td align="left">Mai</td>
-<td align="left">2015-05</td>
-<td align="left">alimentação</td>
-<td align="left">09-05 feira</td>
-</tr>
-<tr class="odd">
-<td align="left">2015-05-25</td>
-<td align="left">2015</td>
-<td align="left">Mai</td>
-<td align="left">2015-05</td>
-<td align="left">alimentação</td>
-<td align="left">25-04 camarao</td>
-</tr>
-<tr class="even">
-<td align="left">2015-05-25</td>
-<td align="left">2015</td>
-<td align="left">Mai</td>
-<td align="left">2015-05</td>
-<td align="left">alimentação</td>
-<td align="left">02-05 feira</td>
-</tr>
-<tr class="odd">
-<td align="left">2015-05-25</td>
-<td align="left">2015</td>
-<td align="left">Mai</td>
-<td align="left">2015-05</td>
-<td align="left">alimentação</td>
-<td align="left">09-05 mercado</td>
+<td align="right">103.00</td>
 </tr>
 <tr class="even">
 <td align="left">2015-07-27</td>
-<td align="left">2015</td>
-<td align="left">Jul</td>
-<td align="left">2015-07</td>
-<td align="left">alimentação</td>
 <td align="left">16-06 compras</td>
+<td align="right">566.00</td>
 </tr>
 <tr class="odd">
 <td align="left">2015-07-27</td>
-<td align="left">2015</td>
-<td align="left">Jul</td>
-<td align="left">2015-07</td>
-<td align="left">alimentação</td>
 <td align="left">04-07 feira</td>
+<td align="right">138.00</td>
 </tr>
 <tr class="even">
 <td align="left">2015-07-27</td>
-<td align="left">2015</td>
-<td align="left">Jul</td>
-<td align="left">2015-07</td>
-<td align="left">alimentação</td>
 <td align="left">27-06 feira</td>
+<td align="right">103.00</td>
 </tr>
 <tr class="odd">
-<td align="left">2015-07-27</td>
-<td align="left">2015</td>
-<td align="left">Jul</td>
-<td align="left">2015-07</td>
-<td align="left">alimentação</td>
-<td align="left">29-06 walmart</td>
-</tr>
-<tr class="even">
-<td align="left">2015-07-27</td>
-<td align="left">2015</td>
-<td align="left">Jul</td>
-<td align="left">2015-07</td>
-<td align="left">alimentação</td>
-<td align="left">11-09 feira</td>
-</tr>
-<tr class="odd">
-<td align="left">2015-07-27</td>
-<td align="left">2015</td>
-<td align="left">Jul</td>
-<td align="left">2015-07</td>
-<td align="left">alimentação</td>
-<td align="left">20-06 feira</td>
-</tr>
-<tr class="even">
 <td align="left">2016-05-25</td>
-<td align="left">2016</td>
-<td align="left">Mai</td>
-<td align="left">2016-05</td>
-<td align="left">alimentação</td>
 <td align="left">assai atacadista</td>
-</tr>
-<tr class="odd">
-<td align="left">2016-05-25</td>
-<td align="left">2016</td>
-<td align="left">Mai</td>
-<td align="left">2016-05</td>
-<td align="left">alimentação</td>
-<td align="left">sacolao saude st</td>
+<td align="right">430.14</td>
 </tr>
 <tr class="even">
 <td align="left">2016-05-25</td>
-<td align="left">2016</td>
-<td align="left">Mai</td>
-<td align="left">2016-05</td>
-<td align="left">alimentação</td>
 <td align="left">sacolao saude st</td>
-</tr>
-<tr class="odd">
-<td align="left">2016-05-25</td>
-<td align="left">2016</td>
-<td align="left">Mai</td>
-<td align="left">2016-05</td>
-<td align="left">alimentação</td>
-<td align="left">sacolao saude st</td>
-</tr>
-<tr class="even">
-<td align="left">2016-05-25</td>
-<td align="left">2016</td>
-<td align="left">Mai</td>
-<td align="left">2016-05</td>
-<td align="left">alimentação</td>
-<td align="left">sacolao saude st</td>
-</tr>
-<tr class="odd">
-<td align="left">2016-05-25</td>
-<td align="left">2016</td>
-<td align="left">Mai</td>
-<td align="left">2016-05</td>
-<td align="left">alimentação</td>
-<td align="left">coop capuava</td>
-</tr>
-<tr class="even">
-<td align="left">2016-05-25</td>
-<td align="left">2016</td>
-<td align="left">Mai</td>
-<td align="left">2016-05</td>
-<td align="left">alimentação</td>
-<td align="left">coop capuava</td>
-</tr>
-<tr class="odd">
-<td align="left">2016-05-25</td>
-<td align="left">2016</td>
-<td align="left">Mai</td>
-<td align="left">2016-05</td>
-<td align="left">alimentação</td>
-<td align="left">coop capuava</td>
-</tr>
-<tr class="even">
-<td align="left">2016-05-25</td>
-<td align="left">2016</td>
-<td align="left">Mai</td>
-<td align="left">2016-05</td>
-<td align="left">alimentação</td>
-<td align="left">carrefour sto 248</td>
+<td align="right">108.76</td>
 </tr>
 <tr class="odd">
 <td align="left">2016-07-25</td>
-<td align="left">2016</td>
-<td align="left">Jul</td>
-<td align="left">2016-07</td>
-<td align="left">alimentação</td>
 <td align="left">assai atacadista</td>
+<td align="right">482.89</td>
 </tr>
 <tr class="even">
 <td align="left">2016-07-25</td>
-<td align="left">2016</td>
-<td align="left">Jul</td>
-<td align="left">2016-07</td>
-<td align="left">alimentação</td>
 <td align="left">compras pão de açúcar</td>
+<td align="right">475.00</td>
 </tr>
 <tr class="odd">
 <td align="left">2016-07-25</td>
-<td align="left">2016</td>
-<td align="left">Jul</td>
-<td align="left">2016-07</td>
-<td align="left">alimentação</td>
 <td align="left">sacolao saude st</td>
+<td align="right">117.15</td>
 </tr>
 <tr class="even">
-<td align="left">2016-07-25</td>
-<td align="left">2016</td>
-<td align="left">Jul</td>
-<td align="left">2016-07</td>
-<td align="left">alimentação</td>
-<td align="left">sacolao saude st</td>
-</tr>
-<tr class="odd">
-<td align="left">2016-07-25</td>
-<td align="left">2016</td>
-<td align="left">Jul</td>
-<td align="left">2016-07</td>
-<td align="left">alimentação</td>
-<td align="left">sacolao saude st</td>
-</tr>
-<tr class="even">
-<td align="left">2016-07-25</td>
-<td align="left">2016</td>
-<td align="left">Jul</td>
-<td align="left">2016-07</td>
-<td align="left">alimentação</td>
-<td align="left">sacolao saude st</td>
-</tr>
-<tr class="odd">
 <td align="left">2017-05-25</td>
-<td align="left">2017</td>
-<td align="left">Mai</td>
-<td align="left">2017-05</td>
-<td align="left">alimentação</td>
 <td align="left">5469 [delivery 01-05</td>
+<td align="right">272.73</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2017-05-25</td>
-<td align="left">2017</td>
-<td align="left">Mai</td>
-<td align="left">2017-05</td>
-<td align="left">alimentação</td>
 <td align="left">sacolao saude 24-04</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-05-25</td>
-<td align="left">2017</td>
-<td align="left">Mai</td>
-<td align="left">2017-05</td>
-<td align="left">alimentação</td>
-<td align="left">mercado 24-04</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-25</td>
-<td align="left">2017</td>
-<td align="left">Mai</td>
-<td align="left">2017-05</td>
-<td align="left">alimentação</td>
-<td align="left">sacolao saude 01-05</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-05-25</td>
-<td align="left">2017</td>
-<td align="left">Mai</td>
-<td align="left">2017-05</td>
-<td align="left">alimentação</td>
-<td align="left">sacolao saude 07-05</td>
-</tr>
-<tr class="even">
-<td align="left">2017-05-25</td>
-<td align="left">2017</td>
-<td align="left">Mai</td>
-<td align="left">2017-05</td>
-<td align="left">alimentação</td>
-<td align="left">mercado 23-04</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-05-25</td>
-<td align="left">2017</td>
-<td align="left">Mai</td>
-<td align="left">2017-05</td>
-<td align="left">alimentação</td>
-<td align="left">carrefour sto 07-05</td>
+<td align="right">123.31</td>
 </tr>
 <tr class="even">
 <td align="left">2017-07-01</td>
-<td align="left">2017</td>
-<td align="left">Jul</td>
-<td align="left">2017-07</td>
-<td align="left">alimentação</td>
 <td align="left">previsão mercado</td>
+<td align="right">600.00</td>
 </tr>
 <tr class="odd">
 <td align="left">2017-07-01</td>
-<td align="left">2017</td>
-<td align="left">Jul</td>
-<td align="left">2017-07</td>
-<td align="left">alimentação</td>
 <td align="left">previsão feira</td>
+<td align="right">450.00</td>
 </tr>
 <tr class="even">
 <td align="left">2017-07-25</td>
-<td align="left">2017</td>
-<td align="left">Jul</td>
-<td align="left">2017-07</td>
-<td align="left">alimentação</td>
 <td align="left">sacolao saude 09-07</td>
+<td align="right">163.68</td>
 </tr>
 <tr class="odd">
 <td align="left">2017-07-25</td>
-<td align="left">2017</td>
-<td align="left">Jul</td>
-<td align="left">2017-07</td>
-<td align="left">alimentação</td>
 <td align="left">carrefour sto 02-07</td>
+<td align="right">127.72</td>
 </tr>
 <tr class="even">
 <td align="left">2017-07-25</td>
-<td align="left">2017</td>
-<td align="left">Jul</td>
-<td align="left">2017-07</td>
-<td align="left">alimentação</td>
 <td align="left">sacolao saude 22-06</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-07-25</td>
-<td align="left">2017</td>
-<td align="left">Jul</td>
-<td align="left">2017-07</td>
-<td align="left">alimentação</td>
-<td align="left">sup cent st andre 15-06</td>
-</tr>
-<tr class="even">
-<td align="left">2017-07-25</td>
-<td align="left">2017</td>
-<td align="left">Jul</td>
-<td align="left">2017-07</td>
-<td align="left">alimentação</td>
-<td align="left">coop capuava 30-06</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-07-25</td>
-<td align="left">2017</td>
-<td align="left">Jul</td>
-<td align="left">2017-07</td>
-<td align="left">alimentação</td>
-<td align="left">sup cent st andre 02-07</td>
-</tr>
-<tr class="even">
-<td align="left">2017-07-25</td>
-<td align="left">2017</td>
-<td align="left">Jul</td>
-<td align="left">2017-07</td>
-<td align="left">alimentação</td>
-<td align="left">coop capuava 07-07</td>
-</tr>
-<tr class="odd">
-<td align="left">2017-07-25</td>
-<td align="left">2017</td>
-<td align="left">Jul</td>
-<td align="left">2017-07</td>
-<td align="left">alimentação</td>
-<td align="left">coop capuava 24-06</td>
+<td align="right">119.56</td>
 </tr>
 </tbody>
 </table>
@@ -972,6 +549,106 @@
 <p>Portanto, verifica-se que há tendência para gastos extras com a páscoa.</p>
 <p>Além disso, o aumento em julho de 2016 ocorreu porque foram feitas 2 compras mensais, para aproveitar uma promoção. Vê-se que este gasto cai até setembro, voltando a subir em outubro, próxima compra mensal.</p>
 <p>O aumento da média em 2016 ocorre porque, além dos fatores acima, em março 2015 os gastos não foram registrados.</p>
+</div>
+<div id="analise-por-tipo-de-despesa-moradia" class="section level2">
+<h2>Análise por tipo de despesa: Moradia</h2>
+<p><img src="index_files/figure-html/moradia-1.png" /><!-- --></p>
+<table>
+<caption>Gastos com moradia em 2017-04</caption>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">descrição</th>
+<th align="right">valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2017-04-15</td>
+<td align="left">seguro residencia</td>
+<td align="right">177</td>
+</tr>
+<tr class="even">
+<td align="left">2017-04-16</td>
+<td align="left">vigia</td>
+<td align="right">45</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-04-20</td>
+<td align="left">faxina</td>
+<td align="right">120</td>
+</tr>
+<tr class="even">
+<td align="left">2017-04-21</td>
+<td align="left">luz</td>
+<td align="right">120</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-04-26</td>
+<td align="left">purificador europa</td>
+<td align="right">89</td>
+</tr>
+<tr class="even">
+<td align="left">2017-04-26</td>
+<td align="left">monigas com gas ltda 31-03</td>
+<td align="right">60</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-04-30</td>
+<td align="left">conta água</td>
+<td align="right">62</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Gastos com moradia em 2016-04</caption>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">mes.ano</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+<th align="right">valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2016-04-16</td>
+<td align="left">2016</td>
+<td align="left">Abr</td>
+<td align="left">2016-04</td>
+<td align="left">moradia</td>
+<td align="left">vigia</td>
+<td align="right">45</td>
+</tr>
+<tr class="even">
+<td align="left">2016-04-21</td>
+<td align="left">2016</td>
+<td align="left">Abr</td>
+<td align="left">2016-04</td>
+<td align="left">moradia</td>
+<td align="left">luz</td>
+<td align="right">120</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-04-30</td>
+<td align="left">2016</td>
+<td align="left">Abr</td>
+<td align="left">2016-04</td>
+<td align="left">moradia</td>
+<td align="left">conta água</td>
+<td align="right">62</td>
+</tr>
+</tbody>
+</table>
+<p>O grande aumento na média deve-se ao fato de que em 2016:</p>
+<ul>
+<li>não contratávamos faxina</li>
+<li>não tínhamos seguro-residência</li>
+<li>gás era lançado como alimentação</li>
+</ul>
 </div>
 <div id="analise-por-tipo-de-despesa-pagamentos" class="section level2">
 <h2>Análise por tipo de despesa: Pagamentos</h2>

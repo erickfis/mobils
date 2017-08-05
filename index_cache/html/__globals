@@ -3,4 +3,6 @@ passo1	~	$	aes	brewer.pal	colorRampPalette	element_text	facet_grid	geom_line	geo
 filtra-dados	==	>	!	&	%>%	ano	dadosT	group_by	mean	mes	mutate	rm	sum	summarise	tipo	total	valor	which	with
 passo2	~	aes	colourCount	element_blank	element_text	facet_grid	geom_line	geom_point	getPalette	ggplot	guide_legend	guides	labs	mes	scale_colour_manual	theme	tipo	totais	total
 grid	
-maiores.despesas	%>%	ano	arrange	desc	group_by	mean	media.mensal.ano	media.mensal.geral	mutate	round	sd	summarise	tipo	totais	total
+maiores.despesas	%>%	ano	arrange	desc	group_by	mean	media.anual	media.geral	mutate	round	sd	summarise	tipo	totais	total
+maiores-plot	$	aes	brewer.pal	colorRampPalette	coord_flip	dollar_format	element_blank	element_text	geom_bar	geom_text	ggplot	labs	length	maiores.df.plot	media	scale_colour_manual	scale_y_continuous	theme	tipo	unique
+variacoes-plot	$	$<-	%>%	aes	arrange	brewer.pal	c	colorRampPalette	coord_flip	desc	element_blank	element_text	factor	geom_bar	geom_text	ggplot	group_by	kable	labs	length	maiores	media.anual	mutate	order	real	round	scale_colour_manual	scale_y_continuous	sd	summarise	theme	tipo	unique
