@@ -1,0 +1,12 @@
+base
+knitr
+scales
+stringr
+data.table
+readxl
+dplyr
+lubridate
+ggplot2
+rmarkdown
+RColorBrewer
+gridExtra

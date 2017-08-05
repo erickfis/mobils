@@ -1,0 +1,49 @@
+---
+title: "Plataforma Mobills - Análise de Despesas Pessoais"
+author: "erickfis@gmail.com"
+date: "`r format(Sys.time(), '%Y %B, %d')`"
+
+
+output:
+  prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+    toc: true
+    self_contained: no
+
+---
+
+
+```{r knit-rules, echo=FALSE}
+library(knitr)
+
+opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE, 
+               warning = FALSE, autodep = TRUE, options(scipen=999))
+
+```
+# Em progresso
+
+- acessar API da plataforma - ainda não disponibilizado pela plataforma
+ 
+
+```{r child = 'engine/intros.Rmd'}
+```
+
+```{r child = 'engine/processamento.Rmd'}
+```        
+
+# Principais tipos de despesas
+
+```{r child = 'engine/alimentacao.Rmd'}
+```        
+
+```{r child = 'engine/pagamentos.Rmd'}
+```        
+
+```{r child = 'engine/corolla.Rmd'}
+```        
+
+
+```{r child = 'engine/conclusao.Rmd'}
+```        
+

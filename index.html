@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="erickfis@gmail.com" />
+
+
+<title>Plataforma Mobills - Análise de Despesas Pessoais</title>
+
+
+
+
+
+
+<link rel="stylesheet" href="index_files/style.css" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<header>
+<div class="inner">
+<h1 class="title toc-ignore">Plataforma Mobills - Análise de Despesas Pessoais</h1>
+<h3 class="author"><a href="mailto:erickfis@gmail.com">erickfis@gmail.com</a></h3>
+<h3 class="date">2017 agosto, 05</h3>
+</div>
+</header>
+
+
+<div id="TOC" class="toc">
+<ul>
+<li><a href="#em-progresso">Em progresso</a></li>
+<li><a href="#objetivo">Objetivo</a></li>
+<li><a href="#software-utilizado-e-instrucoes-de-uso">Software utilizado e instruções de uso</a></li>
+<li><a href="#processamento-dos-dados">Processamento dos dados</a><ul>
+<li><a href="#tratamento-inicial-dos-dados">Tratamento inicial dos dados</a></li>
+<li><a href="#analise-da-qualidade-dos-dados">Análise da qualidade dos dados</a></li>
+</ul></li>
+<li><a href="#maiores-despesas-por-categoria">Maiores Despesas por categoria</a></li>
+<li><a href="#principais-tipos-de-despesas">Principais tipos de despesas</a><ul>
+<li><a href="#analise-por-tipo-de-despesa-alimentacao">Análise por tipo de despesa: Alimentação</a></li>
+<li><a href="#analise-por-tipo-de-despesa-pagamentos">Análise por tipo de despesa: Pagamentos</a></li>
+<li><a href="#analise-por-tipo-de-despesa-corolla">Análise por tipo de despesa: Corolla</a></li>
+</ul></li>
+<li><a href="#conclusao">Conclusão</a><ul>
+<li><a href="#plataforma-mobills">Plataforma Mobills:</a></li>
+<li><a href="#gastos-pessoais">Gastos pessoais</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="content-wrapper">
+  <div class="inner clearfix">
+    <section id="main-content">
+<div id="em-progresso" class="section level1">
+<h1>Em progresso</h1>
+<ul>
+<li>acessar API da plataforma - ainda não disponibilizado pela plataforma</li>
+</ul>
+</div>
+<div id="objetivo" class="section level1">
+<h1>Objetivo</h1>
+<p>A plataforma Mobills é um serviço pago que, através de um app android, leitura de SMSs do banco e de interação via web, registra despesas realizadas, armazena os dados na nuvem e permite a posterior exportação destes dados.</p>
+<p>A interface disponibilizada via APP ou web possui algumas funcionalidades, tais como:</p>
+<ul>
+<li>lançamento de despesas / receitas</li>
+<li>somatória e cálculo de saldo</li>
+<li>gráfico de despesas por categoria, por mês.</li>
+</ul>
+<p>Mas algumas funcionalidades importantes estão faltando, entre elas:</p>
+<ul>
+<li>acompanhamento da evolução das despesas por categoria ao longo dos meses</li>
+<li>gráficos e tabelas que permitam analisar mais a sério o controle de gastos ao longo do tempo</li>
+<li>gráficos e tabelas que indiquem tendências de gastos relacionadas à estações do ano, datas comemorativas ou datas-chave</li>
+<li>evidências que indiquem necessidade de mudanças no controle financeiro</li>
+</ul>
+<p>Este estudo se destina justamente a suprir estas deficiências apontadas e, através do banco de dados gerado pela plataforma, analisar o orçamento doméstico com uma visão mais ampla que possibilitará um maior entendimento do mesmo, dando ao usuário fundamentação e evidências para tomada de decisões que poderão alterar positivamente o rumo de seu planejamento financeiro</p>
+<p>A plataforma mobils pode ser encontrada em:</p>
+<p><a href="https://web.mobills.com.br" class="uri">https://web.mobills.com.br</a></p>
+<p>O aplicativo para android pode ser encontrado em:</p>
+<p><a href="https://play.google.com/store/apps/details?id=br.com.gerenciadorfinanceiro.controller" class="uri">https://play.google.com/store/apps/details?id=br.com.gerenciadorfinanceiro.controller</a></p>
+</div>
+<div id="software-utilizado-e-instrucoes-de-uso" class="section level1">
+<h1>Software utilizado e instruções de uso</h1>
+<p>Esta análise é realisada através dos seguintes softwares:</p>
+<ul>
+<li>R version 3.4.1 (2017-06-30)</li>
+<li>Platform x86_64-pc-linux-gnu</li>
+<li>OS Description: Linux Mint 18.1 Serena</li>
+</ul>
+<p>Para utilizar o programa, acessar a plataforma web e baixar os bancos de dados exportado no formato csv.</p>
+<p>Os arquivos devem ser guardados na pasta data e devem conter a string “mobills” em seu nome. É aconselhado nomear o arquivo usando também um indicador de data.</p>
+<p>Ex: <em>bancoX-mobills-2015a2017.csv</em></p>
+<p>Podem ser utilizados vários arquivos complementares, não sendo necessário exportar um banco de dados completo toda vez que for necessário incluir novos dados.</p>
+<p>O programa analisa a pasta dados e irá processá-los novamente sempre que houver novidades, salvando o banco de dados tratado para o arquivo <em>dados-ok.rds</em>. Caso não haja novidades, o programa somente carrega este banco de dados já tratado, acelerando consideravelmente o processo.</p>
+</div>
+<div id="processamento-dos-dados" class="section level1">
+<h1>Processamento dos dados</h1>
+<p>O banco de dados é carregado e preparado para que possamos responder às questões levantadas.</p>
+<div id="tratamento-inicial-dos-dados" class="section level2">
+<h2>Tratamento inicial dos dados</h2>
+<p>Antes de fazer qualquer inferência, vamos primeiramente analisar os dados exportados pela plataforma, procurando avaliar sua qualidade e quais são as transformações necessárias para o seu uso.</p>
+<!-- tratar inicial.csv com sed+grep para filtrar 2015 e 2016 -->
+<!-- Pega a 1a linha (1 a 5), para cabeçalho -->
+<!-- $ sed -n "1,5p" inicial.csv > newData.csv -->
+<!-- filtra 2015 e 2016 -->
+<!-- $ grep -E "^(,2015|,2016)" inicial.csv >> newData.csv -->
+</div>
+<div id="analise-da-qualidade-dos-dados" class="section level2">
+<h2>Análise da qualidade dos dados</h2>
+<p><img src="index_files/figure-html/passo1-1.png" /><!-- --></p>
+<p>Analisando o primeiro gráfico, vemos que há problemas em março de 2015, tipo pagamentos.</p>
+<p>Vamos olhar este ponto fora do gráfico mais de perto:</p>
+<table>
+<caption>categoria pagamentos, em março de 2015</caption>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+<th align="right">valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-03-07</td>
+<td align="left">pagamentos</td>
+<td align="left">saque</td>
+<td align="right">230</td>
+</tr>
+<tr class="even">
+<td align="left">2015-03-10</td>
+<td align="left">pagamentos</td>
+<td align="left">saque</td>
+<td align="right">90</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-03-10</td>
+<td align="left">pagamentos</td>
+<td align="left">banco</td>
+<td align="right">41</td>
+</tr>
+<tr class="even">
+<td align="left">2015-03-25</td>
+<td align="left">pagamentos</td>
+<td align="left">pagamento parcial-visa</td>
+<td align="right">4077</td>
+</tr>
+</tbody>
+</table>
+<p>Da tabela acima, podemos observar que consta um lançamento referente a pagamento de cartão de crédito, mas não é assim que o restante dos lançamentos foram feitos: não foram registrados totais. Este, portanto, foi um erro de uso da plataforma. Vamos, portanto, retirar este ponto da análise.</p>
+<table>
+<caption>compras no crédito, registradas no dia 25</caption>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">mes.ano</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">corolla</td>
+<td align="left">02-04 bateria (3/5)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">alimentação</td>
+<td align="left">13-05 hitamax</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">roupa</td>
+<td align="left">19-02 extra lençol e fonte (4/8)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">beleza</td>
+<td align="left">27-03 norma (3/3)</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">equipamentos</td>
+<td align="left">14-04 copafer (2/3)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">telefonia</td>
+<td align="left">tim</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>compras no crédito, registradas no dia 25</caption>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">mes.ano</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">investimento</td>
+<td align="left">17-12 joías auth (4/4)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">beleza</td>
+<td align="left">cortina da sala (3/10)</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">equipamentos</td>
+<td align="left">08-04 guitarra (3/8)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">transporte</td>
+<td align="left">17-05 gasolina</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">roupa</td>
+<td align="left">tênis aline (2/3)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-06-25</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">lazer</td>
+<td align="left">net flux</td>
+</tr>
+</tbody>
+</table>
+<p>Além disso, verifica-se que todas as despesas pagas no cartão de crédito ficaram registradas na data de vencimento do cartão, dia 25. Este é um defeito da plataforma.</p>
+<p>Desta forma, não é possível dizer se a despesa foi feita no mês anterior ou no próprio mês. Ela apenas foi paga no mês onde é lançada.</p>
+<p>Uma vez que a fatura deste cartão é fechada no dia 15, todas as compras realizadas a partir do dia 16 são cobradas apenas na próxima fatura.</p>
+<p>No entanto, como isso ocorre para todos os dados da mesma forma, não há impacto impeditivo na análise.</p>
+<p>Como podemos ver no gráfico 2, não há mais pontos obviamente fora do gráfico, todos os erros de coleta dados foram filtrados.</p>
+<p>O próximo passo é estudar os tipos de despesas que mais se destacam.</p>
+</div>
+</div>
+<div id="maiores-despesas-por-categoria" class="section level1">
+<h1>Maiores Despesas por categoria</h1>
+<p>Na tabela abaixo temos um ranking dos maiores tipos de despesa por ano:</p>
+<table>
+<caption>Maiores gastos</caption>
+<thead>
+<tr class="header">
+<th align="right">rank</th>
+<th align="left">tipo</th>
+<th align="right">media</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">alimentação</td>
+<td align="right">1271.03</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">transporte</td>
+<td align="right">619.76</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">corolla</td>
+<td align="right">437.82</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">saúde</td>
+<td align="right">412.18</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">moradia</td>
+<td align="right">346.00</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">pagamentos</td>
+<td align="right">313.00</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">seguros</td>
+<td align="right">273.78</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="left">educação</td>
+<td align="right">246.46</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="left">roupa</td>
+<td align="right">184.08</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="left">equipamentos</td>
+<td align="right">178.48</td>
+</tr>
+<tr class="odd">
+<td align="right">11</td>
+<td align="left">telefonia</td>
+<td align="right">176.36</td>
+</tr>
+<tr class="even">
+<td align="right">12</td>
+<td align="left">pet</td>
+<td align="right">148.93</td>
+</tr>
+<tr class="odd">
+<td align="right">13</td>
+<td align="left">lazer</td>
+<td align="right">146.07</td>
+</tr>
+<tr class="even">
+<td align="right">14</td>
+<td align="left">investimento</td>
+<td align="right">107.20</td>
+</tr>
+<tr class="odd">
+<td align="right">15</td>
+<td align="left">beleza</td>
+<td align="right">85.30</td>
+</tr>
+<tr class="even">
+<td align="right">16</td>
+<td align="left">fast food</td>
+<td align="right">83.40</td>
+</tr>
+<tr class="odd">
+<td align="right">17</td>
+<td align="left">terceiros</td>
+<td align="right">83.12</td>
+</tr>
+<tr class="even">
+<td align="right">18</td>
+<td align="left">presentes</td>
+<td align="right">70.18</td>
+</tr>
+<tr class="odd">
+<td align="right">19</td>
+<td align="left">steam</td>
+<td align="right">33.71</td>
+</tr>
+<tr class="even">
+<td align="right">20</td>
+<td align="left">fatura c.crédito</td>
+<td align="right">0.99</td>
+</tr>
+</tbody>
+</table>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" /><!-- --></p>
+<p>Além disso, pode ser interessante analisar as categorias que apresentam as maiores variações mês a mês:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">rank</th>
+<th align="left">tipo</th>
+<th align="left">ano</th>
+<th align="right">media.mensal.ano</th>
+<th align="right">sd.mensal.ano</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">corolla</td>
+<td align="left">2017</td>
+<td align="right">581.93</td>
+<td align="right">571.50</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">alimentação</td>
+<td align="left">2017</td>
+<td align="right">1633.46</td>
+<td align="right">486.77</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">pagamentos</td>
+<td align="left">2015</td>
+<td align="right">522.25</td>
+<td align="right">333.77</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">corolla</td>
+<td align="left">2015</td>
+<td align="right">442.76</td>
+<td align="right">310.60</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">transporte</td>
+<td align="left">2017</td>
+<td align="right">708.08</td>
+<td align="right">304.62</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left">alimentação</td>
+<td align="left">2016</td>
+<td align="right">1150.79</td>
+<td align="right">264.27</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left">saúde</td>
+<td align="left">2017</td>
+<td align="right">476.39</td>
+<td align="right">227.82</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="left">corolla</td>
+<td align="left">2016</td>
+<td align="right">288.78</td>
+<td align="right">223.24</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="left">alimentação</td>
+<td align="left">2015</td>
+<td align="right">1028.83</td>
+<td align="right">218.45</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="left">lazer</td>
+<td align="left">2017</td>
+<td align="right">149.58</td>
+<td align="right">218.41</td>
+</tr>
+<tr class="odd">
+<td align="right">11</td>
+<td align="left">lazer</td>
+<td align="left">2015</td>
+<td align="right">188.90</td>
+<td align="right">166.38</td>
+</tr>
+<tr class="even">
+<td align="right">12</td>
+<td align="left">pet</td>
+<td align="left">2015</td>
+<td align="right">203.18</td>
+<td align="right">147.09</td>
+</tr>
+<tr class="odd">
+<td align="right">13</td>
+<td align="left">equipamentos</td>
+<td align="left">2016</td>
+<td align="right">186.40</td>
+<td align="right">144.96</td>
+</tr>
+<tr class="even">
+<td align="right">14</td>
+<td align="left">pet</td>
+<td align="left">2016</td>
+<td align="right">94.67</td>
+<td align="right">142.34</td>
+</tr>
+<tr class="odd">
+<td align="right">15</td>
+<td align="left">educação</td>
+<td align="left">2017</td>
+<td align="right">155.40</td>
+<td align="right">131.62</td>
+</tr>
+<tr class="even">
+<td align="right">16</td>
+<td align="left">roupa</td>
+<td align="left">2017</td>
+<td align="right">280.95</td>
+<td align="right">126.83</td>
+</tr>
+<tr class="odd">
+<td align="right">17</td>
+<td align="left">transporte</td>
+<td align="left">2015</td>
+<td align="right">532.86</td>
+<td align="right">126.07</td>
+</tr>
+<tr class="even">
+<td align="right">18</td>
+<td align="left">pagamentos</td>
+<td align="left">2017</td>
+<td align="right">208.32</td>
+<td align="right">124.31</td>
+</tr>
+<tr class="odd">
+<td align="right">19</td>
+<td align="left">beleza</td>
+<td align="left">2015</td>
+<td align="right">181.06</td>
+<td align="right">117.06</td>
+</tr>
+<tr class="even">
+<td align="right">20</td>
+<td align="left">transporte</td>
+<td align="left">2016</td>
+<td align="right">618.33</td>
+<td align="right">109.89</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="principais-tipos-de-despesas" class="section level1">
+<h1>Principais tipos de despesas</h1>
+<div id="analise-por-tipo-de-despesa-alimentacao" class="section level2">
+<h2>Análise por tipo de despesa: Alimentação</h2>
+<p><img src="index_files/figure-html/alimentacao-1.png" /><!-- --></p>
+<p>Observa-se:</p>
+<ul>
+<li>tendência a aumento de gastos em maio</li>
+<li>tendência a aumento de gastos em julho</li>
+<li>aumento da média em 2016</li>
+<li>sobe e desce: as compras maiores não são feitas todo mês</li>
+</ul>
+<p>Vamos analisar a tabela de dados:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">mes.ano</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">Mai</td>
+<td align="left">2015-05</td>
+<td align="left">alimentação</td>
+<td align="left">18-04 mercado</td>
+</tr>
+<tr class="even">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">Mai</td>
+<td align="left">2015-05</td>
+<td align="left">alimentação</td>
+<td align="left">12-04 feira</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">Mai</td>
+<td align="left">2015-05</td>
+<td align="left">alimentação</td>
+<td align="left">25-04 feira</td>
+</tr>
+<tr class="even">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">Mai</td>
+<td align="left">2015-05</td>
+<td align="left">alimentação</td>
+<td align="left">19-04 feira</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">Mai</td>
+<td align="left">2015-05</td>
+<td align="left">alimentação</td>
+<td align="left">19-04 feira</td>
+</tr>
+<tr class="even">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">Mai</td>
+<td align="left">2015-05</td>
+<td align="left">alimentação</td>
+<td align="left">09-05 feira</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">Mai</td>
+<td align="left">2015-05</td>
+<td align="left">alimentação</td>
+<td align="left">25-04 camarao</td>
+</tr>
+<tr class="even">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">Mai</td>
+<td align="left">2015-05</td>
+<td align="left">alimentação</td>
+<td align="left">02-05 feira</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-05-25</td>
+<td align="left">2015</td>
+<td align="left">Mai</td>
+<td align="left">2015-05</td>
+<td align="left">alimentação</td>
+<td align="left">09-05 mercado</td>
+</tr>
+<tr class="even">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">2015-07</td>
+<td align="left">alimentação</td>
+<td align="left">16-06 compras</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">2015-07</td>
+<td align="left">alimentação</td>
+<td align="left">04-07 feira</td>
+</tr>
+<tr class="even">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">2015-07</td>
+<td align="left">alimentação</td>
+<td align="left">27-06 feira</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">2015-07</td>
+<td align="left">alimentação</td>
+<td align="left">29-06 walmart</td>
+</tr>
+<tr class="even">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">2015-07</td>
+<td align="left">alimentação</td>
+<td align="left">11-09 feira</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-07-27</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">2015-07</td>
+<td align="left">alimentação</td>
+<td align="left">20-06 feira</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">Mai</td>
+<td align="left">2016-05</td>
+<td align="left">alimentação</td>
+<td align="left">assai atacadista</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">Mai</td>
+<td align="left">2016-05</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">Mai</td>
+<td align="left">2016-05</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">Mai</td>
+<td align="left">2016-05</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">Mai</td>
+<td align="left">2016-05</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">Mai</td>
+<td align="left">2016-05</td>
+<td align="left">alimentação</td>
+<td align="left">coop capuava</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">Mai</td>
+<td align="left">2016-05</td>
+<td align="left">alimentação</td>
+<td align="left">coop capuava</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">Mai</td>
+<td align="left">2016-05</td>
+<td align="left">alimentação</td>
+<td align="left">coop capuava</td>
+</tr>
+<tr class="even">
+<td align="left">2016-05-25</td>
+<td align="left">2016</td>
+<td align="left">Mai</td>
+<td align="left">2016-05</td>
+<td align="left">alimentação</td>
+<td align="left">carrefour sto 248</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">2016-07</td>
+<td align="left">alimentação</td>
+<td align="left">assai atacadista</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">2016-07</td>
+<td align="left">alimentação</td>
+<td align="left">compras pão de açúcar</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">2016-07</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">2016-07</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+</tr>
+<tr class="odd">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">2016-07</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+</tr>
+<tr class="even">
+<td align="left">2016-07-25</td>
+<td align="left">2016</td>
+<td align="left">Jul</td>
+<td align="left">2016-07</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude st</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-05-25</td>
+<td align="left">2017</td>
+<td align="left">Mai</td>
+<td align="left">2017-05</td>
+<td align="left">alimentação</td>
+<td align="left">5469 [delivery 01-05</td>
+</tr>
+<tr class="even">
+<td align="left">2017-05-25</td>
+<td align="left">2017</td>
+<td align="left">Mai</td>
+<td align="left">2017-05</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude 24-04</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-05-25</td>
+<td align="left">2017</td>
+<td align="left">Mai</td>
+<td align="left">2017-05</td>
+<td align="left">alimentação</td>
+<td align="left">mercado 24-04</td>
+</tr>
+<tr class="even">
+<td align="left">2017-05-25</td>
+<td align="left">2017</td>
+<td align="left">Mai</td>
+<td align="left">2017-05</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude 01-05</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-05-25</td>
+<td align="left">2017</td>
+<td align="left">Mai</td>
+<td align="left">2017-05</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude 07-05</td>
+</tr>
+<tr class="even">
+<td align="left">2017-05-25</td>
+<td align="left">2017</td>
+<td align="left">Mai</td>
+<td align="left">2017-05</td>
+<td align="left">alimentação</td>
+<td align="left">mercado 23-04</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-05-25</td>
+<td align="left">2017</td>
+<td align="left">Mai</td>
+<td align="left">2017-05</td>
+<td align="left">alimentação</td>
+<td align="left">carrefour sto 07-05</td>
+</tr>
+<tr class="even">
+<td align="left">2017-07-01</td>
+<td align="left">2017</td>
+<td align="left">Jul</td>
+<td align="left">2017-07</td>
+<td align="left">alimentação</td>
+<td align="left">previsão mercado</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-07-01</td>
+<td align="left">2017</td>
+<td align="left">Jul</td>
+<td align="left">2017-07</td>
+<td align="left">alimentação</td>
+<td align="left">previsão feira</td>
+</tr>
+<tr class="even">
+<td align="left">2017-07-25</td>
+<td align="left">2017</td>
+<td align="left">Jul</td>
+<td align="left">2017-07</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude 09-07</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-07-25</td>
+<td align="left">2017</td>
+<td align="left">Jul</td>
+<td align="left">2017-07</td>
+<td align="left">alimentação</td>
+<td align="left">carrefour sto 02-07</td>
+</tr>
+<tr class="even">
+<td align="left">2017-07-25</td>
+<td align="left">2017</td>
+<td align="left">Jul</td>
+<td align="left">2017-07</td>
+<td align="left">alimentação</td>
+<td align="left">sacolao saude 22-06</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-07-25</td>
+<td align="left">2017</td>
+<td align="left">Jul</td>
+<td align="left">2017-07</td>
+<td align="left">alimentação</td>
+<td align="left">sup cent st andre 15-06</td>
+</tr>
+<tr class="even">
+<td align="left">2017-07-25</td>
+<td align="left">2017</td>
+<td align="left">Jul</td>
+<td align="left">2017-07</td>
+<td align="left">alimentação</td>
+<td align="left">coop capuava 30-06</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-07-25</td>
+<td align="left">2017</td>
+<td align="left">Jul</td>
+<td align="left">2017-07</td>
+<td align="left">alimentação</td>
+<td align="left">sup cent st andre 02-07</td>
+</tr>
+<tr class="even">
+<td align="left">2017-07-25</td>
+<td align="left">2017</td>
+<td align="left">Jul</td>
+<td align="left">2017-07</td>
+<td align="left">alimentação</td>
+<td align="left">coop capuava 07-07</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-07-25</td>
+<td align="left">2017</td>
+<td align="left">Jul</td>
+<td align="left">2017-07</td>
+<td align="left">alimentação</td>
+<td align="left">coop capuava 24-06</td>
+</tr>
+</tbody>
+</table>
+<p>Da tabela acima, verifica-se que o aumento em maio ocorre porque as compras para a páscoa são pagas em maio, no cartão de crédito.</p>
+<p>Portanto, verifica-se que há tendência para gastos extras com a páscoa.</p>
+<p>Além disso, o aumento em julho de 2016 ocorreu porque foram feitas 2 compras mensais, para aproveitar uma promoção. Vê-se que este gasto cai até setembro, voltando a subir em outubro, próxima compra mensal.</p>
+<p>O aumento da média em 2016 ocorre porque, além dos fatores acima, em março 2015 os gastos não foram registrados.</p>
+</div>
+<div id="analise-por-tipo-de-despesa-pagamentos" class="section level2">
+<h2>Análise por tipo de despesa: Pagamentos</h2>
+<p><img src="index_files/figure-html/plot-pagamentos-1.png" /><!-- --></p>
+<p>Observa-se:</p>
+<ul>
+<li>aumento significativo de de fevereiro a setembro de 2015.</li>
+</ul>
+<p>Vamos analisar a tabela de dados, em especial para valores acima de R$200,00:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">mes.ano</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-02-26</td>
+<td align="left">2015</td>
+<td align="left">Fev</td>
+<td align="left">2015-02</td>
+<td align="left">pagamentos</td>
+<td align="left">25-02 saque</td>
+</tr>
+<tr class="even">
+<td align="left">2015-03-07</td>
+<td align="left">2015</td>
+<td align="left">Mar</td>
+<td align="left">2015-03</td>
+<td align="left">pagamentos</td>
+<td align="left">saque</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-04-01</td>
+<td align="left">2015</td>
+<td align="left">Abr</td>
+<td align="left">2015-04</td>
+<td align="left">pagamentos</td>
+<td align="left">defict mes anterior</td>
+</tr>
+<tr class="even">
+<td align="left">2015-05-01</td>
+<td align="left">2015</td>
+<td align="left">Mai</td>
+<td align="left">2015-05</td>
+<td align="left">pagamentos</td>
+<td align="left">defict mes anterior</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-06-01</td>
+<td align="left">2015</td>
+<td align="left">Jun</td>
+<td align="left">2015-06</td>
+<td align="left">pagamentos</td>
+<td align="left">deficit mês anterior</td>
+</tr>
+<tr class="even">
+<td align="left">2015-07-01</td>
+<td align="left">2015</td>
+<td align="left">Jul</td>
+<td align="left">2015-07</td>
+<td align="left">pagamentos</td>
+<td align="left">defict mes anterior</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-08-03</td>
+<td align="left">2015</td>
+<td align="left">Ago</td>
+<td align="left">2015-08</td>
+<td align="left">pagamentos</td>
+<td align="left">deficit mês anterior</td>
+</tr>
+<tr class="even">
+<td align="left">2015-09-01</td>
+<td align="left">2015</td>
+<td align="left">Set</td>
+<td align="left">2015-09</td>
+<td align="left">pagamentos</td>
+<td align="left">deficit mês anterior</td>
+</tr>
+</tbody>
+</table>
+<p>Verifica-se que este aumento ocorreu porque a cada vez que as metas de economia não eram alcançadas, o valor gasto acima da meta era lançado no mês seguinte como déficit, atingindo o pico em agosto.</p>
+<p>Por outro lado, verifica-se que nunca mais houve deficit.</p>
+</div>
+<div id="analise-por-tipo-de-despesa-corolla" class="section level2">
+<h2>Análise por tipo de despesa: Corolla</h2>
+<p><img src="index_files/figure-html/plot-corolla-1.png" /><!-- --></p>
+<p>Observa-se:</p>
+<ul>
+<li>valores altos de agosto a novembro de 2015</li>
+<li>queda a partir de jul-16</li>
+<li>novo pico em junho-17</li>
+</ul>
+<p>Vamos analisar a tabela de dados:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">ano</th>
+<th align="left">mes</th>
+<th align="left">mes.ano</th>
+<th align="left">tipo</th>
+<th align="left">descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2015-08-23</td>
+<td align="left">2015</td>
+<td align="left">Ago</td>
+<td align="left">2015-08</td>
+<td align="left">corolla</td>
+<td align="left">seguro corolla (1/4)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-08-25</td>
+<td align="left">2015</td>
+<td align="left">Ago</td>
+<td align="left">2015-08</td>
+<td align="left">corolla</td>
+<td align="left">suspensão corolla (2/3)</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-08-25</td>
+<td align="left">2015</td>
+<td align="left">Ago</td>
+<td align="left">2015-08</td>
+<td align="left">corolla</td>
+<td align="left">02-04 bateria (5/5)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-08-19</td>
+<td align="left">2015</td>
+<td align="left">Ago</td>
+<td align="left">2015-08</td>
+<td align="left">corolla</td>
+<td align="left">ducha</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-09-23</td>
+<td align="left">2015</td>
+<td align="left">Set</td>
+<td align="left">2015-09</td>
+<td align="left">corolla</td>
+<td align="left">seguro corolla (2/4)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-09-25</td>
+<td align="left">2015</td>
+<td align="left">Set</td>
+<td align="left">2015-09</td>
+<td align="left">corolla</td>
+<td align="left">manutenção corolla 190k (1/4)</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-09-25</td>
+<td align="left">2015</td>
+<td align="left">Set</td>
+<td align="left">2015-09</td>
+<td align="left">corolla</td>
+<td align="left">suspensão corolla (3/3)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-09-01</td>
+<td align="left">2015</td>
+<td align="left">Set</td>
+<td align="left">2015-09</td>
+<td align="left">corolla</td>
+<td align="left">lavagem carro</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-09-23</td>
+<td align="left">2015</td>
+<td align="left">Set</td>
+<td align="left">2015-09</td>
+<td align="left">corolla</td>
+<td align="left">lavagem carro</td>
+</tr>
+<tr class="even">
+<td align="left">2015-10-23</td>
+<td align="left">2015</td>
+<td align="left">Out</td>
+<td align="left">2015-10</td>
+<td align="left">corolla</td>
+<td align="left">seguro corolla (3/4)</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-10-25</td>
+<td align="left">2015</td>
+<td align="left">Out</td>
+<td align="left">2015-10</td>
+<td align="left">corolla</td>
+<td align="left">manutenção corolla 190k (2/4)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-11-23</td>
+<td align="left">2015</td>
+<td align="left">Nov</td>
+<td align="left">2015-11</td>
+<td align="left">corolla</td>
+<td align="left">seguro corolla (4/4)</td>
+</tr>
+<tr class="odd">
+<td align="left">2015-11-25</td>
+<td align="left">2015</td>
+<td align="left">Nov</td>
+<td align="left">2015-11</td>
+<td align="left">corolla</td>
+<td align="left">manutenção corolla 190k (3/4)</td>
+</tr>
+<tr class="even">
+<td align="left">2015-12-28</td>
+<td align="left">2015</td>
+<td align="left">Dez</td>
+<td align="left">2015-12</td>
+<td align="left">corolla</td>
+<td align="left">manutenção corolla 190k (4/4)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">data</th>
+<th align="left">descrição</th>
+<th align="right">valor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2017-06-02</td>
+<td align="left">manutenção fiesta</td>
+<td align="right">1361.00</td>
+</tr>
+<tr class="even">
+<td align="left">2017-06-25</td>
+<td align="left">pneus 25-05 (1/3)</td>
+<td align="right">225.33</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-06-08</td>
+<td align="left">seguro fiesta</td>
+<td align="right">132.00</td>
+</tr>
+<tr class="even">
+<td align="left">2017-06-25</td>
+<td align="left">uber uber br 27-05</td>
+<td align="right">17.70</td>
+</tr>
+<tr class="odd">
+<td align="left">2017-06-25</td>
+<td align="left">uber*uber br 27-05</td>
+<td align="right">14.59</td>
+</tr>
+</tbody>
+</table>
+<p>Verifica-se que isso ocorreu porque em agosto de 2015 foi renovado o seguro, em 4x, isso explica as altas até novembro; em setembro foi feita uma manutenção de 10k, também parcelada em 4x.</p>
+<p>Por outro lado, a queda a partir de julho de 2016 é explicada pela venda do carro neste mesmo mês.</p>
+</div>
+</div>
+<div id="conclusao" class="section level1">
+<h1>Conclusão</h1>
+<div id="plataforma-mobills" class="section level2">
+<h2>Plataforma Mobills:</h2>
+<ul>
+<li>ainda não há API que permita o acesso direto aos dados</li>
+<li>existe um problema com as datas das compras feitas em cartão de crédito: são registradas todas como se fossem feitas na data de vencimento do cartão</li>
+<li>desta forma, ao registrar estas compras, anotar na descrição a data da transação</li>
+</ul>
+</div>
+<div id="gastos-pessoais" class="section level2">
+<h2>Gastos pessoais</h2>
+<ul>
+<li>os valores mais altos estão em alimentação, pagamentos e corolla</li>
+<li>deve-se tomar cuidado com os gastos para a páscoa</li>
+<li>havia um déficit em 2015, mas foi superado</li>
+<li>o seguro do carro tinha um valor elevado e as manutenções mantinham as médias de gasto mensal na casa dos R$500, mas esse problema acabou com a venda do carro.</li>
+</ul>
+</div>
+</div>
+    </section>
+  </div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
