@@ -1,18 +1,30 @@
 
 ## Análise por tipo de despesa: Moradia
 
+O segundo da lista dos tipos de despesas mais oscilantes é moradia. Vejamos como este tipo de despesa se comporta ao longo dos anos:
+
 ```{r moradia}
 #devidos subsets
 
 totais.moradia <- totais[totais$tipo=="moradia",]
+medias.moradia <- totais.moradia %>% group_by(ano) %>%
+        summarise(media = mean(total))
+
+medias.moradia$media <- round(medias.moradia$media, 2)
+
 
 plt.moradia <- ggplot(totais.moradia, aes(x=mes, y=total,
                                           group=ano, colour=ano))
 
-
 (plt.moradia +  geom_line() + 
-                geom_point(size=0.5, alpha=0.5) +
-                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                geom_point(size=1, alpha=0.5) +
+                # geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                geom_hline(data = medias.moradia, 
+                           aes(yintercept = media, colour = ano), linetype=2) +
+                geom_label(data = medias.moradia, vjust = -0.2, hjust = 1,
+                          aes(12, y = media,label=media)) +
+                
+                
                 labs(title="Gastos com moradia", y="Total (R$)", x="Mês") +
                 
                 theme(plot.title = element_text(hjust = 0.5)) 
@@ -20,25 +32,34 @@ plt.moradia <- ggplot(totais.moradia, aes(x=mes, y=total,
 
 ```
 
+Este gráfico nos mostra que a média de gastos em 2017 está bem acima das médias para os outros anos. Vamos ver em detalhe quais foram os gastos de abril de para cada ano:
 
 ```{r tabela-moradia}
+
+sub <- which(dadosFil$ano==2015 & dadosFil$mes=="Abr" & 
+                     dadosFil$tipo=="moradia" )
+
+kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com moradia em 2015-04")
+
+
+sub <- which(dadosFil$ano==2016 & dadosFil$mes=="Abr" & 
+                     dadosFil$tipo=="moradia" )
+
+kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com moradia em 2016-04")
+
 
 sub <- which(dadosFil$ano==2017 & dadosFil$mes=="Abr" & 
                      dadosFil$tipo=="moradia" )
 
 kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com moradia em 2017-04")
 
-
-sub <- which(dadosFil$ano==2016 & dadosFil$mes=="Abr" & 
-                     dadosFil$tipo=="moradia" )
-
-kable(dadosFil[sub,], caption = "Gastos com moradia em 2016-04")
-
 ```
 
 
-O grande aumento na média deve-se ao fato de que em 2016:
+O grande aumento na média deve-se ao fato de que em 2017:
 
-- não contratávamos faxina
-- não tínhamos seguro-residência
-- gás era lançado como alimentação
+- estamos agora  contratando faxina
+- temos seguro-residência
+- gás de cozinha antes era lançado como alimentação
+
+Desta forma concluímos que não são necessárias medidas de controle aqui.

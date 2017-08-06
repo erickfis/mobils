@@ -1,17 +1,31 @@
 
 ## Análise por tipo de despesa: Alimentação
 
+O primeiro item da lista dos tipos de despesas mais oscilantes é alimentação. Vejamos como este tipo de despesa se comporta ao longo dos anos:
+
+
 ```{r alimentacao}
 #devidos subsets
 
 totais.alim <- totais[totais$tipo=="alimentação",]
 
+medias.alim <- totais.alim %>% group_by(ano) %>%
+        summarise(media = mean(total))
+
+medias.alim$media <- round(medias.alim$media, 2)
+
 plt.alim <- ggplot(totais.alim, aes(x=mes, y=total, group=ano, colour=ano))
 
-
 (plt.alim +  geom_line() + 
-                geom_point(size=0.5, alpha=0.5) +
-                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
+                geom_point(size=1, alpha=0.5) +
+                geom_hline(data = medias.alim, 
+                           aes(yintercept = media, colour = ano), linetype=2) +
+
+                geom_label(data = medias.alim, vjust = -0.2, hjust = 1,
+                          aes(12, y = media,label=media)) +
+                
+            
+                
                 labs(title="Gastos com alimentação", y="Total (R$)", x="Mês") +
                 
                 theme(plot.title = element_text(hjust = 0.5)) 
@@ -21,17 +35,35 @@ plt.alim <- ggplot(totais.alim, aes(x=mes, y=total, group=ano, colour=ano))
 
 Observa-se:
 
-- tendência a aumento de gastos em maio
+- tendência a aumento de gastos em maio de 2015 e 2016
 - tendência a aumento de gastos em julho
-- aumento da média em 2016
+- aumento da média em 2017
 - sobe e desce: as compras maiores não são feitas todo mês
 
 Vamos analisar a tabela de dados:
 
 ```{r tabela-alim}
-dados.alim <- dadosFil %>% filter(mes %in% c("Mai", "Jul") & tipo=="alimentação" & valor > 100) %>%
-        arrange(ano, mes, desc(valor))
-kable(dados.alim[,c(1,6,7)])
+# dados.alim <- dadosFil %>% filter(mes %in% c("Mai", "Jul") & tipo=="alimentação" & valor > 100) %>%
+#         arrange(ano, mes, desc(valor))
+
+sub <- which(dadosFil$ano==2015 & dadosFil$mes %in% c("Mai", "Jul") & 
+                     dadosFil$tipo=="alimentação" )
+
+kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com alimentação em 2015")
+
+sub <- which(dadosFil$ano==2016 & dadosFil$mes %in% c("Mai", "Jul") & 
+                     dadosFil$tipo=="alimentação" )
+
+kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com alimentação em 2016")
+
+sub <- which(dadosFil$ano==2017 & dadosFil$mes %in% c("Mai", "Jul") & 
+                     dadosFil$tipo=="alimentação" )
+
+kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com alimentação em 2017")
+
+
+
+
 ```
 
 

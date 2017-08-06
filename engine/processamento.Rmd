@@ -34,7 +34,7 @@ Antes de fazer qualquer inferência, vamos primeiramente analisar os dados expor
 <!-- $ grep -E "^(,2015|,2016)" inicial.csv >> newData.csv -->
 
 
-```{r load-e-tratamento-csv, cache=TRUE}
+```{r load-e-tratamento}
 # gatilho tem.novidade futuramente vai ser ativado a partir de comparação com o servidor
 tem.novidade <- 0
 
@@ -110,6 +110,13 @@ if(tem.novidade==1|!tem.rda) {
                 ) %>%
                 select(data, ano, mes, mes.ano, tipo, descrição, valor)
 
+# removendo previsões de gastos
+        
+        indices <- grep("previsão", dadosT$descrição)
+        # View(dadosT[indices,])
+        dadosT <- dadosT[-indices,]
+
+
 
 # Vamos agrupar os dados por tipo de gasto, ano e mes, e depois calcular o total de gastos em cada categoria
 
@@ -117,8 +124,7 @@ if(tem.novidade==1|!tem.rda) {
         save(dadosT, file = "../data/dados-ok.rda")
         rm(dados)
 } else{
-        dadosT <- load("../data/dados-ok.rda")
-
+        load("../data/dados-ok.rda")
 }
         
 totais <- summarise(dadosT, total=sum(valor))

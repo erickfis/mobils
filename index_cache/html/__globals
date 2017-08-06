@@ -1,4 +1,3 @@
-load-e-tratamento-csv	==	>	|	!	%>%	account	amount	ano	as.character	as.numeric	bind_rows	c	data	date	descrição	description	dir	expense.type	factor	file.exists	filter	for	format	grep	group_by	gsub	identical	if	length	load	make.names	mes	mes.ano	months	mutate	names	names<-	parse_date_time	paste0	read_excel	readLines	rename	rep	rm	save	select	sum	summarise	tbl_df	tipo	tolower	valor	writeLines	year
 passo1	~	$	aes	brewer.pal	colorRampPalette	element_text	facet_grid	geom_line	geom_point	ggplot	labs	length	mes	scale_colour_manual	theme	tipo	totais	total	unique
 filtra-dados	==	>	!	&	%>%	ano	dadosT	group_by	mean	mes	mutate	rm	sum	summarise	tipo	total	valor	which	with
 passo2	~	aes	colourCount	element_blank	element_text	facet_grid	geom_line	geom_point	getPalette	ggplot	guide_legend	guides	labs	mes	scale_colour_manual	theme	tipo	totais	total

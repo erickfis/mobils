@@ -5,16 +5,25 @@
 
 ```{r plot-pagamentos}
 totais.pag <- totais[totais$tipo=="pagamentos",]
+medias.pag <- totais.pag %>% group_by(ano) %>%
+        summarise(media = mean(total))
+
+medias.pag$media <- round(medias.pag$media, 2)
+
+
 plt.pag <- ggplot(totais.pag, aes(x=mes, y=total, group=ano, colour=ano))
 
 
 (plt.pag +  geom_line() +
-                geom_point(size=0.5, alpha=0.5) +
-                # facet_grid(ano ~., scale="free") +
-                # geom_smooth(colour="black", linetype=3, alpha=0.2) +
-                # geom_errorbar(aes(ymin=total-erro, ymax=total+erro), width=.1) +
-                geom_hline(aes(yintercept = media, colour = ano), linetype=2) +
-                labs(title="Gastos com pagamentos diversos", y="Total (R$)", x="Mês") +
+                geom_point(size=1, alpha=0.5) +
+
+                geom_hline(data = medias.pag, 
+                           aes(yintercept = media, colour = ano), linetype=2) +
+                geom_label(data = medias.pag, vjust = -0.2, hjust = 1,
+                          aes(12, y = media,label=media)) +
+                
+                labs(title="Gastos com pagamentos diversos", 
+                     y="Total (R$)", x="Mês") +
                 theme(plot.title = element_text(hjust = 0.5))
 )
 ```

@@ -1,4 +1,3 @@
-load-e-tratamento-csv	arquivos.atual	dadosT	data.previous	tem.novidade	tem.rda	totais	valid_column_names	.Random.seed
 passo1	colourCount	getPalette	plt.p1
 filtra-dados	dadosFil	sub	totais
 passo2	plt.p2
