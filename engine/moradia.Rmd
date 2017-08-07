@@ -3,7 +3,7 @@
 
 O segundo da lista dos tipos de despesas mais oscilantes é moradia. Vejamos como este tipo de despesa se comporta ao longo dos anos:
 
-```{r moradia}
+```{r moradia, cache=TRUE}
 #devidos subsets
 
 totais.moradia <- totais[totais$tipo=="moradia",]
@@ -32,26 +32,35 @@ plt.moradia <- ggplot(totais.moradia, aes(x=mes, y=total,
 
 ```
 
-Este gráfico nos mostra que a média de gastos em 2017 está bem acima das médias para os outros anos. Vamos ver em detalhe quais foram os gastos de abril de para cada ano:
+Este gráfico nos mostra que a média de gastos em 2017 está bem acima das médias dos outros anos. Vamos ver em detalhe quais foram os gastos de abril para cada ano:
 
 ```{r tabela-moradia}
-
 sub <- which(dadosFil$ano==2015 & dadosFil$mes=="Abr" & 
                      dadosFil$tipo=="moradia" )
 
-kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com moradia em 2015-04")
+dados.sel <- dadosFil[sub,]
+rank <- order(dados.sel$valor, decreasing = TRUE)
 
+kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em abril de 2015")
 
+###
 sub <- which(dadosFil$ano==2016 & dadosFil$mes=="Abr" & 
                      dadosFil$tipo=="moradia" )
 
-kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com moradia em 2016-04")
+dados.sel <- dadosFil[sub,]
+rank <- order(dados.sel$valor, decreasing = TRUE)
 
+kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em abril de 2016")
 
+###
 sub <- which(dadosFil$ano==2017 & dadosFil$mes=="Abr" & 
                      dadosFil$tipo=="moradia" )
 
-kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com moradia em 2017-04")
+dados.sel <- dadosFil[sub,]
+rank <- order(dados.sel$valor, decreasing = TRUE)
+
+kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em abril de 2017")
+
 
 ```
 
@@ -62,4 +71,4 @@ O grande aumento na média deve-se ao fato de que em 2017:
 - temos seguro-residência
 - gás de cozinha antes era lançado como alimentação
 
-Desta forma concluímos que não são necessárias medidas de controle aqui.
+Por hora, não fica evidenciada a necessidade de mudanças em despesas com moradia.

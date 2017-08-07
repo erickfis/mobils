@@ -3,5 +3,11 @@ filtra-dados	dadosFil	sub	totais
 passo2	plt.p2
 grid	
 maiores.despesas	maiores
+maiores.despesas.table	maiores	maiores.df.plot
 maiores-plot	colourCount	getPalette	maiores.plt	real
+maiores-plot-2	colourCount	getPalette	maiores.plt	real
 variacoes-plot	colourCount	getPalette	m.variacoes	variacoes.plt
+alimentacao	medias.alim	plt.alim	totais.alim
+moradia	medias.moradia	plt.moradia	totais.moradia
+plot-pagamentos	medias.pag	plt.pag	totais.pag
+plot-corolla	medias.cor	plt.cor	totais.cor

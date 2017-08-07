@@ -4,7 +4,7 @@
 O primeiro item da lista dos tipos de despesas mais oscilantes é alimentação. Vejamos como este tipo de despesa se comporta ao longo dos anos:
 
 
-```{r alimentacao}
+```{r alimentacao, cache=TRUE}
 #devidos subsets
 
 totais.alim <- totais[totais$tipo=="alimentação",]
@@ -36,43 +36,49 @@ plt.alim <- ggplot(totais.alim, aes(x=mes, y=total, group=ano, colour=ano))
 Observa-se:
 
 - tendência a aumento de gastos em maio de 2015 e 2016
-- tendência a aumento de gastos em julho
+- até 2016, tendência a aumento de gastos em julho
 - aumento da média em 2017
-- sobe e desce: as compras maiores não são feitas todo mês
+- as compras maiores são feitas a cada 2 meses, 
 
-Vamos analisar a tabela de dados:
+
+Vamos analisar na tabela de dados os principais registros:
 
 ```{r tabela-alim}
-# dados.alim <- dadosFil %>% filter(mes %in% c("Mai", "Jul") & tipo=="alimentação" & valor > 100) %>%
-#         arrange(ano, mes, desc(valor))
+sub <- which(dadosFil$ano==2015 & dadosFil$mes %in% c("Jul") & 
+                     dadosFil$tipo=="alimentação" & dadosFil$valor > 50) 
 
-sub <- which(dadosFil$ano==2015 & dadosFil$mes %in% c("Mai", "Jul") & 
-                     dadosFil$tipo=="alimentação" )
+dados.sel <- dadosFil[sub,]
+rank <- order(dados.sel$valor, decreasing = TRUE)
 
-kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com alimentação em 2015")
+kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em julho de 2015")
 
-sub <- which(dadosFil$ano==2016 & dadosFil$mes %in% c("Mai", "Jul") & 
-                     dadosFil$tipo=="alimentação" )
+###
+sub <- which(dadosFil$ano==2016 & dadosFil$mes %in% c("Jul") & 
+                     dadosFil$tipo=="alimentação" & dadosFil$valor > 50) 
 
-kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com alimentação em 2016")
+dados.sel <- dadosFil[sub,]
+rank <- order(dados.sel$valor, decreasing = TRUE)
 
-sub <- which(dadosFil$ano==2017 & dadosFil$mes %in% c("Mai", "Jul") & 
-                     dadosFil$tipo=="alimentação" )
+kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em julho de 2016")
 
-kable(dadosFil[sub,c(1,6,7)], caption = "Gastos com alimentação em 2017")
+###
+sub <- which(dadosFil$ano==2017 & dadosFil$mes %in% c("Jun") & 
+                     dadosFil$tipo=="alimentação" & dadosFil$valor > 50) 
 
+dados.sel <- dadosFil[sub,]
+rank <- order(dados.sel$valor, decreasing = TRUE)
 
-
-
+kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em junho de 2017")
 ```
 
 
+Analizando os dados mais de perto, verifica-se que:
 
-Da tabela acima, verifica-se que o aumento em maio ocorre porque as compras para a páscoa são pagas em maio, no cartão de crédito.
+- até 2016, há tendência para gastos extras com a páscoa.
+- em julho de 2016 foram feitas 2 compras mensais, para aproveitar uma promoção.
+- o aumento da média em 2016 ocorre porque, além dos fatores acima, em março 2015 os gastos não foram registrados.
+- o aumento da média em 2017 ocorre porque a família aumentou.
 
-Portanto, verifica-se que há tendência para gastos extras com a páscoa.
+Por hora, não fica evidenciada a necessidade de mudanças em despesas com alimentação.
 
-Além disso, o aumento em julho de 2016 ocorreu porque foram feitas 2 compras mensais, para aproveitar uma promoção. Vê-se que este gasto cai até setembro, voltando a subir em outubro, próxima compra mensal.
-
-O aumento da média em 2016 ocorre porque, além dos fatores acima, em março 2015 os gastos não foram registrados.
 

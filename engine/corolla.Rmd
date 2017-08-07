@@ -1,7 +1,7 @@
 
 ## Análise por tipo de despesa: Corolla
 
-```{r plot-corolla}
+```{r plot-corolla, cache=TRUE}
 totais.cor <- totais[totais$tipo=="corolla",]
 medias.cor <- totais.cor %>% group_by(ano) %>%
         summarise(media = mean(total))
@@ -32,24 +32,28 @@ Vamos analisar a tabela de dados:
 
 ```{r tabela-cor}
 
-dados.cor <- dadosFil %>% filter(ano %in% c(2015) & tipo=="corolla" & month(data) >= 8) %>%
-        arrange(ano, mes, desc(valor))
+sub <- which(dadosFil$ano==2015 & dadosFil$tipo=="corolla" &
+                     month(dadosFil$data) > 7)
 
-kable(dados.cor[,1:6])
+kable(dadosFil[sub,c(1,6,7)], caption = "Gastos em 2015")
 
+###
+sub <- which(dadosFil$ano==2017 & dadosFil$tipo=="corolla" &
+                     month(dadosFil$data) == 6)
 
-dados.cor <- dadosFil %>% filter(ano %in% c(2017) & tipo=="corolla" &
-                                         month(data) == 6) %>%
-        arrange(ano, mes, desc(valor))
+kable(dadosFil[sub,c(1,6,7)], caption = "Gastos em junho de 2017")
 
-kable(dados.cor[,c(1,6,7)])
 
 ```
 
 
-Verifica-se que isso ocorreu porque em agosto de 2015 foi renovado o seguro, em 4x, isso explica as altas até novembro; em setembro foi feita uma manutenção de 10k, também parcelada em 4x.
+Desta forma, verifica-se que a alta em 2015 ocorreu porque em agosto foi renovado o seguro, parcelado em 4x, isso explica as altas até novembro; em setembro foi feita uma manutenção de 10k, também parcelada em 4x.
 
 Por outro lado, a queda a partir de julho de 2016 é explicada pela venda do carro neste mesmo mês.
+
+Em junho de 2017 foi feita um manutenção signficativa no carro, além da troca de pneus.
+
+
 
 
 

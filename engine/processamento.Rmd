@@ -116,8 +116,11 @@ if(tem.novidade==1|!tem.rda) {
         # View(dadosT[indices,])
         dadosT <- dadosT[-indices,]
 
-
-
+# uber é transporte
+        
+        indices <- grep("uber", dadosT$descrição)
+        dadosT$tipo[indices] <- "transporte"
+        
 # Vamos agrupar os dados por tipo de gasto, ano e mes, e depois calcular o total de gastos em cada categoria
 
         dadosT <- dadosT %>% group_by(tipo, ano, mes)

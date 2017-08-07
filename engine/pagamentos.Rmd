@@ -3,7 +3,7 @@
 
 ## Análise por tipo de despesa: Pagamentos
 
-```{r plot-pagamentos}
+```{r plot-pagamentos, cache=TRUE}
 totais.pag <- totais[totais$tipo=="pagamentos",]
 medias.pag <- totais.pag %>% group_by(ano) %>%
         summarise(media = mean(total))
@@ -30,19 +30,24 @@ plt.pag <- ggplot(totais.pag, aes(x=mes, y=total, group=ano, colour=ano))
 
 Observa-se:
 
-- aumento significativo de de fevereiro a setembro de 2015.
+- valores elevados de fevereiro a setembro de 2015
+- queda nas médias dos demais anos
 
 Vamos analisar a tabela de dados, em especial para valores acima de R$200,00:
 
 
 ```{r tabela-pag}
 
-dados.pag <- dadosFil %>% filter(ano %in% c(2015) & tipo=="pagamentos" & valor > 200) %>%
-        arrange(ano, mes, desc(valor))
-kable(dados.pag[,1:6])
+sub <- which(dadosFil$ano==2015 & dadosFil$valor > 200 & 
+                     dadosFil$tipo=="pagamentos")
+
+kable(dadosFil[sub,c(1,6,7)], caption = "Gastos em 2015")
+
+
+
 ```
 
-Verifica-se que este aumento ocorreu porque a cada vez que as metas de economia não eram alcançadas, o valor gasto acima da meta era lançado no mês seguinte como déficit, atingindo o pico em agosto. 
+Verifica-se que este aumento ocorreu em 2015 porque a cada vez que as metas de economia não eram alcançadas, o valor gasto acima da meta era lançado no mês seguinte como déficit, atingindo o pico em agosto. 
 
 Por outro lado, verifica-se que nunca mais houve deficit. 
 
