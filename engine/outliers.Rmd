@@ -19,7 +19,7 @@ plt.p1 <- plt.p1 +  geom_line() + geom_point() +
                 theme(legend.position="bottom") +
                 theme(plot.title = element_text(hjust = 0.5)) 
 
-plt.p1
+ggplotly(plt.p1)
 ```
 
 Analisando este gráfico, verificamos um outlier em março de 2015, tipo pagamentos. 
@@ -91,7 +91,7 @@ plt.p2 <- plt.p2 +  geom_line() + geom_point() +
                 guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
                 theme(plot.title = element_text(hjust = 0.5)) 
 
-plt.p2
+ggplotly(plt.p2)
 
 ```
 

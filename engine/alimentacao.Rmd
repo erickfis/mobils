@@ -16,20 +16,16 @@ medias.alim$media <- round(medias.alim$media, 2)
 
 plt.alim <- ggplot(totais.alim, aes(x=mes, y=total, group=ano, colour=ano))
 
-(plt.alim +  geom_line() + 
+plt.alim <- plt.alim +  geom_line() + 
                 geom_point(size=1, alpha=0.5) +
                 geom_hline(data = medias.alim, 
                            aes(yintercept = media, colour = ano), linetype=2) +
-
                 geom_label(data = medias.alim, vjust = -0.2, hjust = 1,
                           aes(12, y = media,label=media)) +
-                
-            
-                
                 labs(title="Gastos com alimentação", y="Total (R$)", x="Mês") +
-                
                 theme(plot.title = element_text(hjust = 0.5)) 
-)
+
+ggplotly(plt.alim)
 
 ```
 

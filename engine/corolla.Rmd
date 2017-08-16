@@ -11,7 +11,7 @@ medias.cor$media <- round(medias.cor$media, 2)
 plt.cor <- ggplot(totais.cor, aes(x=mes, y=total, group=ano, colour=ano))
 
 
-(plt.cor +  geom_line() +
+plt.cor <- plt.cor +  geom_line() +
                 geom_point(size=1, alpha=0.5) +
                 geom_hline(data = medias.cor, 
                            aes(yintercept = media, colour = ano), linetype=2) +
@@ -19,7 +19,8 @@ plt.cor <- ggplot(totais.cor, aes(x=mes, y=total, group=ano, colour=ano))
                           aes(12, y = media,label=media)) +
                 labs(title="Gastos com Corolla", y="Total (R$)", x="Mês") +
                 theme(plot.title = element_text(hjust = 0.5))
-)
+
+ggplotly(plt.cor)
 ```
 
 Observa-se:

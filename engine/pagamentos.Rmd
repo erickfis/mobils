@@ -14,7 +14,7 @@ medias.pag$media <- round(medias.pag$media, 2)
 plt.pag <- ggplot(totais.pag, aes(x=mes, y=total, group=ano, colour=ano))
 
 
-(plt.pag +  geom_line() +
+plt.pag <- plt.pag +  geom_line() +
                 geom_point(size=1, alpha=0.5) +
 
                 geom_hline(data = medias.pag, 
@@ -25,7 +25,8 @@ plt.pag <- ggplot(totais.pag, aes(x=mes, y=total, group=ano, colour=ano))
                 labs(title="Gastos com pagamentos diversos", 
                      y="Total (R$)", x="Mês") +
                 theme(plot.title = element_text(hjust = 0.5))
-)
+
+ggplotly(plt.pag)
 ```
 
 Observa-se:

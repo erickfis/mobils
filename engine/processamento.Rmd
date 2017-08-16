@@ -17,6 +17,7 @@ library(rmarkdown)
 library(RColorBrewer)
 library(gridExtra)
 library(grid)
+library(plotly)
 
 ```
 

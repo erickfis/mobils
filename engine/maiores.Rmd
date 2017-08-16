@@ -15,6 +15,9 @@ maiores <- totais %>% group_by(tipo, ano) %>%
 
 maiores <- subset(maiores, media.geral > 200)
 
+maiores$rank <- rank(maiores$media.geral)
+
+maiores$r2 <- ave(maiores$media.geral, FUN = function(x) rank(-x, ties.method = "min"))
 
 ```
 
@@ -59,9 +62,10 @@ maiores.plt <- maiores.plt + geom_bar(stat="identity") +
         theme(legend.title=element_blank()) +
         theme(axis.text.y = element_blank()) + 
         theme(axis.ticks.y = element_blank()) + 
-        theme(plot.title = element_text(hjust = 0.5))    
+        theme(plot.title = element_text(hjust = 0.5)) +
+        coord_flip()
 
-maiores.plt + coord_flip()
+maiores.plt
 ```
 
 
@@ -76,7 +80,7 @@ getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
 maiores.plt <- ggplot(maiores, aes(tipo, media.anual, 
                                    fill=ano))
 
-(maiores.plt + 
+maiores.plt <- maiores.plt + 
         geom_bar(stat="identity", position = position_dodge()) +
         facet_grid(tipo~., scales = "free", space = "free") +
         theme(strip.text.y = element_text(angle = 0)) +                
@@ -94,7 +98,8 @@ maiores.plt <- ggplot(maiores, aes(tipo, media.anual,
 
         theme(plot.title = element_text(hjust = 0.5)) +
         coord_flip()
-)
+
+maiores.plt
 # maiores.plt + coord_flip()
 ```
 
@@ -145,10 +150,10 @@ variacoes.plt <- variacoes.plt + geom_bar(stat="identity") +
         theme(legend.title=element_blank()) +
         theme(axis.text.y = element_blank()) + 
         theme(axis.ticks.y = element_blank()) + 
-        theme(plot.title = element_text(hjust = 0.5))                 
+        theme(plot.title = element_text(hjust = 0.5)) +
+        coord_flip()
 
-
-variacoes.plt + coord_flip()
+variacoes.plt
 
 
 ```
