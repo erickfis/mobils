@@ -1,6 +1,6 @@
 ---
 title: "Plataforma Mobills - Análise de Despesas Pessoais"
-author: "erickfis@gmail.com"
+author: "erickfis - https://github.com/erickfis"
 date: "`r format(Sys.time(), '%Y %B, %d')`"
 
 
