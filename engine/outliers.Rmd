@@ -9,8 +9,12 @@ colourCount = length(unique(totais$tipo))
 getPalette = colorRampPalette(brewer.pal(9, "Set1"))
 
 
-plt.p1 <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
-
+plt.p1 <- ggplot(totais, aes(x=mes, y=total.raw, group=tipo, colour=tipo,
+                text = paste(ano, "-", mes, 
+                             "<br>", tipo,
+                             "<br>", total)))
+                             
+                             
 plt.p1 <- plt.p1 +  geom_line() + geom_point() +
                 scale_colour_manual(values = getPalette(colourCount))+
                 facet_grid(ano ~., scale = "free") + 
@@ -19,7 +23,7 @@ plt.p1 <- plt.p1 +  geom_line() + geom_point() +
                 theme(legend.position="bottom") +
                 theme(plot.title = element_text(hjust = 0.5)) 
 
-ggplotly(plt.p1)
+ggplotly(plt.p1, tooltip = "text")
 ```
 
 Analisando este gráfico, verificamos um outlier em março de 2015, tipo pagamentos. 
@@ -27,13 +31,13 @@ Analisando este gráfico, verificamos um outlier em março de 2015, tipo pagamen
 Vamos olhar esta informação mais de perto:
 
 
-```{r}
+```{r, cache=TRUE}
 
 # vamos ver do q se trata, para talvez remover do gráfico
 
 sub <- with(dadosT, ano==2015 & mes=="Mar" & tipo=="pagamentos" )
-
-kable(dadosT[sub,c(1,5:7)], caption = "categoria pagamentos, em março de 2015")
+dados <- dadosT[sub,c(1,5,6,8)]
+kable(dados, caption = "categoria pagamentos, em março de 2015")
 ```
 
 Da tabela acima, observa-se que consta um lançamento referente a pagamento de cartão de crédito. Porém não é assim que o restante dos lançamentos foram feitos: não foram registrados totais. Este, portanto, foi um erro de uso da plataforma. Podemos, portanto, retirar este outlier com segurança.
@@ -46,9 +50,10 @@ Da tabela acima, observa-se que consta um lançamento referente a pagamento de c
 
 sub <- with(dadosT, mes %in% c("Jun","Jul") & day(dadosT$data) == 25)
 dadosub <- dadosT[which(sub),]
-kable(head(dadosub[unique(dadosub$tipo),1:6]), caption = "compras no crédito, registradas no dia 25")
 
-kable(tail(dadosub[unique(dadosub$tipo),1:6]), caption = "compras no crédito, registradas no dia 25")
+kable(head(dadosub[unique(dadosub$tipo),c(1,5,6,8)]), caption = "compras no crédito, registradas no dia 25")
+
+kable(tail(dadosub[unique(dadosub$tipo),c(1,5,6,8)]), caption = "compras no crédito, registradas no dia 25")
 
 ```
 
@@ -64,11 +69,13 @@ No entanto, como isso ocorre para todos os dados da mesma forma, não há impact
 ```{r filtra-dados, cache=TRUE}
 
 # retirando ponto do db
-sub <- with(dadosT, ano==2015 & mes=="Mar" & tipo=="pagamentos" & valor > 4000)
+sub <- with(dadosT, ano==2015 & mes=="Mar" & tipo=="pagamentos" & valor.raw > 4000)
 dadosFil <- dadosT[which(!sub),]
 dadosFil <- group_by(dadosFil, tipo, ano, mes)
-totais <- summarise(dadosFil, total=sum(valor)) %>%
-                mutate(media = mean(total))
+totais <- summarise(dadosFil, total.raw=sum(valor.raw)) %>%
+                mutate(media.raw = mean(total.raw), 
+                       total = real(total.raw),
+                       media = real(media.raw))
 
 
 rm(dadosT) # house cleanning
@@ -78,8 +85,11 @@ rm(dadosT) # house cleanning
 
 
 ```{r passo2, cache=TRUE}
-plt.p2 <- ggplot(totais, aes(x=mes, y=total, group=tipo, colour=tipo))
-
+plt.p2 <- ggplot(totais, aes(x=mes, y=total.raw, group=tipo, colour=tipo,
+                text = paste(ano, "-", mes, 
+                             "<br>", tipo,
+                             "<br>", total)))
+        
 plt.p2 <- plt.p2 +  geom_line() + geom_point() +
                 scale_colour_manual(values = getPalette(colourCount))+
                 facet_grid(ano ~., scale="free") + 
@@ -91,7 +101,7 @@ plt.p2 <- plt.p2 +  geom_line() + geom_point() +
                 guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
                 theme(plot.title = element_text(hjust = 0.5)) 
 
-ggplotly(plt.p2)
+ggplotly(plt.p2, tooltip = "text")
 
 ```
 

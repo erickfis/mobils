@@ -10,3 +10,5 @@ rmarkdown
 scales
 stringr
 chron
+readxl
+plotly

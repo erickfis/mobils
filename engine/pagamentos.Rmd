@@ -6,27 +6,29 @@
 ```{r plot-pagamentos, cache=TRUE}
 totais.pag <- totais[totais$tipo=="pagamentos",]
 medias.pag <- totais.pag %>% group_by(ano) %>%
-        summarise(media = mean(total))
+        summarise(media = mean(total.raw))
 
 medias.pag$media <- round(medias.pag$media, 2)
 
 
-plt.pag <- ggplot(totais.pag, aes(x=mes, y=total, group=ano, colour=ano))
-
+plt.pag <- ggplot(totais.pag, aes(x=mes, y=total.raw, group=ano, colour=ano,
+                text = paste(ano, "-", mes, 
+                             "<br>", total)))                                  
 
 plt.pag <- plt.pag +  geom_line() +
                 geom_point(size=1, alpha=0.5) +
-
                 geom_hline(data = medias.pag, 
-                           aes(yintercept = media, colour = ano), linetype=2) +
-                geom_label(data = medias.pag, vjust = -0.2, hjust = 1,
-                          aes(12, y = media,label=media)) +
-                
+                           aes(yintercept = media, colour = ano,
+                                 text=paste(real(media))),
+                           linetype=2) +
+                # geom_label(data = medias.pag, vjust = -0.2, hjust = 1,
+                #           aes(12, y = media,label=media)) +
+                # 
                 labs(title="Gastos com pagamentos diversos", 
                      y="Total (R$)", x="Mês") +
                 theme(plot.title = element_text(hjust = 0.5))
 
-ggplotly(plt.pag)
+ggplotly(plt.pag, tooltip = "text")
 ```
 
 Observa-se:
@@ -39,10 +41,10 @@ Vamos analisar a tabela de dados, em especial para valores acima de R$200,00:
 
 ```{r tabela-pag}
 
-sub <- which(dadosFil$ano==2015 & dadosFil$valor > 200 & 
+sub <- which(dadosFil$ano==2015 & dadosFil$valor.raw > 200 & 
                      dadosFil$tipo=="pagamentos")
 
-kable(dadosFil[sub,c(1,6,7)], caption = "Gastos em 2015")
+kable(dadosFil[sub,c(1,6,8)], caption = "Gastos em 2015")
 
 
 

@@ -4,23 +4,26 @@
 ```{r plot-corolla, cache=TRUE}
 totais.cor <- totais[totais$tipo=="corolla",]
 medias.cor <- totais.cor %>% group_by(ano) %>%
-        summarise(media = mean(total))
+        summarise(media = mean(total.raw))
 
 medias.cor$media <- round(medias.cor$media, 2)
 
-plt.cor <- ggplot(totais.cor, aes(x=mes, y=total, group=ano, colour=ano))
-
-
+plt.cor <- ggplot(totais.cor, aes(x=mes, y=total.raw, group=ano, colour=ano,
+                text = paste(ano, "-", mes, 
+                             "<br>", total)))
+                     
 plt.cor <- plt.cor +  geom_line() +
                 geom_point(size=1, alpha=0.5) +
                 geom_hline(data = medias.cor, 
-                           aes(yintercept = media, colour = ano), linetype=2) +
-                geom_label(data = medias.cor, vjust = -0.2, hjust = 1,
-                          aes(12, y = media,label=media)) +
+                           aes(yintercept = media, colour = ano,
+                                 text=paste(real(media))),
+                           linetype=2) +
+                # geom_label(data = medias.cor, vjust = -0.2, hjust = 1,
+                #           aes(12, y = media,label=media)) +
                 labs(title="Gastos com Corolla", y="Total (R$)", x="Mês") +
                 theme(plot.title = element_text(hjust = 0.5))
 
-ggplotly(plt.cor)
+ggplotly(plt.cor, tooltip = "text")
 ```
 
 Observa-se:
@@ -36,13 +39,13 @@ Vamos analisar a tabela de dados:
 sub <- which(dadosFil$ano==2015 & dadosFil$tipo=="corolla" &
                      month(dadosFil$data) > 7)
 
-kable(dadosFil[sub,c(1,6,7)], caption = "Gastos em 2015")
+kable(dadosFil[sub,c(1,6,8)], caption = "Gastos em 2015")
 
 ###
 sub <- which(dadosFil$ano==2017 & dadosFil$tipo=="corolla" &
                      month(dadosFil$data) == 6)
 
-kable(dadosFil[sub,c(1,6,7)], caption = "Gastos em junho de 2017")
+kable(dadosFil[sub,c(1,6,8)], caption = "Gastos em junho de 2017")
 
 
 ```

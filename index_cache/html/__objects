@@ -1,13 +1,14 @@
-passo1	colourCount	getPalette	plt.p1	.index_cache/html/passo1_aaf0c366e89f7ce7a745f113cd149085_meta
+passo1	colourCount	getPalette	plt.p1	.index_cache/html/passo1_9970ba4dd260d7de1df3c1a00894fbe9_meta
+unnamed-chunk-10	dados	sub
 filtra-dados	dadosFil	sub	totais
-passo2	plt.p2	.index_cache/html/passo2_68853a1ca6d2cea0dc56752d877e0760_meta
+passo2	plt.p2	.index_cache/html/passo2_57fe3264c9478207e14c1c07e0161c6e_meta
 grid	
 maiores.despesas	maiores
-maiores.despesas.table	maiores	maiores.df.plot
-maiores-plot	colourCount	getPalette	maiores.plt	real
+maiores.despesas.table	dados	maiores	maiores.df.plot
+maiores-plot	ax	colourCount	getPalette	maiores.plt	p	real
 maiores-plot-2	colourCount	getPalette	maiores.plt	real
-variacoes-plot	colourCount	getPalette	m.variacoes	variacoes.plt
-alimentacao	medias.alim	plt.alim	totais.alim	.index_cache/html/alimentacao_fc27e513e6e677817d211346187944c2_meta
-moradia	medias.moradia	plt.moradia	totais.moradia	.index_cache/html/moradia_2a14208b741117509b81d0f98c915b59_meta
-plot-pagamentos	medias.pag	plt.pag	totais.pag	.index_cache/html/plot-pagamentos_8783a949722a84e5326071acd32bfad3_meta
-plot-corolla	medias.cor	plt.cor	totais.cor	.index_cache/html/plot-corolla_b69b810db34c0214f703f42d06a1d10b_meta
+variacoes-plot	colourCount	dados	getPalette	m.variacoes	variacoes.plt
+alimentacao	medias.alim	plt.alim	totais.alim	.index_cache/html/alimentacao_bf42ec042dbd42a8e1f4d4cbbfb75e58_meta
+moradia	medias.moradia	plt.moradia	totais.moradia	.index_cache/html/moradia_805b3f6f8feb14445316f771f3decbdd_meta
+plot-pagamentos	medias.pag	plt.pag	totais.pag	.index_cache/html/plot-pagamentos_e12670ab44082fbb12dcaa1d1f16df2a_meta
+plot-corolla	medias.cor	plt.cor	totais.cor	.index_cache/html/plot-corolla_c39550370f491aa1b8ac4f133d4b606a_meta

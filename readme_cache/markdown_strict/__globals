@@ -11,3 +11,4 @@ passo1	~	$	aes	brewer.pal	colorRampPalette	element_text	facet_grid	geom_line	geo
 passo2	~	aes	colourCount	element_blank	element_text	facet_grid	geom_line	geom_point	getPalette	ggplot	guide_legend	guides	labs	mes	scale_colour_manual	theme	tipo	totais	total
 grid	gpar	grid.arrange	grid.rect	plt.p1	plt.p2
 maiores.despesas	%>%	ano	arrange	desc	group_by	mean	media.mensal.ano	media.mensal.geral	mutate	round	sd	summarise	tipo	totais	total
+alimentacao	==	$	$<-	%>%	aes	ano	element_text	geom_hline	geom_label	geom_line	geom_point	ggplot	ggplotly	group_by	labs	mean	media	mes	round	summarise	theme	totais	total

@@ -92,6 +92,7 @@ if(tem.novidade==1|!tem.rda) {
 # # filtrando as informações que interessam,
 # Além disso, transformar tudo para lowercase, converter formato de datas,
 # renomear variáveis, selecionar as que interessam, criar variável mês
+real <- dollar_format(prefix = "R$ ")
 
         dadosT <- dados %>% filter(account == "itau") %>%
                 rename(tipo = expense.type, valor = amount,
@@ -99,7 +100,8 @@ if(tem.novidade==1|!tem.rda) {
                 mutate(data = parse_date_time(date, "dmY"),
                        descrição = tolower(as.character(descrição)),
                        tipo = factor(tolower(as.character(tipo))),
-                       valor = as.numeric(gsub("\\$|,","", valor)),
+                       valor.raw = as.numeric(gsub("\\$|,","", valor)),
+                       valor = real(valor.raw),
                        mes = factor(months(data, abbreviate=TRUE),
                                     levels = c("Jan", "Fev", "Mar", "Abr",
                                                "Mai","Jun", "Jul", "Ago",
@@ -109,7 +111,8 @@ if(tem.novidade==1|!tem.rda) {
                        mes.ano = format(data, '%Y-%m')
 
                 ) %>%
-                select(data, ano, mes, mes.ano, tipo, descrição, valor)
+                select(data, ano, mes, mes.ano, tipo, descrição, 
+                        valor.raw,valor)
 
 # removendo previsões de gastos
         
@@ -130,8 +133,11 @@ if(tem.novidade==1|!tem.rda) {
 } else{
         load("../data/dados-ok.rda")
 }
-        
-totais <- summarise(dadosT, total=sum(valor))
+
+real <- dollar_format(prefix = "R$ ")
+
+totais <- summarise(dadosT, total.raw=sum(valor.raw)) %>%
+        mutate(total = real(total.raw))
 
 ```
 

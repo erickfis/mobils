@@ -1,13 +1,14 @@
-passo1	~	$	aes	brewer.pal	colorRampPalette	element_text	facet_grid	geom_line	geom_point	ggplot	ggplotly	labs	length	mes	scale_colour_manual	theme	tipo	totais	total	unique
-filtra-dados	==	>	!	&	%>%	ano	dadosT	group_by	mean	mes	mutate	rm	sum	summarise	tipo	total	valor	which	with
-passo2	~	aes	colourCount	element_blank	element_text	facet_grid	geom_line	geom_point	getPalette	ggplot	ggplotly	guide_legend	guides	labs	mes	scale_colour_manual	theme	tipo	totais	total
+passo1	~	$	aes	ano	brewer.pal	colorRampPalette	element_text	facet_grid	geom_line	geom_point	ggplot	ggplotly	labs	length	mes	paste	scale_colour_manual	theme	tipo	totais	total	total.raw	unique
+unnamed-chunk-10	==	&	ano	c	dadosT	kable	mes	tipo	with
+filtra-dados	==	>	!	&	%>%	ano	dadosT	group_by	mean	media.raw	mes	mutate	real	rm	sum	summarise	tipo	total.raw	valor.raw	which	with
+passo2	~	aes	ano	colourCount	element_blank	element_text	facet_grid	geom_line	geom_point	getPalette	ggplot	ggplotly	guide_legend	guides	labs	mes	paste	scale_colour_manual	theme	tipo	totais	total	total.raw
 grid	
-maiores.despesas	>	$	$<-	%>%	ano	arrange	ave	desc	group_by	mean	media.anual	media.geral	mutate	rank	round	sd	subset	summarise	tipo	totais	total
-maiores.despesas.table	$	$<-	%>%	arrange	c	desc	factor	group_by	kable	length	mean	media	media.anual	mutate	order	round	summarise	tipo
-maiores-plot	$	aes	brewer.pal	colorRampPalette	coord_flip	dollar_format	element_blank	element_text	geom_bar	geom_text	ggplot	labs	length	maiores.df.plot	media	scale_colour_manual	scale_y_continuous	theme	tipo	unique
+maiores.despesas	>	%>%	ano	arrange	desc	group_by	mean	media.anual	media.geral	mutate	round	sd	subset	summarise	tipo	totais	total.raw
+maiores.despesas.table	$	$<-	%>%	arrange	c	desc	factor	group_by	kable	mean	media	media.anual	mutate	order	rank	real	round	summarise	tipo
+maiores-plot	~	$	%>%	aes	brewer.pal	colorRampPalette	coord_flip	dollar_format	element_blank	element_text	geom_bar	geom_text	ggplot	labs	layout	length	list	maiores.df.plot	media	plot_ly	scale_colour_manual	scale_y_continuous	theme	tipo	unique
 maiores-plot-2	~	$	aes	ano	brewer.pal	colorRampPalette	coord_flip	dollar_format	element_blank	element_text	facet_grid	geom_bar	ggplot	labs	length	maiores	media.anual	position_dodge	scale_colour_manual	scale_y_continuous	theme	tipo	unique
 variacoes-plot	>	$	$<-	%>%	aes	arrange	brewer.pal	c	colorRampPalette	coord_flip	desc	element_blank	element_text	factor	geom_bar	geom_text	ggplot	group_by	kable	labs	length	maiores	media.anual	mutate	order	real	round	scale_colour_manual	scale_y_continuous	sd	subset	summarise	theme	tipo	unique
-alimentacao	==	$	$<-	%>%	aes	ano	element_text	geom_hline	geom_label	geom_line	geom_point	ggplot	ggplotly	group_by	labs	mean	media	mes	round	summarise	theme	totais	total
-moradia	==	$	$<-	%>%	aes	ano	element_text	geom_hline	geom_label	geom_line	geom_point	ggplot	ggplotly	group_by	labs	mean	media	mes	round	summarise	theme	totais	total
-plot-pagamentos	==	$	$<-	%>%	aes	ano	element_text	geom_hline	geom_label	geom_line	geom_point	ggplot	ggplotly	group_by	labs	mean	media	mes	round	summarise	theme	totais	total
-plot-corolla	==	$	$<-	%>%	aes	ano	element_text	geom_hline	geom_label	geom_line	geom_point	ggplot	ggplotly	group_by	labs	mean	media	mes	round	summarise	theme	totais	total
+alimentacao	==	$	$<-	%>%	aes	ano	element_text	geom_hline	geom_line	geom_point	ggplot	ggplotly	group_by	labs	mean	media	mes	paste	real	round	summarise	theme	totais	total	total.raw
+moradia	==	$	$<-	%>%	aes	ano	element_text	geom_hline	geom_line	geom_point	ggplot	ggplotly	group_by	labs	mean	media	mes	paste	real	round	summarise	theme	totais	total	total.raw
+plot-pagamentos	==	$	$<-	%>%	aes	ano	element_text	geom_hline	geom_line	geom_point	ggplot	ggplotly	group_by	labs	mean	media	mes	paste	real	round	summarise	theme	totais	total	total.raw
+plot-corolla	==	$	$<-	%>%	aes	ano	element_text	geom_hline	geom_line	geom_point	ggplot	ggplotly	group_by	labs	mean	media	mes	paste	real	round	summarise	theme	totais	total	total.raw

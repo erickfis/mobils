@@ -10,22 +10,26 @@ O primeiro item da lista dos tipos de despesas mais oscilantes é alimentação.
 totais.alim <- totais[totais$tipo=="alimentação",]
 
 medias.alim <- totais.alim %>% group_by(ano) %>%
-        summarise(media = mean(total))
+        summarise(media = mean(total.raw))
 
 medias.alim$media <- round(medias.alim$media, 2)
 
-plt.alim <- ggplot(totais.alim, aes(x=mes, y=total, group=ano, colour=ano))
-
+plt.alim <- ggplot(totais.alim, aes(x=mes, y=total.raw, group=ano, colour=ano,
+                text = paste(ano, "-", mes, 
+                             "<br>", total)))
+                                 
 plt.alim <- plt.alim +  geom_line() + 
                 geom_point(size=1, alpha=0.5) +
                 geom_hline(data = medias.alim, 
-                           aes(yintercept = media, colour = ano), linetype=2) +
-                geom_label(data = medias.alim, vjust = -0.2, hjust = 1,
-                          aes(12, y = media,label=media)) +
+                           aes(yintercept = media, colour = ano,
+                                 text=paste(real(media))),
+                           linetype=2) +
+                # geom_label(data = medias.alim, vjust = -0.2, hjust = 1,
+                #           aes(12, y = media,label=media)) +
                 labs(title="Gastos com alimentação", y="Total (R$)", x="Mês") +
                 theme(plot.title = element_text(hjust = 0.5)) 
 
-ggplotly(plt.alim)
+ggplotly(plt.alim, tooltip = "text")
 
 ```
 
@@ -41,30 +45,30 @@ Vamos analisar na tabela de dados os principais registros:
 
 ```{r tabela-alim}
 sub <- which(dadosFil$ano==2015 & dadosFil$mes %in% c("Jul") & 
-                     dadosFil$tipo=="alimentação" & dadosFil$valor > 50) 
+                     dadosFil$tipo=="alimentação" & dadosFil$valor.raw > 50) 
 
 dados.sel <- dadosFil[sub,]
-rank <- order(dados.sel$valor, decreasing = TRUE)
+rank <- order(dados.sel$valor.raw, decreasing = TRUE)
 
-kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em julho de 2015")
+kable(dados.sel[rank,c(1,6,8)], caption = "Gastos em julho de 2015")
 
 ###
 sub <- which(dadosFil$ano==2016 & dadosFil$mes %in% c("Jul") & 
-                     dadosFil$tipo=="alimentação" & dadosFil$valor > 50) 
+                     dadosFil$tipo=="alimentação" & dadosFil$valor.raw > 50) 
 
 dados.sel <- dadosFil[sub,]
-rank <- order(dados.sel$valor, decreasing = TRUE)
+rank <- order(dados.sel$valor.raw, decreasing = TRUE)
 
-kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em julho de 2016")
+kable(dados.sel[rank,c(1,6,8)], caption = "Gastos em julho de 2016")
 
 ###
 sub <- which(dadosFil$ano==2017 & dadosFil$mes %in% c("Jun") & 
-                     dadosFil$tipo=="alimentação" & dadosFil$valor > 50) 
+                     dadosFil$tipo=="alimentação" & dadosFil$valor.raw > 50) 
 
 dados.sel <- dadosFil[sub,]
-rank <- order(dados.sel$valor, decreasing = TRUE)
+rank <- order(dados.sel$valor.raw, decreasing = TRUE)
 
-kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em junho de 2017")
+kable(dados.sel[rank,c(1,6,8)], caption = "Gastos em junho de 2017")
 ```
 
 

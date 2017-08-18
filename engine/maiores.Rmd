@@ -6,18 +6,17 @@ Na tabela abaixo temos um ranking dos maiores tipos de despesa na média de todo
 ```{r maiores.despesas, cache=TRUE}
 
 maiores <- totais %>% group_by(tipo, ano) %>% 
-        summarise(media.anual = round(mean(total),2),
-                  sd.anual=round(sd(total), 2)) %>%
+        summarise(media.anual = round(mean(total.raw),2),
+                  sd.anual=round(sd(total.raw), 2)) %>%
         mutate(media.geral = round(mean(media.anual),2),
                sd.geral=round(sd(media.anual), 2)) %>%
-        arrange(desc(media.geral), ano, tipo)
-       
+        arrange(desc(media.geral), ano, tipo) 
 
 maiores <- subset(maiores, media.geral > 200)
 
-maiores$rank <- rank(maiores$media.geral)
-
-maiores$r2 <- ave(maiores$media.geral, FUN = function(x) rank(-x, ties.method = "min"))
+# maiores$rank <- rank(maiores$media.geral)
+# 
+# maiores$r2 <- ave(maiores$media.geral, FUN = function(x) rank(-x, ties.method = "min"))
 
 ```
 
@@ -26,19 +25,22 @@ maiores$r2 <- ave(maiores$media.geral, FUN = function(x) rank(-x, ties.method = 
 maiores.df.plot <-  maiores %>% group_by(tipo) %>% 
         summarise(media = round(mean(media.anual),2)) %>%
         arrange(desc(media)) %>%
-        mutate(rank = 1:length(media))
-
+        # mutate(rank = 1:length(media))
+        mutate(rank = rank(media))
 
 maiores.df.plot$tipo <- factor(maiores.df.plot$tipo,
                 levels = maiores.df.plot$tipo[order(maiores.df.plot$rank,
-                                                decreasing = TRUE)])
+                                                decreasing = FALSE)])
 
 maiores$tipo <- factor(maiores$tipo, levels = maiores.df.plot$tipo)
 
 maiores$ano <- factor(maiores$ano,
                 levels = c(2017, 2016,2015))
 
-kable(maiores.df.plot[, c(3,1:2)], caption = "Os maiores tipos de despesas")
+
+dados <- maiores.df.plot[, c(3,1:2)]
+dados$media <- real(dados$media)
+kable(dados, caption = "Os maiores tipos de despesas")
 ```
 
 
@@ -49,23 +51,58 @@ real <- dollar_format(prefix = "R$ ")
 colourCount = length(unique(maiores.df.plot$tipo))
 getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
 
+# maiores.plt <- ggplot(maiores.df.plot, aes(tipo, media, fill=tipo))
+# 
+# maiores.plt <- maiores.plt + geom_bar(stat="identity") +
+#         labs(title=" Média das maiores despesas, por tipo", 
+#              y="", x="") + 
+#         geom_text(aes(label=tipo),
+#                 vjust=.5, hjust=1.1, colour="white") +
+#         scale_y_continuous(labels = real) +
+#         scale_colour_manual(values = getPalette(colourCount))+ 
+#         theme(legend.position="none") +    
+#         theme(legend.title=element_blank()) +
+#         theme(axis.text.y = element_blank()) + 
+#         theme(axis.ticks.y = element_blank()) + 
+#         theme(plot.title = element_text(hjust = 0.5)) +
+#         coord_flip()
+# 
+# maiores.plt
+
+
 maiores.plt <- ggplot(maiores.df.plot, aes(tipo, media, fill=tipo))
 
 maiores.plt <- maiores.plt + geom_bar(stat="identity") +
-        labs(title=" Média das maiores despesas, por tipo", 
-             y="", x="") + 
+        labs(title=" Média das maiores despesas, por tipo",
+             y="", x="") +
         geom_text(aes(label=tipo),
                 vjust=.5, hjust=1.1, colour="white") +
         scale_y_continuous(labels = real) +
-        scale_colour_manual(values = getPalette(colourCount))+ 
-        theme(legend.position="none") +    
+        scale_colour_manual(values = getPalette(colourCount))+
+        theme(legend.position="none") +
         theme(legend.title=element_blank()) +
-        theme(axis.text.y = element_blank()) + 
-        theme(axis.ticks.y = element_blank()) + 
+        theme(axis.text.y = element_blank()) +
+        theme(axis.ticks.y = element_blank()) +
         theme(plot.title = element_text(hjust = 0.5)) +
         coord_flip()
 
 maiores.plt
+ax <- list(
+  # title = ""
+  # zeroline = FALSE,
+  # showline = FALSE,
+  showticklabels = FALSE
+  # showgrid = FALSE
+)
+
+p <- plot_ly(maiores.df.plot, x = ~media, y = ~tipo, type = 'bar',
+             orientation = 'h', color=~tipo, hoverinfo = "text",
+             text = ~paste(tipo, ":", real(media))) %>%
+  layout(yaxis = ax)
+
+
+
+
 ```
 
 
@@ -122,9 +159,10 @@ m.variacoes <-  maiores %>% group_by(tipo) %>%
 
 m.variacoes <- subset(m.variacoes, sd > 50)
 
+dados <- m.variacoes[, c(3,1:2)]
+dados$sd <- real(dados$sd)
 
-kable(m.variacoes[, c(3,1:2)])
-
+kable(dados, caption = "Maiores variações ao longo dos anos")
 
 m.variacoes$tipo <- factor(m.variacoes$tipo,
                 levels = m.variacoes$tipo[order(m.variacoes$rank, 

@@ -8,24 +8,28 @@ O segundo da lista dos tipos de despesas mais oscilantes é moradia. Vejamos com
 
 totais.moradia <- totais[totais$tipo=="moradia",]
 medias.moradia <- totais.moradia %>% group_by(ano) %>%
-        summarise(media = mean(total))
+        summarise(media = mean(total.raw))
 
 medias.moradia$media <- round(medias.moradia$media, 2)
 
 
-plt.moradia <- ggplot(totais.moradia, aes(x=mes, y=total,
-                                          group=ano, colour=ano))
+plt.moradia <- ggplot(totais.moradia, 
+                      aes(x=mes, y=total.raw,group=ano, colour=ano,
+                       text = paste(ano, "-", mes, 
+                             "<br>", total)))
 
 plt.moradia <- plt.moradia +  geom_line() + 
                 geom_point(size=1, alpha=0.5) +
                 geom_hline(data = medias.moradia, 
-                           aes(yintercept = media, colour = ano), linetype=2) +
-                geom_label(data = medias.moradia, vjust = -0.2, hjust = 1,
-                          aes(12, y = media,label=media)) +
+                           aes(yintercept = media, colour = ano,
+                                 text=paste(real(media))),
+                           linetype=2) +
+                # geom_label(data = medias.moradia, vjust = -0.2, hjust = 1,
+                #           aes(12, y = media,label=media)) +
                 labs(title="Gastos com moradia", y="Total (R$)", x="Mês") +
                 theme(plot.title = element_text(hjust = 0.5)) 
 
-ggplotly(plt.moradia)
+ggplotly(plt.moradia, tooltip = "text")
 
 ```
 
@@ -36,27 +40,27 @@ sub <- which(dadosFil$ano==2015 & dadosFil$mes=="Abr" &
                      dadosFil$tipo=="moradia" )
 
 dados.sel <- dadosFil[sub,]
-rank <- order(dados.sel$valor, decreasing = TRUE)
+rank <- order(dados.sel$valor.raw, decreasing = TRUE)
 
-kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em abril de 2015")
+kable(dados.sel[rank,c(1,6,8)], caption = "Gastos em abril de 2015")
 
 ###
 sub <- which(dadosFil$ano==2016 & dadosFil$mes=="Abr" & 
                      dadosFil$tipo=="moradia" )
 
 dados.sel <- dadosFil[sub,]
-rank <- order(dados.sel$valor, decreasing = TRUE)
+rank <- order(dados.sel$valor.raw, decreasing = TRUE)
 
-kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em abril de 2016")
+kable(dados.sel[rank,c(1,6,8)], caption = "Gastos em abril de 2016")
 
 ###
 sub <- which(dadosFil$ano==2017 & dadosFil$mes=="Abr" & 
                      dadosFil$tipo=="moradia" )
 
 dados.sel <- dadosFil[sub,]
-rank <- order(dados.sel$valor, decreasing = TRUE)
+rank <- order(dados.sel$valor.raw, decreasing = TRUE)
 
-kable(dados.sel[rank,c(1,6,7)], caption = "Gastos em abril de 2017")
+kable(dados.sel[rank,c(1,6,8)], caption = "Gastos em abril de 2017")
 
 
 ```
