@@ -26,7 +26,7 @@ maiores.df.plot <-  maiores %>% group_by(tipo) %>%
         summarise(media = round(mean(media.anual),2)) %>%
         arrange(desc(media)) %>%
         # mutate(rank = 1:length(media))
-        mutate(rank = rank(media))
+        mutate(rank = rank(-media))
 
 maiores.df.plot$tipo <- factor(maiores.df.plot$tipo,
                 levels = maiores.df.plot$tipo[order(maiores.df.plot$rank,
