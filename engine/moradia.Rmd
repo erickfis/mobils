@@ -3,7 +3,7 @@
 
 O segundo da lista dos tipos de despesas mais oscilantes é moradia. Vejamos como este tipo de despesa se comporta ao longo dos anos:
 
-```{r moradia, cache=TRUE}
+```{r moradia}
 #devidos subsets
 
 totais.moradia <- totais[totais$tipo=="moradia",]
@@ -36,40 +36,22 @@ ggplotly(plt.moradia, tooltip = "text")
 Este gráfico nos mostra que a média de gastos em 2017 está bem acima das médias dos outros anos. Vamos ver em detalhe quais foram os gastos de abril para cada ano:
 
 ```{r tabela-moradia}
-sub <- which(dadosFil$ano==2015 & dadosFil$mes=="Abr" & 
+sub <- which(dadosFil$valor.raw > 50 & dadosFil$mes %in% c("Fev", "Abr", "Ago") & 
                      dadosFil$tipo=="moradia" )
 
-dados.sel <- dadosFil[sub,]
-rank <- order(dados.sel$valor.raw, decreasing = TRUE)
-
-kable(dados.sel[rank,c(1,6,8)], caption = "Gastos em abril de 2015")
-
-###
-sub <- which(dadosFil$ano==2016 & dadosFil$mes=="Abr" & 
-                     dadosFil$tipo=="moradia" )
-
-dados.sel <- dadosFil[sub,]
-rank <- order(dados.sel$valor.raw, decreasing = TRUE)
-
-kable(dados.sel[rank,c(1,6,8)], caption = "Gastos em abril de 2016")
-
-###
-sub <- which(dadosFil$ano==2017 & dadosFil$mes=="Abr" & 
-                     dadosFil$tipo=="moradia" )
-
-dados.sel <- dadosFil[sub,]
-rank <- order(dados.sel$valor.raw, decreasing = TRUE)
-
-kable(dados.sel[rank,c(1,6,8)], caption = "Gastos em abril de 2017")
-
+dadosFil[sub, c(2,3,6,7)]  %>% 
+        datatable(options = list(pageLength = 6), 
+                  caption = "Picos de gastos com moradia",
+                  rownames = FALSE, filter = "top"
+        )
 
 ```
 
 
-O grande aumento na média deve-se ao fato de que em 2017:
+O aumento na deve-se ao fato de que:
 
-- estamos agora  contratando faxina
+- estamos agora contratando faxina
+- em alguns meses a faxina é lançada em outra conta
 - temos seguro-residência
 - gás de cozinha antes era lançado como alimentação
 
-Por hora, não fica evidenciada a necessidade de mudanças em despesas com moradia.

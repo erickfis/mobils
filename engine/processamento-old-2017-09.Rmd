@@ -1,0 +1,144 @@
+# Processamento dos dados 
+
+O banco de dados é carregado e preparado para que possamos responder às questões levantadas. 
+
+
+```{r libraries}
+
+library(knitr)
+library(rmarkdown)
+
+
+library(scales)
+library(stringr)
+library(readxl)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(RColorBrewer)
+library(grid)
+library(gridExtra)
+library(plotly)
+
+```
+
+
+
+## Tratamento inicial dos dados
+
+Antes de fazer qualquer inferência, vamos primeiramente analisar os dados exportados pela plataforma, procurando avaliar sua qualidade e quais são as transformações necessárias para o seu uso.
+
+<!-- tratar inicial.csv com sed+grep para filtrar 2015 e 2016 -->
+<!-- Pega a 1a linha (1 a 5), para cabeçalho -->
+<!-- $ sed -n "1,5p" inicial.csv > newData.csv -->
+
+<!-- filtra 2015 e 2016 -->
+<!-- $ grep -E "^(,2015|,2016)" inicial.csv >> newData.csv -->
+
+
+```{r load-e-tratamento}
+# gatilho tem.novidade futuramente vai ser ativado a partir de comparação com o servidor
+tem.novidade <- 0
+
+# verifica se os arquivos disponíveis são os mesmos que já foram utilizados anteriormente. Se não, dispara um novo processamento
+
+arquivos.atual <- dir("../data/")
+arquivos.atual <- arquivos.atual[grep("mobills", arquivos.atual)]
+
+if (file.exists("../data/lista.txt")) {
+        data.previous <- readLines("../data/lista.txt")
+                if (identical(data.previous,arquivos.atual)) {
+                        tem.novidade <- 0
+                } else {
+                        tem.novidade <- 1
+                        writeLines(arquivos.atual, "../data/lista.txt")
+                }
+        
+} else {
+        tem.novidade <- 1
+        writeLines(arquivos.atual, "../data/lista.txt")
+}
+
+
+
+
+# procurando por db pronto, salvo em rds
+tem.rda <- file.exists("../data/dados-ok.rda")
+
+# se tem novidade ou falta o rds, processar do começo:
+if(tem.novidade==1|!tem.rda) {
+
+        dados <- read_excel(paste0("../data/", arquivos.atual[1]), 1,
+                                   col_types = c(rep("text",6)))
+                        
+        if (length(arquivos.atual) > 1) {
+
+        for (i in 2:length(arquivos.atual)) {
+                dados <- bind_rows(dados, read_excel(
+                        paste0("../data/", arquivos.atual[i]), 1,
+                                   col_types = c(rep("text",6)))
+                                   
+                        )
+        }
+        }        
+
+        dados <- tbl_df(dados)
+        valid_column_names <- make.names(names=names(dados), 
+                                         unique=TRUE, allow_ = TRUE)
+        names(dados) <- valid_column_names
+        names(dados) <- gsub(" ", ".", tolower(names(dados)))
+        
+        
+        
+# # filtrando as informações que interessam,
+# Além disso, transformar tudo para lowercase, converter formato de datas,
+# renomear variáveis, selecionar as que interessam, criar variável mês
+real <- dollar_format(prefix = "R$ ")
+
+        dadosT <- dados %>% filter(account == "itau") %>%
+                rename(tipo = expense.type, valor = amount,
+                                   descrição = description) %>%
+                mutate(data = parse_date_time(date, "dmY"),
+                       descrição = tolower(as.character(descrição)),
+                       tipo = factor(tolower(as.character(tipo))),
+                       valor.raw = as.numeric(gsub("\\$|,","", valor)),
+                       valor = real(valor.raw),
+                       mes = factor(months(data, abbreviate=TRUE),
+                                    levels = c("Jan", "Fev", "Mar", "Abr",
+                                               "Mai","Jun", "Jul", "Ago",
+                                               "Set", "Out","Nov", "Dez"),
+                                    ordered=TRUE),
+                       ano = factor(year(data)),
+                       mes.ano = format(data, '%Y-%m')
+
+                ) %>%
+                select(data, ano, mes, mes.ano, tipo, descrição, 
+                        valor.raw,valor)
+
+# removendo previsões de gastos
+        
+        indices <- grep("previsão", dadosT$descrição)
+        # View(dadosT[indices,])
+        dadosT <- dadosT[-indices,]
+
+# uber é transporte
+        
+        indices <- grep("uber", dadosT$descrição)
+        dadosT$tipo[indices] <- "transporte"
+        
+# Vamos agrupar os dados por tipo de gasto, ano e mes, e depois calcular o total de gastos em cada categoria
+
+        dadosT <- dadosT %>% group_by(tipo, ano, mes)
+        save(dadosT, file = "../data/dados-ok.rda")
+        rm(dados)
+} else{
+        load("../data/dados-ok.rda")
+}
+
+real <- dollar_format(prefix = "R$ ")
+
+totais <- summarise(dadosT, total.raw=sum(valor.raw)) %>%
+        mutate(total = real(total.raw))
+
+```
+

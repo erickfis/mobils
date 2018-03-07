@@ -1,5 +1,5 @@
 
-# Objetivo
+# Sobre
 
 
 A plataforma Mobills é um serviço pago que, através de um app android, leitura de SMSs do banco e de interação via web, registra despesas realizadas, armazena os dados na nuvem e permite a posterior exportação destes dados.
@@ -55,4 +55,18 @@ O programa analisa a pasta dados e irá processá-los novamente sempre que houve
 Caso não haja novidades, o programa somente carrega este banco de dados já tratado, acelerando consideravelmente o processo.
 
 
+# Processamento dos dados 
+
+O banco de dados é carregado e preparado para que possamos responder às questões levantadas. 
+
+## Tratamento inicial dos dados
+
+Antes de fazer qualquer inferência, vamos primeiramente analisar os dados exportados pela plataforma, procurando avaliar sua qualidade e quais são as transformações necessárias para o seu uso.
+
+<!-- tratar inicial.csv com sed+grep para filtrar 2015 e 2016 -->
+<!-- Pega a 1a linha (1 a 5), para cabeçalho -->
+<!-- $ sed -n "1,5p" inicial.csv > newData.csv -->
+
+<!-- filtra 2015 e 2016 -->
+<!-- $ grep -E "^(,2015|,2016)" inicial.csv >> newData.csv -->
 

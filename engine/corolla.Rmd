@@ -1,7 +1,7 @@
 
-## Análise por tipo de despesa: Corolla
+## Análise por tipo de despesa: Veículos
 
-```{r plot-corolla, cache=TRUE}
+```{r plot-corolla}
 totais.cor <- totais[totais$tipo=="corolla",]
 medias.cor <- totais.cor %>% group_by(ano) %>%
         summarise(media = mean(total.raw))
@@ -28,24 +28,27 @@ ggplotly(plt.cor, tooltip = "text")
 
 Observa-se:
 
-- valores altos de agosto a novembro de 2015
-- queda a partir de jul-16
-- novo pico em junho-17
+- a troca de carro em julho de 2016 foi um divisor de águas
+- aumento do custo no final de 2015
+- alguns picos referentes a manutenções maiores
 
 Vamos analisar a tabela de dados:
 
 ```{r tabela-cor}
 
-sub <- which(dadosFil$ano==2015 & dadosFil$tipo=="corolla" &
-                     month(dadosFil$data) > 7)
+# sub <- which(dadosFil$ano==2015 & dadosFil$tipo=="corolla" &
+#                      month(dadosFil$data) > 7 & dadosFil$valor.raw > 150)
 
-kable(dadosFil[sub,c(1,6,8)], caption = "Gastos em 2015")
 
-###
-sub <- which(dadosFil$ano==2017 & dadosFil$tipo=="corolla" &
-                     month(dadosFil$data) == 6)
+sub <- which(dadosFil$tipo=="corolla" & 
+                     dadosFil$mes %in% c("Jan", "Jun", "Ago", "Nov"))
 
-kable(dadosFil[sub,c(1,6,8)], caption = "Gastos em junho de 2017")
+
+dadosFil[sub, c(2,3,6,7)]  %>% 
+        datatable(options = list(pageLength = 6), 
+                  caption = "Picos de gastos com veículos",
+                  rownames = FALSE, filter = "top"
+        )
 
 
 ```

@@ -1,0 +1,138 @@
+
+# Custo de vida, por mês
+
+O custo de vida mensal da famíla é a soma de todos os gastos mensais de quaisquer tipos de despesas.
+
+
+
+```{r custo}
+#devidos subsets
+
+custo.total <- totais %>% group_by(ano, mes) %>%
+        # filter(tipo != "corolla") %>%
+        summarize(total.raw = sum(total.raw)) %>%
+        mutate(total = real(total.raw))
+        
+
+medias.custo.total <- custo.total %>% group_by(ano) %>%
+        summarise(media = mean(total.raw))
+medias.custo.total$media <- round(medias.custo.total$media, 2)
+
+
+
+plt.totais <- ggplot(custo.total, aes(x=mes, y=total.raw, group=ano, colour=ano,
+                text = paste(ano, "-", mes, 
+                             "<br>", total)))
+                                 
+plt.totais <- plt.totais +  geom_line() + 
+                geom_point(size=1, alpha=0.5) +
+                geom_hline(data = medias.custo.total, 
+                           aes(yintercept = media, colour = ano,
+                                 text=paste(real(media))),
+                           linetype=2) +
+                # geom_label(data = medias.alim, vjust = -0.2, hjust = 1,
+                #           aes(12, y = media,label=media)) +
+                labs(title="Custo de Vida", y="Total (R$)", x="Mês") +
+                theme(plot.title = element_text(hjust = 0.5)) 
+
+#plt.totais
+ggplotly(plt.totais, tooltip = "text")
+
+
+```
+
+Verifica-se a necessidade de investigar em detalhe os dados referentes ao período de junho a outubro de 2017, onde verifica-se um aumento significativo no custo mensal.
+
+
+```{r}
+custo.junho <- totais %>% group_by(tipo, ano) %>%
+        filter(mes == "Jun")
+
+
+colourCount = length(unique(totais$tipo))
+getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+
+plt <- ggplot(custo.junho, aes(x=ano, y=total.raw, group=tipo,
+                                     colour=tipo,
+                                     text = paste(ano, "-", mes,
+                                                  "<br>", tipo,
+                                                  "<br>", total)))
+
+plt <- plt +  geom_line() + geom_point() +
+                scale_colour_manual(values = getPalette(colourCount))+
+                labs(title="Gastos por tipo de despesa",
+                     y="Total (R$)", x="Custo em Junho de cada ano") +
+
+                theme(legend.title=element_blank()) +
+                theme(legend.position="bottom") +
+                guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
+                theme(plot.title = element_text(hjust = 0.5))
+
+
+ggplotly(plt, tooltip = "text")
+
+
+```
+
+Analisar gastos com:
+
+- corolla 
+- alimentação
+- lazer
+
+```{r}
+custo.outubro <- totais %>% group_by(tipo, ano) %>%
+        filter(mes == "Out")
+
+colourCount = length(unique(totais$tipo))
+getPalette = colorRampPalette(brewer.pal(colourCount, "Set1"))
+
+plt <- ggplot(custo.outubro, aes(x=ano, y=total.raw, group=tipo,
+                                     colour=tipo,
+                                     text = paste(ano, "-", mes,
+                                                  "<br>", tipo,
+                                                  "<br>", total)))
+
+plt <- plt +  geom_line() + geom_point() +
+                scale_colour_manual(values = getPalette(colourCount))+
+                labs(title="Gastos por tipo de despesa",
+                     y="Total (R$)", x="Custo em Outubro de cada ano") +
+
+                theme(legend.title=element_blank()) +
+                theme(legend.position="bottom") +
+                guides(fill=guide_legend(nrow=5, byrow=TRUE)) +
+                theme(plot.title = element_text(hjust = 0.5))
+
+
+ggplotly(plt, tooltip = "text")
+
+
+```
+
+Verifica-se um novo pico porque aqui começaram a ser registrados gastos com
+"refeição no trabalho"
+
+Além disso, analisar gastos com:
+
+- alimentação
+- moradia
+
+<!-- Vamos analisar na tabela de dados as médias e desvios padrões para cada mês. -->
+
+
+<!-- ## Maiores variações, por mês -->
+
+
+
+
+<!-- ```{r dados-mes, cache=TRUE} -->
+
+<!-- dados.mensal <- custo.total %>% group_by(mes) %>% -->
+<!--         summarise(media.raw = mean(total.raw), desvio.raw = sd(total.raw)) %>% -->
+<!--         mutate(media = real(media.raw), desvio=real(desvio.raw)) %>% -->
+<!--         mutate(rank = rank(-desvio.raw)) %>% -->
+<!--         arrange(rank) -->
+
+
+<!-- ``` -->
+

@@ -1,0 +1,12 @@
+name: noaa_storm_db_-_economic_losses_-_nvd3
+title: NOAA Storm db - economic losses - nvd3
+username:
+account: erickfis
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 220350
+bundleId: 1003734
+url: https://erickfis.shinyapps.io/noaa_storm_db_-_economic_losses_-_nvd3/
+when: 1506705969.33103
+asMultiple: FALSE
+asStatic: FALSE

@@ -7,7 +7,7 @@ date: "`r format(Sys.time(), '%Y %B, %d')`"
 
 output:
   prettydoc::html_pretty:
-    theme: architect
+    theme: tactile
     highlight: github
     toc: true
     self_contained: no
@@ -15,23 +15,24 @@ output:
 ---
 
 
-```{r knit-rules, echo=FALSE}
-library(knitr)
+```{r knit-rules, echo=FALSE, message=FALSE}
 
-opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE, 
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE, 
                warning = FALSE, autodep = TRUE, options(scipen=999))
 
+source(here::here("engine", "processamento.R"))
+
+
 ```
-# Em progresso
+# Objetivo
 
-- acessar API da plataforma - ainda não disponibilizado pela plataforma
- 
+Análise do orçamento familiar, com base nos dados obtidos pela plataforma mobils.
 
-```{r child = 'engine/intros.Rmd'}
-```
+https://web.mobills.com.br
 
-```{r child = 'engine/processamento.Rmd'}
-```        
+
+*ESTE RELATÓRIO ESTÁ EM CONSTANTE CONSTRUÇÃO* 
+
 
 ```{r child = 'engine/outliers.Rmd'}
 ```        
@@ -39,6 +40,9 @@ opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE,
 ```{r child = 'engine/maiores.Rmd'}
 ```        
 
+```{r child = 'engine/custo-mes.Rmd'}
+```  
+<br>
 
 # Principais tipos de despesas
 
@@ -53,6 +57,12 @@ opts_chunk$set(echo = FALSE, message = FALSE, include = TRUE,
 ```        
 
 ```{r child = 'engine/corolla.Rmd'}
+```        
+
+```{r child = 'engine/pet.Rmd'}
+```   
+
+```{r child = 'engine/intros.Rmd'}
 ```        
 
 

@@ -1,0 +1,47 @@
+
+## Análise por tipo de despesa: PET
+
+
+```{r pet}
+#devidos subsets
+
+totais.alim <- totais[totais$tipo=="pet",]
+
+medias.alim <- totais.alim %>% group_by(ano) %>%
+        summarise(media = mean(total.raw))
+
+medias.alim$media <- round(medias.alim$media, 2)
+
+plt.alim <- ggplot(totais.alim, aes(x=mes, y=total.raw, group=ano, colour=ano,
+                text = paste(ano, "-", mes, 
+                             "<br>", total)))
+                                 
+plt.alim <- plt.alim +  geom_line() + 
+                geom_point(size=1, alpha=0.5) +
+                geom_hline(data = medias.alim, 
+                           aes(yintercept = media, colour = ano,
+                                 text=paste(real(media))),
+                           linetype=2) +
+                # geom_label(data = medias.alim, vjust = -0.2, hjust = 1,
+                #           aes(12, y = media,label=media)) +
+                labs(title="Gastos com pet", y="Total (R$)", x="Mês") +
+                theme(plot.title = element_text(hjust = 0.5)) 
+
+ggplotly(plt.alim, tooltip = "text")
+
+```
+
+
+```{r}
+sub <- which(dadosFil$tipo=="pet" & 
+                     dadosFil$mes %in% c("Jan", "Abr", "Jun", "Set", "Nov"))
+
+
+dadosFil[sub, c(2,3,6,7)]  %>% 
+        datatable(options = list(pageLength = 6), 
+                  caption = "Picos de gastos com pet",
+                  rownames = FALSE, filter = "top"
+        )
+```
+
+
